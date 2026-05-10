@@ -20,7 +20,7 @@
 
 ## 命名規則
 
-- `REQ-<category>-<short-title>.md`
+- `v<major>/REQ-<category>-<short-title>.md`
 
 ## 参照ルール
 
@@ -28,4 +28,5 @@
 
 ## 参照
 
-- 現在は個票なし: requirement 追加時は `REQ-<category>-<short-title>.md` をこのディレクトリに置く
+- `v0/index.md`: v0 / MVP の対象範囲と要求
+- `v1/index.md`: v1 で対応する推奨機能と拡張要求

@@ -29,5 +29,6 @@
 
 ## 参照
 
-- `active/`: 現在有効な ADR の配置先。現在は個票なし
+- `active/`: 現在有効な ADR の配置先
+- `active/ADR-0001-initial-architecture-and-stack.md`: 初期 architecture と technology stack
 - `archive/`: 参照優先度を落とした ADR の配置先。現在は個票なし

@@ -27,4 +27,5 @@
 
 ## 参照
 
-- 現在は個票なし: 追加時は `<integration>.md` を置く
+- `git-cli.md`: ローカル Git CLI 連携。
+- `ai-cli.md`: 外部 AI coding CLI / Agent 連携。

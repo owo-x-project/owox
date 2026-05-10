@@ -31,4 +31,6 @@
 ## 参照
 
 - `shared/index.md`: 複数 subproject にまたがる共有仕様の入口
-- 現在は subproject 固有仕様なし: 追加時は `<subproject>/index.md` と個票を作成する
+- `crates/index.md`: Rust crates 仕様の入口
+- `web/index.md`: WebUI 仕様の入口
+- `contracts/index.md`: 外部契約仕様の入口

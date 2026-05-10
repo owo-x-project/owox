@@ -27,4 +27,4 @@
 
 ## 参照
 
-- 現在は個票なし: 追加時は `<team>-guide.md` を置く
+- `maintainers-guide.md`: 暫定 maintainer 責任境界。

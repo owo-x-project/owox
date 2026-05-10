@@ -1,0 +1,45 @@
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        NODE_MAJOR: ${NODE_MAJOR:-22}
+    image: ${COMPOSE_PROJECT_NAME:-monorepo}-codex-devcontainer:local
+    working_dir: /workspace
+    init: true
+    command: sleep infinity
+    network_mode: host
+    environment:
+      TZ: ${TZ:-Asia/Tokyo}
+      COMPOSE_FILE: /workspace/.devcontainer/compose.yml
+      NPM_CONFIG_PREFIX: /home/vscode/.npm-global
+      PNPM_HOME: /home/vscode/.local/share/pnpm
+      PNPM_STORE_DIR: /pnpm/store
+      CARGO_HOME: /usr/local/cargo
+      RUSTUP_HOME: /usr/local/rustup
+      PIP_CACHE_DIR: /home/vscode/.cache/pip
+      PIPX_HOME: /home/vscode/.local/pipx
+      PIPX_BIN_DIR: /home/vscode/.local/bin
+      PATH: /home/vscode/.npm-global/bin:/home/vscode/.local/bin:/home/vscode/.local/share/pnpm:/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    volumes:
+      - ..:/workspace:cached
+      - ${HOME}/.ssh:/home/vscode/.ssh:ro
+      - codex-home:/root/.codex
+      - npm-global:/home/vscode/.npm-global
+      - user-local:/home/vscode/.local
+      - user-cache:/home/vscode/.cache
+      - pnpm-store:/pnpm/store
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-git:/usr/local/cargo/git
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+volumes:
+  codex-home:
+  npm-global:
+  user-local:
+  user-cache:
+  pnpm-store:
+  cargo-registry:
+  cargo-git:

@@ -34,4 +34,9 @@
 
 ## 参照
 
-- 現在は個票なし: 追加時はカテゴリ接頭辞付きの pattern 個票を置く
+- `data-repo-backed-entity-store.md`: Git 管理 `.owox/` を正本、DB を projection/cache とする entity store
+- `data-versioned-payload.md`: 永続 payload に `schema_version` を持たせる
+- `api-command-endpoint.md`: 状態変更を command endpoint で表す
+- `api-typed-error.md`: API error と Policy violation を typed model で返す
+- `ops-append-only-event-log.md`: Event を append-only とし correction Event で補正する
+- `ui-bounded-workbench-editor.md`: Workbench 内 editor を境界付き mini IDE として扱う

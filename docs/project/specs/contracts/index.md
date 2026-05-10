@@ -6,4 +6,4 @@ OpenAPI と JSON Schema による外部契約に閉じる仕様の入口。
 
 ## 参照
 
-- 現在は個票なし: 追加時は `SPEC-<category>-<short-title>.md` を置く
+- `SPEC-api-v0-contracts.md`: v0 HTTP API、schema_version、typed error

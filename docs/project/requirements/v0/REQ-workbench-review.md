@@ -20,7 +20,8 @@ Owox は本格 IDE ではないが、AI 作業の検収には diff 確認、Evid
 
 - MVP 画面は Home / CEO Desk、Work Orders、Context に絞る。
 - ユーザーは判断待ち、高リスク変更、検収待ち、失敗 Session、Context Proposal を確認できる。
-- diff viewer、簡易編集、patch apply、patch revert、Evidence 表示、accept / reject を扱う。
+- diff viewer、Repo Editor、file tree、簡易 Git 操作、patch apply、patch revert、Evidence 表示、accept / reject を扱う。
+- Session Monitor により、OpenCode Session の log streaming、status、cancel、retry、result import、interactive input を扱える。
 - Work Order と diff / Evidence を紐付けて表示する。
 - WebUI は Owox 管理下の作業を確認、修正、検収する作業台として扱う。
 
@@ -30,7 +31,7 @@ Owox は本格 IDE ではないが、AI 作業の検収には diff 確認、Evid
 - 高度な補完。
 - LSP 統合。
 - debugger。
-- 本格 terminal。
+- 汎用 terminal。
 - 拡張機能システム。
 - リモート開発 IDE。
 
@@ -39,6 +40,8 @@ Owox は本格 IDE ではないが、AI 作業の検収には diff 確認、Evid
 - ユーザーが WebUI から今見るべき Work Order と判断待ちを把握できる。
 - Work Order に関連する Context、AI CLI Session、diff、Evidence を辿れる。
 - diff を確認し、必要な軽微修正を行える。
+- repo ごとの file tree、Git 状態、対象 file 編集を確認できる。
+- Session ごとの CLI 動作を同期、監視、制御できる。
 - Evidence と Verifier 結果を見て accept / reject できる。
 - Official Context への反映が必要な場合、Context Proposal に進められる。
 
@@ -46,6 +49,7 @@ Owox は本格 IDE ではないが、AI 作業の検収には diff 確認、Evid
 
 - UI は段階的に増やし、MVP で画面を広げすぎない。
 - WebUI は検収と確認の作業台であり、外部 IDE を置き換えない。
+- LSP、debugger、汎用 terminal、拡張機能システムは MVP 対象外とする。
 - 重大判断は AI Agent に自動委任しない。
 
 ## 関連資料

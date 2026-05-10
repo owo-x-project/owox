@@ -6,4 +6,4 @@ SvelteKit static build の WebUI に閉じる仕様の入口。
 
 ## 参照
 
-- 現在は個票なし: 追加時は `SPEC-<category>-<short-title>.md` を置く
+- `SPEC-interaction-workbench-review.md`: Workbench MVP、Repo Editor、Session Monitor、検収導線

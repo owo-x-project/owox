@@ -4,27 +4,27 @@
 
 ## owox
 
-Open Workspace Orchestrator。AI Agent First な Terminal Workspace / plugin host。複数 AI agent、AI CLI、terminal session、diff、file tree、簡易 editor、preview、logs、approvals、plugin UI を扱う実行・操作面。
+Open Workspace Orchestrator。AI Agent First な WebUI ベースの Terminal Workspace / 簡易 IDE。code-server のようにブラウザから利用できることを必須条件とし、brand 配下の project repo、terminal session、agent session、log、Git、file tree、簡易 editor、diff を扱う。
 
 ## owlcore
 
-現 Owox の Context / Work / Evidence 制御プレーン思想を継承する公式 `owox` plugin。server なしで project repo 内 `.owox/owlcore/` を正本とし、project context、Work Order、Work Contract、Evidence、Verifier、Policy、Event Log を扱う。
+`owox` の裏側で使う、project repo に紐づく制御・記録レイヤー。server 常駐型ではなく、project repo 内 `.owox/owlcore/` を正本とする file-based mechanism。Project Metadata、Work Order、Work Contract、Context Capsule、Evidence、Verifier、Policy、Event Log、Agent Session 記録を扱う。
 
 ## owox plugin
 
-`owox` に機能、command、schema、UI、外部 tool 連携を追加する拡張単位。公式 plugin は `owl*` 命名規則を使う。
+`owox` に command、backend hook、panel などを追加する拡張単位。v0 は manifest、command contribution、backend hook 予約を最小 extension point とし、汎用 plugin UI 実行基盤は v1 以降で扱う。
 
 ## Plugin UI
 
-plugin が `owox` 本体に追加する固有 UI。`owox` 本体は mount、routing、panel、permission、command integration を提供し、plugin は自分の責務に閉じた UI を提供する。
+plugin が `owox` 本体に追加する固有 UI。v0 では本格対応しない。`owlcore` v1 以降で、panel、permission、command integration と合わせて扱う。
 
 ## Brand Repo
 
-ブランド固有 context を持つ Git repository。v2 以降の追加機能候補。project repo 作業時に brand context をどう注入するかは `owox` orchestration の責務候補であり、`owlcore` v1 の中核には含めない。
+1 brand 配下で扱う project repo 群。`owox` は 1 brand の Web workspace として、複数 project repo を一覧・選択・操作できる。
 
 ## Context
 
-AI Agent や人間が作業判断に使う文脈情報。Raw、Proposed、Official の状態を分け、Official だけを継続参照する。
+AI Agent や人間が作業判断に使う文脈情報。`owlcore` では Context Capsule として repo 内に記録し、Work Contract や Evidence と関連付ける。
 
 ## Work Contract
 
@@ -41,3 +41,7 @@ Work Contract と Evidence に基づき、scope、policy、必須証拠、テス
 ## Official Context
 
 Review や Policy Gate を通過し、正本として継続参照してよい文脈。
+
+## Agent Session
+
+`owox` または `owlcore` が追跡する AI CLI / terminal process の実行単位。v0 `owox` は汎用 terminal session として扱い、v1 `owlcore` は Work Order / Work Contract / Evidence と関連付ける。

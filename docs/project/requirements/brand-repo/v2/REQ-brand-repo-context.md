@@ -2,7 +2,7 @@
 id: REQ-brand-repo-context
 status: 提案中
 related:
-  - docs/project/adr/active/ADR-0003-owox-owlcore-product-split.md
+  - docs/project/requirements/owox/v0/REQ-owox-product-scope.md
   - docs/project/requirements/owlcore/v1/REQ-owlcore-product-scope.md
 ---
 
@@ -10,18 +10,18 @@ related:
 
 ## 目標
 
-brand repo はブランド固有 context を Git repo として管理し、project repo 作業時に必要な brand context を使えるようにする。
+brand-wide context を project repo 作業へ接続できるようにする。
 
 ## 根拠
 
-会社・ブランド思想は継続する。ただし v1 の `owlcore` project repo 管理に混ぜると scope が肥大化するため、v2 以降の拡張として分ける。
+`owox` は 1 brand の workspace として複数 project repo を扱う。将来、brand 全体の方針、文脈、制約を project repo 作業へ安全に渡す仕組みが必要になる。
 
 ## 対象範囲
 
-- brand repo にブランド固有 context を保存する。
-- project repo 作業時に brand context を参照できる。
+- brand-wide context の保存場所を検討する。
+- project repo 作業時に必要な brand context を参照できる。
 - `owox` が project workspace と brand context の接続 orchestration を扱う。
-- brand repo を別公式 plugin にするか、`owlcore` を拡張するかを検討する。
+- 別 plugin か `owlcore` 拡張かを判断する。
 
 ## 対象外
 

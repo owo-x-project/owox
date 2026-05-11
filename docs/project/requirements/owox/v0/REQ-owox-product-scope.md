@@ -2,7 +2,7 @@
 id: REQ-owox-product-scope
 status: 採用
 related:
-  - docs/project/adr/active/ADR-0003-owox-owlcore-product-split.md
+  - docs/project/adr/active/ADR-0001-owox-owlcore-boundary.md
   - docs/project/architecture.md
 ---
 
@@ -10,48 +10,50 @@ related:
 
 ## 目標
 
-`owox` v0 は、AI Agent First な Terminal Workspace と plugin host の最小核を提供する。
+`owox` v0 は、AI Agent First な WebUI ベース Terminal Workspace / 簡易 IDE を提供する。
 
 ## 根拠
 
-`owlcore` や将来の `owl*` plugin を成立させるには、先に AI CLI / agent session を動かす場所、plugin を読み込む host、plugin 固有 UI を表示する shell が必要である。
+AI 駆動開発では、browser から project repo を開き、terminal、agent session、log、Git、file tree、editor、diff を一体で操作できる作業面が必要である。
 
 ## 対象範囲
 
-- Workspace を開ける。
+- 1 brand 配下の複数 project repo を一覧できる。
+- project workspace を browser から開ける。
 - terminal session を作成、表示、終了できる。
-- AI CLI / agent process の起動、監視、log 表示を扱える。
-- Git diff を確認できる。
+- AI CLI / agent process を汎用 terminal session として起動、監視、log 表示できる。
+- Git 操作を VS Code 標準 Source Control 相当で扱える。
 - 簡易 file tree と簡易 editor を扱える。
-- preview / logs / approvals の基礎 UI を持つ。
-- plugin manifest を読み込める。
-- plugin command を登録できる。
-- plugin 固有 UI を mount できる。
-- 公式 plugin 命名規則 `owl*` を扱える。
+- diff view を提供する。
+- PC、tablet、smartphone で主要操作を完了できる。
+- plugin manifest、command contribution、backend hook 予約を最小 extension point として持つ。
 
 ## 対象外
 
 - `owlcore` の Context / Work Contract / Evidence / Verifier の完全実装。
-- brand repo / company context。
+- AI CLI 固有 adapter。
+- team / multi-user 権限管理。
 - community marketplace。
 - 本格 IDE。
 - LSP / debugger。
+- 汎用 plugin UI 実行基盤。
 - Git hosting / CI/CD / deployment service の再実装。
 
 ## 成功指標
 
-- ユーザーが `owox` で project workspace を開き、terminal session と AI CLI process を操作できる。
-- plugin が command と UI panel を `owox` に追加できる。
-- `owox` 本体 UI と plugin UI の境界が確認できる。
-- AI CLI の log、diff、approval 操作が同じ workspace 内で辿れる。
+- ユーザーが browser から project workspace を開き、terminal session と AI CLI process を操作できる。
+- Git status / diff / stage / commit / branch / remote sync 系操作を WebUI から実行できる。
+- file tree、簡易 editor、diff view、log が同じ workspace 内で辿れる。
+- PC、tablet、smartphone で主要操作を完了できる。
 
 ## 制約 / 品質条件
 
-- `owox` 本体は plugin 固有 domain を内蔵しない。
+- `owox` 本体は owlcore domain を内蔵しない。
 - AI CLI の出力を無検収で正本化しない。
-- plugin host / plugin UI は v0 中核として扱う。
+- WebUI から利用できることを必須条件とする。
+- v0 は個人セルフホストを対象にする。
 
 ## 関連資料
 
 - `../../../architecture.md`
-- `../../../adr/active/ADR-0003-owox-owlcore-product-split.md`
+- `../../../adr/active/ADR-0001-owox-owlcore-boundary.md`

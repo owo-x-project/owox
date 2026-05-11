@@ -3,29 +3,29 @@ id: REQ-terminal-workspace
 status: 採用
 related:
   - docs/project/requirements/owox/v0/REQ-owox-product-scope.md
-  - docs/project/adr/active/ADR-0003-owox-owlcore-product-split.md
+  - docs/project/adr/active/ADR-0001-owox-owlcore-boundary.md
 ---
 
 # Terminal Workspace
 
 ## 目標
 
-`owox` は AI agent と人間が同じ作業面で terminal、diff、file tree、editor、preview、logs、approvals を扱える Terminal Workspace を提供する。
+`owox` は AI agent と人間が同じ作業面で terminal、log、Git、diff、file tree、簡易 editor を扱える Terminal Workspace を提供する。
 
 ## 根拠
 
-AI CLI 作業は terminal と Git diff だけでなく、log、preview、approval、関連 file の確認が必要になる。これらを plugin が拡張できる workspace shell に集約する。
+AI CLI 作業は terminal だけでは完結しない。log、Git change、関連 file、diff を browser 上で横断確認できる作業面が必要である。
 
 ## 対象範囲
 
 - workspace を開く。
 - terminal session を作る。
 - 複数 terminal session を切り替える。
-- Git diff を表示する。
+- session log を表示する。
+- Git status / diff と連動する。
 - 簡易 file tree を表示する。
-- 簡易 editor を提供する。
-- preview / logs / approvals の表示領域を提供する。
-- plugin UI panel と共存する layout を提供する。
+- syntax highlight 付き簡易 editor を提供する。
+- browser reload 後に session / log を再表示する。
 
 ## 対象外
 
@@ -34,20 +34,21 @@ AI CLI 作業は terminal と Git diff だけでなく、log、preview、approva
 - Git hosting。
 - CI/CD。
 - `owlcore` の Context / Work Contract / Evidence domain。
+- AI CLI 固有 adapter。
 
 ## 成功指標
 
 - ユーザーが project workspace を開き、terminal と diff を同じ画面で確認できる。
-- plugin UI panel と terminal / diff / preview が同じ workspace 内で併用できる。
-- AI CLI 作業中の log と approval 待ちが確認できる。
+- terminal、log、file tree、editor、diff を同じ workspace 内で併用できる。
+- browser reload 後も session / log を追跡できる。
 
 ## 制約 / 品質条件
 
 - `owox` 本体は plugin 固有 domain を持たない。
-- editor は軽量確認・軽微修正に留める。
+- editor は LSP なしの簡易 editor とする。
 - terminal session 操作は Event または log として追跡可能にする。
 
 ## 関連資料
 
 - `REQ-owox-product-scope.md`
-- `REQ-plugin-host-ui.md`
+- `REQ-agent-session-runtime.md`

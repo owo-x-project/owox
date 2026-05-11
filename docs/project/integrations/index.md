@@ -26,3 +26,6 @@
 - integration を追加または変更したら `.agents/project.md` と validation 影響を確認する
 
 ## 参照
+
+- `docker.md`: v0 self-host runtime と volume / repo mount 境界
+- `external-ai-cli.md`: Claude Code / Codex / OpenCode / Gemini CLI など外部 AI CLI の扱い

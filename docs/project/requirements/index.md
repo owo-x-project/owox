@@ -29,6 +29,6 @@
 
 ## 参照
 
-- `owox/v0/index.md`: `owox` v0。AI Agent First Terminal Workspace / plugin host の要求
-- `owlcore/v0/index.md`: `owlcore` v1。serverless repo-native 公式 plugin の要求
-- `brand-repo/v0/index.md`: brand repo / brand context など v2 以降の要求
+- `owox/v0/index.md`: `owox` v0。WebUI ベース Terminal Workspace / 簡易 IDE の要求
+- `owlcore/v1/index.md`: `owlcore` v1。project repo 内 `.owox/owlcore/` file-based 制御・記録レイヤーの要求
+- `brand-repo/v2/index.md`: brand repo / brand context など v2 以降の要求

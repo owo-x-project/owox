@@ -29,5 +29,8 @@
 
 ## 参照
 
-- `active/`: 現在有効な ADR の配置先
+- `active/ADR-0001-owox-owlcore-boundary.md`: owox / owlcore の責務境界
+- `active/ADR-0002-rust-solid-stack.md`: Rust + Axum / Solid + Vite 採用
+- `active/ADR-0003-terminal-renderer-adapter.md`: terminal renderer adapter と prototype 比較
+- `active/ADR-0004-sqlite-managed-state.md`: owox managed SQLite 採用
 - `archive/`: 参照優先度を落とした ADR の配置先。現在は個票なし

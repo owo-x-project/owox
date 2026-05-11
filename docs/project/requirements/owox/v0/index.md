@@ -2,17 +2,19 @@
 
 ## 役割
 
-`owox` v0 は AI Agent First Terminal Workspace / plugin host の要求正本です。terminal session、AI CLI / agent process 操作、diff、preview、logs、approvals、plugin host、plugin UI host を対象にします。
+`owox` v0 は AI Agent First な WebUI ベース Terminal Workspace / 簡易 IDE の要求正本です。project list、terminal session、agent session、log、Git、file tree、簡易 editor、diff を対象にします。
 
 ## 管轄
 
 - owner: `owox`
 - version: `v0`
-- responsibility: 実行・操作面、plugin host、plugin UI host
+- responsibility: WebUI、API server、実行・操作面、最小 extension point
 
 ## 参照
 
 - `REQ-owox-product-scope.md`: `owox` v0 の対象範囲と成功条件
 - `REQ-terminal-workspace.md`: Terminal Workspace と作業面
 - `REQ-agent-session-runtime.md`: AI CLI / agent process の起動、監視、操作
-- `REQ-plugin-host-ui.md`: plugin host と plugin 固有 UI
+- `REQ-git-workflow.md`: VS Code 標準 Source Control 相当の Git 操作
+- `REQ-responsive-webui.md`: PC / tablet / smartphone の responsive 同等操作
+- `REQ-plugin-extension-point.md`: v0 最小 plugin extension point

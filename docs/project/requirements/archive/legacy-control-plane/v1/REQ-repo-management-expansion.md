@@ -2,7 +2,7 @@
 id: REQ-repo-management-expansion
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-repo-worktree-isolation.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-repo-worktree-isolation.md
   - docs/project/integrations/git-cli.md
 ---
 

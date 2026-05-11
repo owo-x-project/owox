@@ -2,7 +2,7 @@
 id: REQ-ai-cli-session-expansion
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-ai-cli-outsourcing.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-ai-cli-outsourcing.md
   - docs/project/integrations/ai-cli.md
 ---
 

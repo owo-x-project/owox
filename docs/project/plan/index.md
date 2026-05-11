@@ -70,4 +70,5 @@ docs/project/plan/
 
 ## 参照
 
-- `v0-implementation/index.md`: Owox v0 実装計画。contracts / protocol / core / store / projection / git / verifier / server / web / adapter / hardening を検証可能な phase と task に分解する
+- `owox-product-roadmap/index.md`: ADR-0003 に基づく `owox` v0、`owlcore` v1、brand repo v2 以降のロードマップ
+- `v0-implementation/index.md`: 旧 Owox 制御プレーン実装計画。ADR-0003 採用後は `owlcore` v1 計画へ再編対象

@@ -2,7 +2,7 @@
 id: SPEC-interaction-workbench-review
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-workbench-review.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-workbench-review.md
   - docs/project/specs/contracts/SPEC-api-v0-contracts.md
 subproject: web
 ---
@@ -106,4 +106,4 @@ Workbench は作業状況、Context、Session、diff、Evidence を確認し、�
 
 ## 関連資料
 
-- `../../requirements/v0/REQ-workbench-review.md`
+- `../../requirements/archive/legacy-control-plane/v0/REQ-workbench-review.md`

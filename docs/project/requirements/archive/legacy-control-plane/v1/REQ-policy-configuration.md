@@ -2,7 +2,7 @@
 id: REQ-policy-configuration
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-policy-event-audit.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-policy-event-audit.md
 ---
 
 # 設定可能な Policy

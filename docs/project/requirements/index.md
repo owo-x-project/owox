@@ -20,7 +20,8 @@
 
 ## 命名規則
 
-- `v<major>/REQ-<category>-<short-title>.md`
+- `<owner>/v<major>/REQ-<category>-<short-title>.md`
+- owner は `owox`、`owlcore`、`brand-repo` などの管轄名を使う
 
 ## 参照ルール
 
@@ -28,5 +29,7 @@
 
 ## 参照
 
-- `v0/index.md`: v0 / MVP の対象範囲と要求
-- `v1/index.md`: v1 で対応する推奨機能と拡張要求
+- `owox/index.md`: `owox` v0。AI Agent First Terminal Workspace / plugin host の要求
+- `owlcore/index.md`: `owlcore` v1。serverless repo-native 公式 plugin の要求
+- `brand-repo/index.md`: brand repo / brand context など v2 以降の要求
+- `archive/legacy-control-plane/`: ADR-0003 以前の旧 Owox 制御プレーン要件

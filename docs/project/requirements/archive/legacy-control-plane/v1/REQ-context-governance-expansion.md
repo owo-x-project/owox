@@ -2,7 +2,7 @@
 id: REQ-context-governance-expansion
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-context-governance.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-context-governance.md
   - docs/project/glossary/core.md
 ---
 

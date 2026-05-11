@@ -12,36 +12,38 @@
 
 ## 不変条件
 
-- Owox は AI coding CLI や Git hosting を置き換えない。文脈、作業契約、権限、証拠、検収、監査を管理する制御プレーンとして扱う。
+- `owox` は AI Agent First な Terminal Workspace / plugin host として扱う。
+- `owox` は AI coding CLI や Git hosting を置き換えない。AI CLI / agent process の起動、監視、操作、terminal session、diff、preview、logs、approvals、plugin UI host を担当する。
+- 現 Owox の文脈、作業契約、権限、証拠、検収、監査を管理する制御プレーン思想は、公式 plugin `owlcore` に継承する。
+- `owlcore` は server なしで project repo に紐づく。必須 runtime は CLI / library / owox plugin とし、常駐 HTTP daemon を前提にしない。
 - Raw input や inbox 資料は直接 Official Context にしない。Proposed Context と Review / Policy Gate を経て正式化する。
 - AI の完了報告だけで完了扱いにしない。Evidence と Verifier による検収を必須にする。
-- 外部契約は Contract first で扱う。JSON Schema、OpenAPI、Workspace layout、State transition、Event Envelope を優先して固定する。
-- project 由来の Context、Work Contract、Evidence、Event、検収結果の正本は、対象 project repo 内の `.owox/` に置く Git 管理ファイルとする。
-- SQLite などの DB は projection / cache / index として扱い、正本ではない。DB は `.owox/` 正本から再構築できる必要がある。
-- Owox は外部 Git service の PR / MR 作成、review、merge、webhook state sync を再実装しない。Owox は merge 可否判断と HandoffRecord を正本化し、merge 済み判定は Git 履歴から provider 非依存に推定する。
-- 本番 runtime では WebUI server を常駐させず、静的 build を `owoxd` から配信する方針を初期案とする。
+- 外部契約は Contract first で扱う。plugin API、plugin manifest、plugin UI mount、repo layout、state transition、event envelope、schema を優先して固定する。
+- `owlcore` 由来の Context、Work Contract、Evidence、Event、検収結果の正本は、対象 project repo 内の `.owox/owlcore/` に置く Git 管理ファイルとする。
+- SQLite などの DB は必要な場合のみ projection / cache / index として扱い、正本ではない。cache は `.owox/owlcore/` 正本から再構築できる必要がある。
+- `owox` / `owlcore` は外部 Git service の PR / MR 作成、review、merge、webhook state sync を中核責務にしない。
+- plugin 固有 UI は `owox` の中核拡張面として扱う。`owlcore` の Context / Work / Evidence UI は `owlcore` plugin UI として提供する。
+- Brand Repo / brand context は v2 以降の追加機能候補とし、v1 `owlcore` project repo 管理の中核には含めない。
 
 ## 責務分離
 
-- `contracts`: Work Contract、Context Capsule、Evidence Report、Event などの外部契約を定義する。
-- `crates/owox-protocol`: 外部契約に対応する Rust 型を持つ。他の Owox crate に依存しない。
-- `crates/owox-core`: domain logic と状態遷移を持つ。DB、HTTP、Git、filesystem write、process spawn、UI に依存しない。
-- `crates/owox-store`: `.owox/` 配下の正本ファイル、append-only event、entity snapshot、projection 再構築を担当する。
-- `crates/owox-db`: SQLite projection / cache / index、migration、query model を担当する。DB row や SQLx 型を外へ漏らさず、DB を正本にしない。
-- `crates/owox-git`: Git CLI、worktree 操作、changed paths、diff、Git 履歴判定を担当する。DB と Git provider API に依存しない。
-- `crates/owox-verifier`: Evidence と diff を検査する。固定 rule catalog と `VerifierRule` trait を持ち、UI 表示ではなく Rust 側の changed paths と Evidence を検査対象にする。
-- `crates/owox-server`: HTTP API と静的 WebUI 配信、domain command orchestration を担当する。route handler は薄く保ち、AppService が core / store / db / git / verifier を調停する。
-- `crates/owox-cli`: `owoxd` binary、`init`、`serve`、`doctor` を担当する。
-- `crates/owox-testkit`: shared fixtures、temporary `.owox/` repo、Git worktree fixture、fixed clock / ID generator を担当する。
-- `apps/web`: Owox Workbench の静的 WebUI を担当する。
+- `owox`: Terminal Workspace、agent/session/process 操作、plugin host、plugin UI host、approvals、diff、preview、logs を担当する。
+- `owox plugin API`: plugin manifest、permission、command、UI mount、event bridge、host capability を定義する。
+- `plugins/owlcore`: Context / Work / Evidence 制御プレーンを担当する公式 plugin。
+- `owlcore-cli`: project repo 内 `.owox/owlcore/` の初期化、context、work、evidence、verifier、doctor を扱う。
+- `owlcore-core`: domain logic と状態遷移を持つ。DB、HTTP、process spawn、UI に依存しない。
+- `owlcore-store`: `.owox/owlcore/` 配下の正本ファイル、append-only event、entity snapshot、rebuild stream を担当する。
+- `owlcore-git`: Git CLI、worktree、changed paths、diff、Git 履歴判定を担当する。Git provider API に依存しない。
+- `owlcore-verifier`: Work Contract、Evidence、diff、Policy を検査する。
+- `owlcore-cache`: 必要な場合だけ projection / cache / index を担当する。正本にはしない。
 
 ## 設計方針
 
-- Core before UI。Protocol、Core、Store、Projection、API、Git / Verifier、WebUI、Adapter の順に固める。
-- API は `/api/v1` 配下に置き、contract payload は API version と別に `schema_version` を持つ。
-- 状態遷移は command endpoint として表現し、DB row を API response として直接返さない。
-- `.owox/` の Event は JSONL の append-only record、entity snapshot は JSON を基本形式とする。
-- 一覧 API は大きな本文を返しすぎず、metadata と詳細取得を分ける。
+- Host before plugins。v0 は `owox` plugin host / plugin UI / terminal workspace を先に固める。
+- `owlcore` は v1 で公式 plugin として実装する。
+- Plugin contract first。plugin manifest、permission、command、UI mount、host capability、repo layout、schema を先に固定する。
+- `.owox/owlcore/` の Event は JSONL の append-only record、entity snapshot は JSON を基本形式とする。
+- server API first ではなく、CLI / library / plugin API first とする。HTTP API は必要になるまで必須にしない。
 - monorepo の task は小さく保ち、1 task につき対象 crate は原則 1 つ、多くても 2 つにする。
 
 ## 関連資料
@@ -51,3 +53,4 @@
 - `tech-stack.md`
 - `adr/active/ADR-0001-initial-architecture-and-stack.md`
 - `adr/active/ADR-0002-repo-backed-owox-store.md`
+- `adr/active/ADR-0003-owox-owlcore-product-split.md`

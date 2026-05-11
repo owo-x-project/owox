@@ -2,7 +2,7 @@
 id: SPEC-data-event-log
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-policy-event-audit.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-policy-event-audit.md
   - docs/project/adr/active/ADR-0002-repo-backed-owox-store.md
 ---
 
@@ -59,5 +59,5 @@ Event Log は監査記録。debug log ではなく、判断理由と結果を追
 
 ## 関連資料
 
-- `../../requirements/v0/REQ-policy-event-audit.md`
+- `../../requirements/archive/legacy-control-plane/v0/REQ-policy-event-audit.md`
 - `../../adr/active/ADR-0002-repo-backed-owox-store.md`

@@ -2,9 +2,9 @@
 id: REQ-runtime-governance-agents
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-context-governance.md
-  - docs/project/requirements/v0/REQ-work-contract.md
-  - docs/project/requirements/v0/REQ-evidence-verification.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-context-governance.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-work-contract.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-evidence-verification.md
 ---
 
 # Governance Agent による判断補助

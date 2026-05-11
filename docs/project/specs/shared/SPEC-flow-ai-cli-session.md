@@ -2,7 +2,7 @@
 id: SPEC-flow-ai-cli-session
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-ai-cli-outsourcing.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-ai-cli-outsourcing.md
   - docs/project/specs/shared/SPEC-data-work-contract.md
 ---
 
@@ -83,4 +83,4 @@ AI CLI は外部 Worker。Manual Outsource と OpenCode は共通 Session lifecy
 
 ## 関連資料
 
-- `../../requirements/v0/REQ-ai-cli-outsourcing.md`
+- `../../requirements/archive/legacy-control-plane/v0/REQ-ai-cli-outsourcing.md`

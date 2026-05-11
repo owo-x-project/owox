@@ -31,6 +31,6 @@
 ## 参照
 
 - `shared/index.md`: 複数 subproject にまたがる共有仕様の入口
-- `crates/index.md`: Rust crates 仕様の入口
-- `web/index.md`: WebUI 仕様の入口
-- `contracts/index.md`: 外部契約仕様の入口
+- `crates/index.md`: 旧 Owox 制御プレーン crate 仕様の入口。ADR-0003 採用後は `owlcore` crate / library 仕様へ再編対象
+- `web/index.md`: 旧 WebUI 仕様の入口。ADR-0003 採用後は `owox` shell / plugin UI 仕様へ再編対象
+- `contracts/index.md`: 旧 HTTP API / JSON Schema 契約仕様の入口。ADR-0003 採用後は plugin API / repo layout schema へ再編対象

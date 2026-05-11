@@ -2,7 +2,7 @@
 id: SPEC-state-context-governance
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-context-governance.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-context-governance.md
   - docs/project/architecture.md
 ---
 
@@ -65,5 +65,5 @@ Context は AI や人間が作業判断に使う文脈であり、Raw から Off
 
 ## 関連資料
 
-- `../../requirements/v0/REQ-context-governance.md`
+- `../../requirements/archive/legacy-control-plane/v0/REQ-context-governance.md`
 - `../../architecture.md`

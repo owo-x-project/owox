@@ -2,7 +2,7 @@
 id: SPEC-data-context-capsule
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-context-governance.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-context-governance.md
   - docs/project/specs/shared/SPEC-state-context-governance.md
 ---
 

@@ -2,7 +2,7 @@
 id: SPEC-permission-policy-gate
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-policy-event-audit.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-policy-event-audit.md
 ---
 
 # Policy Gate
@@ -102,4 +102,4 @@ v0 Policy は固定 rule set とし、accept 前に安全核と検収条件を�
 
 ## 関連資料
 
-- `../../requirements/v0/REQ-policy-event-audit.md`
+- `../../requirements/archive/legacy-control-plane/v0/REQ-policy-event-audit.md`

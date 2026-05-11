@@ -2,7 +2,7 @@
 id: REQ-task-graph-planner-lite
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-work-contract.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-work-contract.md
 ---
 
 # Task Graph / Planner-lite

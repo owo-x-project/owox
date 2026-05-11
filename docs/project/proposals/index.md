@@ -30,5 +30,6 @@
 
 ## 参照
 
-- `active/`: 採否判断前の proposal の配置先。現在は個票なし
+- `active/`: 採否判断前の proposal の配置先
+- `active/proposal-owox-owlcore-restructure.md`: `owox` を AI Agent First Terminal Workspace / plugin host、`owlcore` を現 owox 由来の serverless repo-native 公式 plugin として再構成する提案
 - `archive/`: 参照優先度を落とした proposal の配置先。現在は個票なし

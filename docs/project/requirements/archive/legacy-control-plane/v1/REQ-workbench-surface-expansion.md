@@ -2,7 +2,7 @@
 id: REQ-workbench-surface-expansion
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-workbench-review.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-workbench-review.md
   - docs/project/specs/web/index.md
 ---
 

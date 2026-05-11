@@ -2,9 +2,25 @@
 
 このファイルは、プロジェクト全体で必読となる共通用語を置きます。
 
-## Owox
+## owox
 
-AI Agent、AI coding CLI、人間、外部ツールが、必要最小限の文脈、作業契約、証拠、検収結果を共有しながら作業するためのセルフホスト型制御プレーン。
+Open Workspace Orchestrator。AI Agent First な Terminal Workspace / plugin host。複数 AI agent、AI CLI、terminal session、diff、file tree、簡易 editor、preview、logs、approvals、plugin UI を扱う実行・操作面。
+
+## owlcore
+
+現 Owox の Context / Work / Evidence 制御プレーン思想を継承する公式 `owox` plugin。server なしで project repo 内 `.owox/owlcore/` を正本とし、project context、Work Order、Work Contract、Evidence、Verifier、Policy、Event Log を扱う。
+
+## owox plugin
+
+`owox` に機能、command、schema、UI、外部 tool 連携を追加する拡張単位。公式 plugin は `owl*` 命名規則を使う。
+
+## Plugin UI
+
+plugin が `owox` 本体に追加する固有 UI。`owox` 本体は mount、routing、panel、permission、command integration を提供し、plugin は自分の責務に閉じた UI を提供する。
+
+## Brand Repo
+
+ブランド固有 context を持つ Git repository。v2 以降の追加機能候補。project repo 作業時に brand context をどう注入するかは `owox` orchestration の責務候補であり、`owlcore` v1 の中核には含めない。
 
 ## Context
 
@@ -12,7 +28,7 @@ AI Agent や人間が作業判断に使う文脈情報。Raw、Proposed、Offici
 
 ## Work Contract
 
-AI CLI や人間に渡す作業契約。目的、許可パス、禁止パス、必要文脈、期待成果物、必須 Evidence、受け入れ条件を含む。
+`owlcore` が AI CLI や人間に渡す作業契約。目的、許可パス、禁止パス、必要文脈、期待成果物、必須 Evidence、受け入れ条件を含む。
 
 ## Evidence
 

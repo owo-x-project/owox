@@ -4,6 +4,10 @@
 
 Owox v0 を実装フェーズへ入れるため、正本化済みの requirements / specs / ADR / validation に基づき、AI エージェントが迷わず着手できる phase と task に分解する。
 
+## 状態
+
+ADR-0003 採用により、この計画は旧 Owox 制御プレーン実装計画として再編対象。今後の主導線は `../owox-product-roadmap/index.md`。
+
 ## 範囲
 
 - contracts / fixtures
@@ -57,4 +61,4 @@ Owox v0 を実装フェーズへ入れるため、正本化済みの requirement
 - `../../tech-stack.md`
 - `../../validation.md`
 - `../../specs/index.md`
-- `../../requirements/v0/index.md`
+- `../../requirements/archive/legacy-control-plane/v0/index.md`

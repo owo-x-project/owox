@@ -2,7 +2,7 @@
 id: SPEC-flow-evidence-acceptance
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-evidence-verification.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-evidence-verification.md
 ---
 
 # Evidence Verification Acceptance
@@ -70,4 +70,4 @@ Done は Claim + Evidence + Verification + human Acceptance で判定する。
 
 ## 関連資料
 
-- `../../requirements/v0/REQ-evidence-verification.md`
+- `../../requirements/archive/legacy-control-plane/v0/REQ-evidence-verification.md`

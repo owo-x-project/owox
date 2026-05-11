@@ -2,7 +2,7 @@
 id: SPEC-flow-repo-worktree
 status: 採用
 related:
-  - docs/project/requirements/v0/REQ-repo-worktree-isolation.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-repo-worktree-isolation.md
   - docs/project/adr/active/ADR-0002-repo-backed-owox-store.md
 ---
 
@@ -81,6 +81,6 @@ Managed Repo は workspace 内 clone として扱い、Task ごとの worktree �
 
 ## 関連資料
 
-- `../../requirements/v0/REQ-repo-worktree-isolation.md`
+- `../../requirements/archive/legacy-control-plane/v0/REQ-repo-worktree-isolation.md`
 - `../../adr/active/ADR-0002-repo-backed-owox-store.md`
 - `SPEC-data-owox-layout.md`

@@ -2,7 +2,7 @@
 id: REQ-platform-scaleout
 status: 提案中
 related:
-  - docs/project/requirements/v0/REQ-product-mvp-scope.md
+  - docs/project/requirements/archive/legacy-control-plane/v0/REQ-product-mvp-scope.md
   - docs/project/tech-stack.md
 ---
 

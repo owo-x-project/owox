@@ -26,6 +26,3 @@
 - integration を追加または変更したら `.agents/project.md` と validation 影響を確認する
 
 ## 参照
-
-- `git-cli.md`: ローカル Git CLI 連携。
-- `ai-cli.md`: 外部 AI coding CLI / Agent 連携。

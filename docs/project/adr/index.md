@@ -30,7 +30,4 @@
 ## 参照
 
 - `active/`: 現在有効な ADR の配置先
-- `active/ADR-0001-initial-architecture-and-stack.md`: 初期 architecture と technology stack。ADR-0003 採用後は現 owox 制御プレーン前提の置換対象を含む
-- `active/ADR-0002-repo-backed-owox-store.md`: project repo 内 `.owox/` を正本、SQLite を projection/cache とする判断。ADR-0003 採用後は `owlcore` の `.owox/owlcore/` 方針へ継承する
-- `active/ADR-0003-owox-owlcore-product-split.md`: `owox` を Terminal Workspace / plugin host、`owlcore` を serverless repo-native 公式 plugin とする判断
 - `archive/`: 参照優先度を落とした ADR の配置先。現在は個票なし

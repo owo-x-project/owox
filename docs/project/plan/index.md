@@ -69,6 +69,3 @@ docs/project/plan/
 - `.agents/tasks/task-*.md` は plan task の代替にしない
 
 ## 参照
-
-- `owox-product-roadmap/index.md`: ADR-0003 に基づく `owox` v0、`owlcore` v1、brand repo v2 以降のロードマップ
-- `v0-implementation/index.md`: 旧 Owox 制御プレーン実装計画。ADR-0003 採用後は `owlcore` v1 計画へ再編対象

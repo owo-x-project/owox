@@ -29,7 +29,6 @@
 
 ## 参照
 
-- `owox/index.md`: `owox` v0。AI Agent First Terminal Workspace / plugin host の要求
-- `owlcore/index.md`: `owlcore` v1。serverless repo-native 公式 plugin の要求
-- `brand-repo/index.md`: brand repo / brand context など v2 以降の要求
-- `archive/legacy-control-plane/`: ADR-0003 以前の旧 Owox 制御プレーン要件
+- `owox/v0/index.md`: `owox` v0。AI Agent First Terminal Workspace / plugin host の要求
+- `owlcore/v0/index.md`: `owlcore` v1。serverless repo-native 公式 plugin の要求
+- `brand-repo/v0/index.md`: brand repo / brand context など v2 以降の要求

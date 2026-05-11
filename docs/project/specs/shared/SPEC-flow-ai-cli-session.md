@@ -39,6 +39,19 @@ AI CLI は外部 Worker。Manual Outsource と OpenCode は共通 Session lifecy
 - OpenCode v0 連携は session lifecycle、streaming、cancel、retry、result import、interactive input を扱う。
 - AI CLI は worktree 上で作業する。
 
+## OpenCode Managed Process
+
+- `owox-server` は OpenCode process を child process として起動する。
+- process cwd は task worktree root。
+- 起動入力は Work Contract、Context Capsule、target paths、禁止 path、期待 Evidence を含む prompt file。
+- stdout JSONL を優先 stream とする。JSONL として parse できない行は raw log として保存する。
+- stderr は raw diagnostic log として保存し、UI には typed event へ変換して表示する。
+- stream event は `session.started`, `session.output`, `session.input_requested`, `session.tool_call`, `session.evidence_hint`, `session.finished`, `session.failed` を扱う。
+- interactive input は `session.input` command から stdin または adapter protocol へ送る。
+- cancel はまず graceful cancel を送り、timeout 後に process kill する。
+- retry は同じ Work Contract revision と新しい Session ID で開始し、元 Session へ `retry_of` link を持つ。
+- result import は process exit 後に diff、changed paths、log、test result candidate を Evidence candidate として登録する。
+
 ## 状態遷移 / 不変条件
 
 - `ready -> running -> submitted`
@@ -51,6 +64,12 @@ AI CLI は外部 Worker。Manual Outsource と OpenCode は共通 Session lifecy
 - Contract revision なしの Session start は reject。
 - worktree なしの AI CLI Session start は reject。
 - required evidence 不足時は accepted にできない。
+- OpenCode executable が見つからない場合は `SESSION_ADAPTER_NOT_FOUND`。
+- process 起動失敗は `failed`。
+- stream parse 失敗は raw log 保存後、session は継続する。
+- process exit code 非 0 は `failed`。ただし diff / log は Evidence candidate として保持する。
+- cancel timeout 後の kill 失敗は `SESSION_CANCEL_FAILED`。
+- retry は `running` 中 Session には実行不可。
 
 ## 横断ルール
 

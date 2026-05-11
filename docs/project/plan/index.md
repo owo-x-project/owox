@@ -70,4 +70,4 @@ docs/project/plan/
 
 ## 参照
 
-- 現在は個別 plan なし: 追加時は `<plan-slug>/index.md` と phase/task 個票を置く
+- `v0-implementation/index.md`: Owox v0 実装計画。contracts / protocol / core / store / projection / git / verifier / server / web / adapter / hardening を検証可能な phase と task に分解する

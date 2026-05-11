@@ -2,11 +2,11 @@
 
 ## 状態
 
-採用。ただし inbox 由来の初期判断であり、具体 version は `tbd`。
+採用。具体 version 方針は `docs/project/tech-stack.md` で major 固定として管理する。
 
 ## 判断
 
-Owox MVP は Rust daemon `owoxd` を中心とする monorepo とし、Rust crates、SvelteKit static WebUI、OpenAPI / JSON Schema contracts を分ける。採用技術は `docs/project/tech-stack.md` の初期表を正本とする。
+Owox MVP は Rust daemon `owoxd` を中心とする monorepo とし、Rust crates、SvelteKit static WebUI、OpenAPI / JSON Schema contracts を分ける。採用技術と major version 方針は `docs/project/tech-stack.md` を正本とする。
 
 ## 背景
 
@@ -30,7 +30,7 @@ inbox 資料では、Owox を AI Agent / AI CLI / 人間 / 外部ツールの制
 - `.agents/project.md` の Kind は `monorepo`。
 - subproject は `crates`, `web`, `contracts`。
 - `docs/project/specs/<subproject>/index.md` を維持する。
-- 技術 version は後続 task で確定し、ADR または tech-stack を更新する。
+- 技術 version は major を `docs/project/tech-stack.md` で固定し、patch / minor は lockfile で固定する。
 
 ## 関連資料
 

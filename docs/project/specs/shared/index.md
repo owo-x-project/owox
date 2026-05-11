@@ -28,8 +28,9 @@
 - `SPEC-state-context-governance.md`: Context 状態、正式化、Active Context
 - `SPEC-data-context-capsule.md`: Context Capsule の構造と生成ルール
 - `SPEC-data-work-contract.md`: Work Order、Task Graph Lite、Work Contract revision
+- `SPEC-data-owox-layout.md`: `.owox/` 正本 layout、snapshot、月次 Event JSONL、lock
 - `SPEC-flow-ai-cli-session.md`: Manual Outsource と OpenCode Session lifecycle
 - `SPEC-flow-evidence-acceptance.md`: Evidence、Verifier、Acceptance
-- `SPEC-flow-repo-worktree.md`: Managed Repo、worktree、accept 反映
+- `SPEC-flow-repo-worktree.md`: Managed Repo、worktree、Review Handoff、Git 履歴判定
 - `SPEC-permission-policy-gate.md`: v0 Policy 固定ルールと violation
 - `SPEC-data-event-log.md`: Event Envelope と append-only correction

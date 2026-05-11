@@ -18,6 +18,7 @@
 - 外部契約は Contract first で扱う。JSON Schema、OpenAPI、Workspace layout、State transition、Event Envelope を優先して固定する。
 - project 由来の Context、Work Contract、Evidence、Event、検収結果の正本は、対象 project repo 内の `.owox/` に置く Git 管理ファイルとする。
 - SQLite などの DB は projection / cache / index として扱い、正本ではない。DB は `.owox/` 正本から再構築できる必要がある。
+- Owox は外部 Git service の PR / MR 作成、review、merge、webhook state sync を再実装しない。Owox は merge 可否判断と HandoffRecord を正本化し、merge 済み判定は Git 履歴から provider 非依存に推定する。
 - 本番 runtime では WebUI server を常駐させず、静的 build を `owoxd` から配信する方針を初期案とする。
 
 ## 責務分離
@@ -27,9 +28,11 @@
 - `crates/owox-core`: domain logic と状態遷移を持つ。DB、HTTP、Git、filesystem write、process spawn、UI に依存しない。
 - `crates/owox-store`: `.owox/` 配下の正本ファイル、append-only event、entity snapshot、projection 再構築を担当する。
 - `crates/owox-db`: SQLite projection / cache / index、migration、query model を担当する。DB row や SQLx 型を外へ漏らさず、DB を正本にしない。
-- `crates/owox-git`: Git CLI と worktree 操作を担当する。DB に依存しない。
-- `crates/owox-verifier`: Evidence と diff を検査する。UI 表示ではなく Rust 側の changed paths と Evidence を検査対象にする。
-- `crates/owox-server`: HTTP API と静的 WebUI 配信、domain command orchestration を担当する。
+- `crates/owox-git`: Git CLI、worktree 操作、changed paths、diff、Git 履歴判定を担当する。DB と Git provider API に依存しない。
+- `crates/owox-verifier`: Evidence と diff を検査する。固定 rule catalog と `VerifierRule` trait を持ち、UI 表示ではなく Rust 側の changed paths と Evidence を検査対象にする。
+- `crates/owox-server`: HTTP API と静的 WebUI 配信、domain command orchestration を担当する。route handler は薄く保ち、AppService が core / store / db / git / verifier を調停する。
+- `crates/owox-cli`: `owoxd` binary、`init`、`serve`、`doctor` を担当する。
+- `crates/owox-testkit`: shared fixtures、temporary `.owox/` repo、Git worktree fixture、fixed clock / ID generator を担当する。
 - `apps/web`: Owox Workbench の静的 WebUI を担当する。
 
 ## 設計方針

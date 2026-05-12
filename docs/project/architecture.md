@@ -17,12 +17,12 @@
 - `owox` は Open Workspace Orchestrator として扱う。
 - `owox` は AI Agent First な WebUI ベースの Terminal Workspace / 簡易 IDE とする。
 - `owox` は code-server のようにブラウザから利用できることを絶対条件とする。
-- `owox` は 1 brand の workspace として、brand 配下の複数 project repo を扱う。
+- `owox` v0 は owox workspace root 配下の複数 project repo を扱う。
 - `owox` v0 は個人セルフホストを対象にする。multi-user / team 権限管理は v2 以降とする。
 - `owox` v0 は PC、tablet、smartphone の各 viewport で主要操作を完了できる responsive UI を必須とする。
 - `owox` は AI CLI、Git hosting、CI/CD、deployment service を置き換えない。
-- `owox` v0 の AI CLI 連携は固有 adapter を持たず、汎用 terminal session として起動、監視、log 表示する。
-- `owox` v0 は Terminal / Session / Agent / Log / Git / File Tree / 簡易 Editor / Diff を必須機能とする。
+- `owox` v0 の AI CLI 連携は固有 adapter や agent runtime を持たず、任意 command の汎用 terminal session として扱う。
+- `owox` v0 は Terminal / Session / Log / Git / File Tree / 簡易 Editor / Diff を必須機能とする。
 - `owox` v0 は plugin manifest、command contribution、backend hook 予約を最小 extension point とする。汎用 plugin UI 実行基盤は v1 以降とする。
 
 ### owlcore
@@ -37,10 +37,11 @@
 ## 責務分離
 
 - `owox client`: UI rendering、layout、terminal renderer、editor、diff viewer、軽量 state、responsive interaction を担当する。
-- `owox server`: HTTP API、WebSocket、PTY / process、session reconnect、log stream、Git command、SQLite metadata を担当する。
+- `owox server`: HTTP API、WebSocket、PTY / process、terminal session reconnect、log stream、Git command、SQLite metadata を担当する。
 - `owox managed DB`: project、session、log metadata、UI state を SQLite で管理する。永続化有無は Docker volume 運用に委ねる。
+- `owox workspace root`: v0 で project repo を発見する filesystem root。直下の Git repo を project として扱う。
 - `project repo`: source code と、v1 以降の `.owox/owlcore/` 正本を保持する。
-- `external AI CLI`: Claude Code、Codex、OpenCode、Gemini CLI などの CLI 本体。v0 では owox が terminal process として扱う。
+- `external AI CLI`: Claude Code、Codex、OpenCode、Gemini CLI などの CLI 本体。v0 では `owox` が任意 command の terminal process として扱う。
 - `owlcore`: repo 内正本、作業契約、証拠、検収、再現性を担当する。terminal process manager ではない。
 
 ## 設計方針

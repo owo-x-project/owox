@@ -14,13 +14,13 @@ related:
 
 ## 根拠
 
-`owox` は 1 brand の project repo を、スマホ、タブレット、ラップトップ、デスクトップなどあらゆる device から browser 経由で開発する作業面である。
+`owox` は owox workspace root 配下の project repo を、スマホ、タブレット、ラップトップ、デスクトップなどあらゆる device から browser 経由で開発する作業面である。
 
 ## 対象範囲
 
 - project 一覧と workspace 切替。
 - terminal session 操作。
-- agent session 起動、停止、監視。
+- 任意 command としての AI CLI 起動、停止、監視。
 - log 確認。
 - Git 操作。
 - file tree。

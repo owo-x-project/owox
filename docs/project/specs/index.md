@@ -29,3 +29,5 @@
 - 1 つの subproject に閉じる仕様はその subproject 配下に置く
 
 ## 参照
+
+- `owox/index.md`: `owox` v0 の requirement 対応仕様と横断仕様

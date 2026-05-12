@@ -14,7 +14,7 @@ related:
 
 ## 根拠
 
-AI 駆動開発では、agent session の出力と Git change を同じ workspace 内で確認し、必要な差分操作をすぐ実行できることが重要である。
+AI 駆動開発では、terminal output と Git change を同じ workspace 内で確認し、必要な差分操作をすぐ実行できることが重要である。
 
 ## 対象範囲
 

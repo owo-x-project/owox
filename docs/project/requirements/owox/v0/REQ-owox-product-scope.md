@@ -14,14 +14,14 @@ related:
 
 ## 根拠
 
-AI 駆動開発では、browser から project repo を開き、terminal、agent session、log、Git、file tree、editor、diff を一体で操作できる作業面が必要である。
+AI 駆動開発では、browser から project repo を開き、terminal、log、Git、file tree、editor、diff を一体で操作できる作業面が必要である。
 
 ## 対象範囲
 
-- 1 brand 配下の複数 project repo を一覧できる。
+- owox workspace root 直下の複数 project repo を一覧できる。
 - project workspace を browser から開ける。
 - terminal session を作成、表示、終了できる。
-- AI CLI / agent process を汎用 terminal session として起動、監視、log 表示できる。
+- AI CLI を含む任意 command を汎用 terminal session として起動、監視、log 表示できる。
 - Git 操作を VS Code 標準 Source Control 相当で扱える。
 - 簡易 file tree と簡易 editor を扱える。
 - diff view を提供する。
@@ -31,7 +31,8 @@ AI 駆動開発では、browser から project repo を開き、terminal、agent
 ## 対象外
 
 - `owlcore` の Context / Work Contract / Evidence / Verifier の完全実装。
-- AI CLI 固有 adapter。
+- AI CLI 固有 adapter / agent runtime。
+- agent CLI ごとの特殊 UI。
 - team / multi-user 権限管理。
 - community marketplace。
 - 本格 IDE。
@@ -41,7 +42,7 @@ AI 駆動開発では、browser から project repo を開き、terminal、agent
 
 ## 成功指標
 
-- ユーザーが browser から project workspace を開き、terminal session と AI CLI process を操作できる。
+- ユーザーが browser から project workspace を開き、terminal session と任意 command としての AI CLI を操作できる。
 - Git status / diff / stage / commit / branch / remote sync 系操作を WebUI から実行できる。
 - file tree、簡易 editor、diff view、log が同じ workspace 内で辿れる。
 - PC、tablet、smartphone で主要操作を完了できる。

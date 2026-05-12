@@ -4,7 +4,7 @@
 
 ## owox
 
-Open Workspace Orchestrator。AI Agent First な WebUI ベースの Terminal Workspace / 簡易 IDE。code-server のようにブラウザから利用できることを必須条件とし、brand 配下の project repo、terminal session、agent session、log、Git、file tree、簡易 editor、diff を扱う。
+Open Workspace Orchestrator。AI Agent First な WebUI ベースの Terminal Workspace / 簡易 IDE。code-server のようにブラウザから利用できることを必須条件とし、owox workspace root 配下の project repo、terminal session、log、Git、file tree、簡易 editor、diff を扱う。
 
 ## owlcore
 
@@ -18,9 +18,13 @@ Open Workspace Orchestrator。AI Agent First な WebUI ベースの Terminal Wor
 
 plugin が `owox` 本体に追加する固有 UI。v0 では本格対応しない。`owlcore` v1 以降で、panel、permission、command integration と合わせて扱う。
 
+## owox workspace root
+
+`owox` v0 が project repo を発見する filesystem root。v0 は owox workspace root 直下の Git repo を project repo として扱う。
+
 ## Brand Repo
 
-1 brand 配下で扱う project repo 群。`owox` は 1 brand の Web workspace として、複数 project repo を一覧・選択・操作できる。
+v2 以降で扱う brand context / brand repo の概念。v0 の project repo 発見・操作には使わない。
 
 ## Context
 

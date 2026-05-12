@@ -33,3 +33,14 @@
 - 追加時は spec / implementation / validation への影響を確認する
 
 ## 参照
+
+- `ui-workspace-shell.md`: Caelestia Shell 風 workspace shell
+- `ui-shell-drawer-panel.md`: shell drawer / panel
+- `ux-command-launcher.md`: command launcher
+- `ux-mobile-bottom-shell.md`: mobile sheet shell
+- `ui-caelestia-inspired-theme.md`: Caelestia inspired visual theme
+- `api-workspace-boundary.md`: workspace boundary API
+- `api-command-execution-result.md`: command execution result
+- `api-websocket-event-envelope.md`: WebSocket event envelope
+- `data-sqlite-managed-metadata.md`: SQLite managed metadata
+- `ops-log-retention-redaction.md`: log retention / redaction

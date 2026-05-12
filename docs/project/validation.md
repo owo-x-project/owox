@@ -20,7 +20,7 @@
 ### Responsive 同等操作
 
 - 対象: PC、tablet、smartphone。
-- 手段: browser E2E と実機相当 viewport で、project 選択、terminal、agent session、log、Git、file tree、editor、diff を確認する。
+- 手段: browser E2E と実機相当 viewport で、project 選択、terminal、log、Git、file tree、editor、diff を確認する。
 - 期待結果: 各 viewport で主要操作を完了できる。smartphone では drawer、tabs、sheets などで表示を切り替え、操作不可領域を作らない。
 
 ### Git 操作

@@ -491,8 +491,8 @@ GET /api/plugins
 {
   "plugins": [
     {
-      "id": "owlcore",
-      "name": "owlcore",
+      "id": "example-plugin",
+      "name": "Example Plugin",
       "version": "1.0.0",
       "capabilities": []
     }
@@ -508,8 +508,8 @@ GET /api/plugins/commands
 {
   "commands": [
     {
-      "id": "owlcore.example",
-      "plugin_id": "owlcore",
+      "id": "example-plugin.example",
+      "plugin_id": "example-plugin",
       "title": "Example Command",
       "category": "plugin",
       "capabilities": [],

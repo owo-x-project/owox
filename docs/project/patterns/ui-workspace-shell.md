@@ -21,7 +21,7 @@ Caelestia Shell 風の workspace shell として、status、navigation、launche
 
 - native desktop shell 実装。
 - OS status bar / window manager integration。
-- v1 `owlcore` plugin UI の内部 layout。
+- 後続 plugin UI の内部 layout。
 
 ## パターン
 

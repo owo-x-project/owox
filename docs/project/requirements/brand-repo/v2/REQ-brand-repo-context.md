@@ -3,7 +3,6 @@ id: REQ-brand-repo-context
 status: 提案中
 related:
   - docs/project/requirements/owox/v0/REQ-owox-product-scope.md
-  - docs/project/requirements/owlcore/v1/REQ-owlcore-product-scope.md
 ---
 
 # Brand Repo and Brand Context
@@ -21,19 +20,19 @@ brand-wide context を project repo 作業へ接続できるようにする。
 - brand-wide context の保存場所を検討する。
 - project repo 作業時に必要な brand context を参照できる。
 - `owox` が project workspace と brand context の接続 orchestration を扱う。
-- 別 plugin か `owlcore` 拡張かを判断する。
+- 別 plugin / integration として扱うかを判断する。
 
 ## 対象外
 
 - v0 `owox` 本体。
-- v1 `owlcore` project repo 管理の中核。
+- v0 `owox` core。
 - company-wide ERP / CRM / deployment 管理。
 
 ## 成功指標
 
 - brand context と project context の責務差分が明確である。
 - project repo 作業時に、どの brand context を使ったか追跡できる。
-- brand repo 実装方針を別 plugin か `owlcore` 拡張かで判断できる。
+- brand repo 実装方針を plugin / integration として判断できる。
 
 ## 制約 / 品質条件
 
@@ -42,5 +41,4 @@ brand-wide context を project repo 作業へ接続できるようにする。
 
 ## 関連資料
 
-- `../../owlcore/v1/REQ-owlcore-product-scope.md`
 - `../../../architecture.md`

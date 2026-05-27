@@ -20,7 +20,7 @@ terminal command と Git command の実行結果、exit status、stderr、UI 表
 ## 適用しない範囲
 
 - AI CLI 固有 adapter の semantic result。
-- v1 `owlcore` Evidence の検収結果。
+- 後続 plugin / integration の検収結果。
 
 ## パターン
 

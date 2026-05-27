@@ -14,7 +14,7 @@ related:
 
 ## 根拠
 
-`owox` v0 の価値は AI CLI 固有機能の再実装ではなく、terminal session の実行・監視・log 確認を browser workspace に統合することにある。CLI 固有 adapter や agent CLI ごとの特殊 UI は v1 `owlcore` plugin UI と合わせて扱う。
+`owox` v0 の価値は AI CLI 固有機能の再実装ではなく、terminal session の実行・監視・log 確認を browser workspace に統合することにある。CLI 固有 adapter や agent CLI ごとの特殊 UI は後続 plugin / integration として扱う。
 
 ## 対象範囲
 
@@ -29,7 +29,7 @@ related:
 - agent runtime。
 - agent CLI ごとの特殊 UI。
 - model provider の課金、認証、rate limit 管理。
-- `owlcore` の Work Contract / Evidence 正本化。
+- 外部仕様管理、作業契約、証拠正本化、検収自動化。
 - agent 役割分担、swarm manager、衝突検知。
 - approval workflow の正本化。
 
@@ -41,7 +41,7 @@ related:
 ## 制約 / 品質条件
 
 - AI CLI の自然文完了報告を正本の完了判定にしない。
-- `owox` は terminal process 実行状態だけを扱い、agent runtime、検収、証拠正本化は v1 `owlcore` に委譲する。
+- `owox` は terminal process 実行状態だけを扱い、agent runtime、検収、証拠正本化は core に内蔵しない。
 - process 操作は安全な workspace boundary 内で行う。
 
 ## 関連資料

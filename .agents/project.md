@@ -14,7 +14,6 @@ monorepo
 
 ## Subprojects
 - `owox`: WebUI / API server / terminal session / Git / file tree / editor / diff / log 操作面。
-- `plugins/owlcore`: v1 公式 plugin。project repo 内 `.owox/owlcore/` を使う repo-native context / work / evidence control plane。
 
 ## Teams
 - `maintainers`: プロジェクト全体の暫定責任境界。実チーム構成は未確定。

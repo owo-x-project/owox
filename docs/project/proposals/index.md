@@ -31,5 +31,5 @@
 ## 参照
 
 - `active/`: 採否判断前の proposal の配置先
-- 採用済みの owox / owlcore 再定義は `../adr/active/ADR-0001-owox-owlcore-boundary.md` と requirements に昇格済み
+- 採用済みの `owox` v0 再定義は architecture と requirements に昇格済み
 - `archive/`: 参照優先度を落とした proposal の配置先。現在は個票なし

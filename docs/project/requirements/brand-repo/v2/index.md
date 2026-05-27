@@ -2,7 +2,7 @@
 
 ## 役割
 
-`brand-repo` v2 は brand-wide context や team 運用の将来拡張要求です。v0 `owox` と v1 `owlcore` の基礎が成立した後に扱います。
+`brand-repo` v2 は brand-wide context や team 運用の将来拡張要求です。v0 `owox` の基礎が成立した後に扱います。
 
 ## 管轄
 

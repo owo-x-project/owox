@@ -22,7 +22,7 @@ project、session、log metadata、UI state を SQLite で扱う共通 data patt
 
 - 大量 terminal output 本体。
 - raw secret。
-- `owlcore` v1 の repo-native 正本。
+- 外部 plugin / integration の repo-native 正本。
 
 ## パターン
 

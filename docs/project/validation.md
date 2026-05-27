@@ -35,11 +35,11 @@
 - 手段: 同じ WebSocket PTY adapter で prototype し、IME、copy/paste、resize、scrollback、fullscreen CLI、mobile input、1 万行 log、初期表示、入力遅延を比較する。
 - 期待結果: 実用操作が破綻しない renderer を default 候補にできる。ghostty-web は互換性リスクを記録したうえで採否判断する。
 
-### owox / owlcore 境界
+### owox core / 外部連携境界
 
-- 対象: v0 owox と v1 owlcore。
-- 手段: v0 実装で owlcore domain を直接実装していないこと、v1 設計で `.owox/owlcore/` 以外を正本にしていないことを review する。
-- 期待結果: owox は実行・操作面、owlcore は repo 内制御・記録面に分離される。
+- 対象: v0 owox core、後続 plugin / integration。
+- 手段: v0 実装が external AI CLI、仕様管理、作業契約、証拠正本化、検収自動化を core domain として直接実装していないことを review する。
+- 期待結果: owox は WebUI Terminal Workspace / 簡易 IDE に集中し、外部連携は adapter / plugin 境界に留まる。
 
 ### 外部依存
 

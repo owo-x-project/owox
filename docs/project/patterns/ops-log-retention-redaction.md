@@ -20,12 +20,12 @@ terminal log、operation log、Git failure log の保持と secret redaction 方
 ## 適用しない範囲
 
 - secret の完全検出保証。
-- v1 `owlcore` Evidence の正本保持方針。
+- 後続 plugin / integration の証拠保持方針。
 
 ## パターン
 
 - terminal output は保存前に既知 secret pattern を redaction する。
-- raw secret を docs、log、`.owox/owlcore/` に保存しない。
+- raw secret を docs、log、project repo 内の連携用メタデータに保存しない。
 - workspace 全体の log 容量上限を持つ。
 - session log は手動削除できる。
 - redaction 済みであることを metadata に残す。

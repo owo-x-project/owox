@@ -25,24 +25,14 @@
 - `owox` v0 は Terminal / Session / Log / Git / File Tree / 簡易 Editor / Diff を必須機能とする。
 - `owox` v0 は plugin manifest、command contribution、backend hook 予約を最小 extension point とする。汎用 plugin UI 実行基盤は v1 以降とする。
 
-### owlcore
-
-- `owlcore` は `owox` の裏側で使う project repo 紐づきの制御・記録レイヤーとする。
-- `owlcore` は server 常駐型ではなく、完全に local / file-based な仕組みとする。
-- `owlcore` の正本は project repo 内 `.owox/owlcore/` とする。
-- `owlcore` は Project Metadata、Work Order、Work Contract、Context Capsule、Evidence、Verifier、Policy、Event Log、Agent Session 記録を扱う。
-- `owlcore` は中央サーバー、daemon、remote database を前提にしない。
-- `owlcore` v1 で Codex を最初の深い CLI adapter 候補とする。v0 `owox` では CLI 固有連携をしない。
-
 ## 責務分離
 
 - `owox client`: UI rendering、layout、terminal renderer、editor、diff viewer、軽量 state、responsive interaction を担当する。
 - `owox server`: HTTP API、WebSocket、PTY / process、terminal session reconnect、log stream、Git command、SQLite metadata を担当する。
 - `owox managed DB`: project、session、log metadata、UI state を SQLite で管理する。永続化有無は Docker volume 運用に委ねる。
 - `owox workspace root`: v0 で project repo を発見する filesystem root。直下の Git repo を project として扱う。
-- `project repo`: source code と、v1 以降の `.owox/owlcore/` 正本を保持する。
+- `project repo`: source code とプロジェクト固有ファイルを保持する。v0 `owox` は project repo 内に独自 control plane 正本を作らない。
 - `external AI CLI`: Claude Code、Codex、OpenCode、Gemini CLI などの CLI 本体。v0 では `owox` が任意 command の terminal process として扱う。
-- `owlcore`: repo 内正本、作業契約、証拠、検収、再現性を担当する。terminal process manager ではない。
 
 ## 設計方針
 
@@ -53,7 +43,7 @@
 - editor は LSP なしの簡易 editor とし、syntax highlight を提供する。フル IDE 化しない。
 - Git UI は VS Code 標準 Source Control 相当を目指し、status、diff、stage、unstage、discard、commit、branch、fetch、pull、push、sync を扱う。PR / issue 連携は v0 外とする。
 - responsive UI は同等操作を原則とし、smartphone では drawer、tabs、sheets で表示を切り替える。
-- owlcore file format は human-readable snapshot と append-only log を分ける。metadata、contract、context、policy は YAML、event、evidence、session は JSONL を基本とする。
+- 外部仕様管理、作業契約、証拠正本化、検収自動化は v0 `owox` core に含めない。必要になった場合は後続 plugin / integration として扱う。
 
 ## 関連資料
 
@@ -61,4 +51,3 @@
 - `validation.md`
 - `tech-stack.md`
 - `requirements/owox/v0/index.md`
-- `requirements/owlcore/v1/index.md`

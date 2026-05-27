@@ -16,11 +16,11 @@ related:
 
 ## 背景
 
-`owox` v0 は browser reload 後の reconnect と log 再表示が必要だが、`owlcore` の repo-local 正本とは責務を分ける必要がある。
+`owox` v0 は browser reload 後の reconnect と log 再表示が必要だが、project repo を runtime state で汚さずに管理する必要がある。
 
 ## 代替案
 
-- repo 内 `.owox/owlcore/` に v0 session 状態を保存する。
+- project repo 内に v0 session 状態を保存する。
 - JSONL / file store のみで管理する。
 - remote database を必須にする。
 
@@ -28,9 +28,9 @@ related:
 
 - SQLite は single-node self-host と相性が良い。
 - repo を v0 runtime state で汚さない。
-- `owlcore` v1 の file-based 正本と責務を分けられる。
+- runtime metadata と project source code の責務を分けられる。
 
 ## 結果
 
 - Docker volume がない場合、SQLite / log 永続化は保証しない。
-- `owlcore` の正本に SQLite を使わない。
+- project repo 内ファイルを v0 runtime metadata の正本にしない。

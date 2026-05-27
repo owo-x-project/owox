@@ -20,7 +20,7 @@ project repo boundary 内で API / command / filesystem 操作を扱う共通境
 
 ## 適用しない範囲
 
-- v2 以降の brand repo / brand context。
+- project repo をまたぐ上位 context 管理。
 - repo 外 allowlist path。
 
 ## パターン
@@ -40,7 +40,7 @@ project repo boundary 内で API / command / filesystem 操作を扱う共通境
 
 - v0 では repo 外 path を許可しない。
 - host absolute path を client resource id として露出しない。
-- v2 以降の brand repo / brand context は別 requirement / spec で扱う。
+- project repo をまたぐ上位 context 管理は別 requirement / spec で扱う。
 
 ## 根拠
 

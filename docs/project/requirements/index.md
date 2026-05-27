@@ -21,7 +21,7 @@
 ## 命名規則
 
 - `<owner>/v<major>/REQ-<category>-<short-title>.md`
-- owner は `owox`、`brand-repo` などの管轄名を使う
+- owner は `owox` などの管轄名を使う
 
 ## 参照ルール
 
@@ -30,4 +30,3 @@
 ## 参照
 
 - `owox/v0/index.md`: `owox` v0。WebUI ベース Terminal Workspace / 簡易 IDE の要求
-- `brand-repo/v2/index.md`: brand repo / brand context など v2 以降の要求

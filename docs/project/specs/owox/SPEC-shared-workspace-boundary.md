@@ -38,7 +38,7 @@ project repo boundary と workspace 内操作境界の横断仕様。
 - project / session / command は server 発行の opaque id で参照する。
 - client は host absolute path や project path を resource id として扱わない。
 - file、Git、terminal command の cwd は selected project repo 内に制限する。
-- brand repo / brand context は v0 では扱わない。
+- project repo をまたぐ上位 context 管理は v0 では扱わない。
 
 ## 状態遷移 / 不変条件
 

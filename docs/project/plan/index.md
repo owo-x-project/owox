@@ -69,3 +69,5 @@ docs/project/plan/
 - `.agents/tasks/task-*.md` は plan task の代替にしない
 
 ## 参照
+
+- `v0/index.md`: `owox` v0 完全実装計画。現行 requirement / spec に基づき、基盤契約、workspace UI、terminal/log、Git/diff、responsive 統合、plugin/packaging/release validation に分解する。

@@ -1,0 +1,9 @@
+/target/
+/node_modules/
+/dist/
+/.sqlx/
+*.db
+*.sqlite
+*.sqlite3
+tsconfig.tsbuildinfo
+.env

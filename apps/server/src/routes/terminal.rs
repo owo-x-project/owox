@@ -189,6 +189,8 @@ struct SessionSummary {
 ///
 /// Merges durable DB metadata with live registry state: the live state wins for
 /// any session still in the registry, so UI sees the current 5-state value.
+/// Sessions that are recorded as creating/running in the DB but absent from the
+/// live registry (e.g. after a server restart) are silently pruned.
 async fn list_sessions(
     State(state): State<AppState>,
     Path(project_id): Path<String>,
@@ -202,6 +204,15 @@ async fn list_sessions(
             .terminal
             .snapshot(&record.id)
             .map(|info| info.state.as_str().to_string());
+
+        let is_active_in_db = record.state == "creating" || record.state == "running";
+        if is_active_in_db && live_state.is_none() {
+            // Stale session: DB says active but no live process exists.
+            // Remove the DB record silently.
+            let _ = state.store.sessions().delete(&record.id).await;
+            continue;
+        }
+
         sessions.push(SessionSummary {
             id: record.id,
             label: record.label,
@@ -274,17 +285,16 @@ async fn delete_session(
     state.boundary.find_project(&project_id)?;
 
     let now = now_ms();
-    state
-        .terminal
-        .stop_session(&session_id, now)
-        .map_err(map_terminal_error)?;
+    // Attempt to stop the live process; ignore NotFound (already exited or
+    // only exists in DB after a server restart).
+    match state.terminal.stop_session(&session_id, now) {
+        Ok(()) => {}
+        Err(owox_core::terminal::TerminalError::NotFound) => {}
+        Err(e) => return Err(map_terminal_error(e)),
+    }
 
-    // Reflect the terminated state in the durable record.
-    state
-        .store
-        .sessions()
-        .update_state(&session_id, SessionState::Terminated.as_str(), None, Some(now))
-        .await?;
+    // Remove the session record from the database entirely.
+    let _ = state.store.sessions().delete(&session_id).await;
 
     Ok(StatusCode::NO_CONTENT)
 }

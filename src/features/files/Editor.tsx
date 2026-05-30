@@ -12,6 +12,8 @@ export interface EditorProps {
   api: FilesApi;
   /** Repo-relative path of the open file, or null when none is open. */
   path: string | null;
+  /** Callback when dirty state changes (for tab indicators). */
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 /**
@@ -30,7 +32,12 @@ export function Editor(props: EditorProps) {
   const [version, setVersion] = createSignal<string | null>(null);
   const [kind, setKind] = createSignal<"text" | "binary" | null>(null);
   const [truncated, setTruncated] = createSignal(false);
-  const [dirty, setDirty] = createSignal(false);
+  const [dirty, setDirtyRaw] = createSignal(false);
+
+  function setDirty(value: boolean) {
+    setDirtyRaw(value);
+    props.onDirtyChange?.(value);
+  }
   const [loading, setLoading] = createSignal(false);
   const [saving, setSaving] = createSignal(false);
   const [error, setError] = createSignal<FileError | null>(null);

@@ -5,24 +5,129 @@
  */
 
 .files-surface {
-  display: grid;
-  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  display: flex;
   flex: 1;
   min-width: 0;
   min-height: 0;
+  position: relative;
 }
 
 .files-surface__tree {
-  border-right: 1px solid var(--owox-border);
+  border-right: none;
   background: rgba(255, 255, 255, 0.015);
   overflow: auto;
   min-height: 0;
 }
 
-.files-surface__editor {
+.files-surface__handle {
+  width: 4px;
+  cursor: col-resize;
+  background: var(--owox-border);
+  flex-shrink: 0;
+  transition: background var(--motion-micro) var(--ease-standard);
+}
+
+.files-surface__handle:hover {
+  background: var(--owox-accent);
+}
+
+.files-surface__editor-area {
+  flex: 1;
   min-width: 0;
   min-height: 0;
   display: flex;
+  flex-direction: column;
+}
+
+.files-surface__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+/* Editor tabs */
+.editor-tabs {
+  display: flex;
+  gap: 2px;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--owox-border);
+  overflow-x: auto;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.editor-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--owox-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background var(--motion-micro) var(--ease-standard);
+}
+
+.editor-tab:hover {
+  background: var(--owox-surface-2);
+  color: var(--owox-text);
+}
+
+.editor-tab--active {
+  background: var(--owox-accent-soft);
+  color: var(--owox-text);
+  border-color: var(--owox-accent);
+}
+
+.editor-tab__dirty {
+  color: var(--owox-warning);
+  font-size: 10px;
+}
+
+.editor-tab__name {
+  max-width: 20ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.editor-tab__close {
+  opacity: 0;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 2px;
+  padding: 0;
+}
+
+.editor-tab:hover .editor-tab__close {
+  opacity: 1;
+}
+
+.editor-tab__close:hover {
+  background: var(--owox-danger);
+  color: white;
+}
+
+.editor-tab-panel {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.editor-tab-panel--hidden {
+  display: none;
 }
 
 /* ------------------------------------------------------------- file tree */

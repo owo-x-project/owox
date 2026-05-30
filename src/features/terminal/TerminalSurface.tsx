@@ -8,7 +8,7 @@ import {
   onCleanup,
   Show,
 } from "solid-js";
-import { createStore } from "solid-js/store";
+import { createStore, produce, reconcile } from "solid-js/store";
 import { t } from "../../i18n";
 import {
   createRenderer,
@@ -41,6 +41,7 @@ import {
   removePane,
   splitPane,
 } from "./pane-model";
+import { SplitHorizontalIcon, SplitVerticalIcon } from "../shell/icons";
 import "./terminal.css";
 
 /** Map an unknown thrown value into the shared error-display contract. */
@@ -93,6 +94,9 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
   const [paneRoot, setPaneRoot] = createSignal<PaneNode | null>(null);
   const [activePaneId, setActivePaneId] = createSignal<string | null>(null);
 
+  /** IDs explicitly closed by the user – filtered out on next loadSessions. */
+  const deletedIds = new Set<string>();
+
   let containerRef: HTMLDivElement | undefined;
   let renderer: TerminalRenderer | null = null;
   let socket: TerminalSocket | null = null;
@@ -109,8 +113,22 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
     setLoading(true);
     try {
       const response = await api().list();
-      setSessions(sessionsFromList(response.sessions));
-      const ids = response.sessions.map((s) => s.id);
+      // Silently remove failed sessions from server and filter them out.
+      const failedIds: string[] = [];
+      const alive = response.sessions.filter((s) => {
+        if (deletedIds.has(s.id)) return false;
+        if (s.state === "failed") {
+          failedIds.push(s.id);
+          return false;
+        }
+        return true;
+      });
+      // Fire-and-forget cleanup of failed sessions on server.
+      for (const fid of failedIds) {
+        api().remove(fid).catch(() => { });
+      }
+      setSessions(reconcile(sessionsFromList(alive)));
+      const ids = alive.map((s) => s.id);
       const current = activeId();
       if (current === null || !ids.includes(current)) {
         setActiveId(ids[0] ?? null);
@@ -166,10 +184,31 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
       onOpen: () => setLinkStatus("live"),
       onOutput: (seq, data) => {
         renderer?.write(data);
-        setSessions((prev) => applyOutputSeq(prev, sessionId, seq));
+        setSessions(produce((draft) => {
+          const e = draft[sessionId];
+          if (e && seq > e.lastOutputSeq) e.lastOutputSeq = seq;
+        }));
       },
       onState: (info: TermStateInfo) => {
-        setSessions((prev) => applyTermState(prev, sessionId, info));
+        setSessions(produce((draft) => {
+          const e = draft[sessionId];
+          if (e) {
+            e.state = info.state;
+            if (info.exit_code != null) e.exitCode = info.exit_code;
+          }
+        }));
+        // Auto-remove failed sessions silently.
+        if (info.state === "failed") {
+          deletedIds.add(sessionId);
+          setSessions(produce((draft) => { delete draft[sessionId]; }));
+          if (activeId() === sessionId) {
+            teardown();
+            const ids = Object.keys(sessions).filter((id) => id !== sessionId);
+            setActiveId(ids[0] ?? null);
+          }
+          api().remove(sessionId).catch(() => { });
+          return;
+        }
         if (isFinished(info.state)) {
           setLinkStatus("closed");
         }
@@ -214,7 +253,7 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
       () => props.projectId,
       () => {
         teardown();
-        setSessions(sessionsFromList([]));
+        setSessions(reconcile({}));
         setActiveId(null);
         void loadSessions();
       },
@@ -249,11 +288,21 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
 
   /** Task 004: Delete a session (close tab). */
   async function deleteSession(sessionId: string) {
-    try {
-      await api().remove(sessionId);
-    } catch (err) {
-      setListError(toTerminalError(err));
-      return;
+    const entry = sessions[sessionId];
+    const finished = entry && isFinished(entry.state);
+    const isPending = sessionId.startsWith("pending_");
+    // Remember this ID so loadSessions() won't resurrect it.
+    deletedIds.add(sessionId);
+    if (!isPending) {
+      try {
+        await api().remove(sessionId);
+      } catch (err) {
+        // For finished sessions or if server returns error, remove locally anyway.
+        if (!finished) {
+          setListError(toTerminalError(err));
+          // Still remove locally to unblock the UI.
+        }
+      }
     }
     // Remove pane if in split view.
     const root = paneRoot();
@@ -262,11 +311,9 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
       setPaneRoot(updated);
     }
     // Remove from local state.
-    setSessions((prev) => {
-      const next = { ...prev };
-      delete next[sessionId];
-      return next;
-    });
+    setSessions(produce((draft) => {
+      delete draft[sessionId];
+    }));
     // Switch to next session if deleted was active.
     if (activeId() === sessionId) {
       teardown();
@@ -328,16 +375,15 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
         label: "",
       });
       const created = response.session;
-      setSessions((prev) => ({
-        ...prev,
-        [created.id]: {
+      setSessions(produce((draft) => {
+        draft[created.id] = {
           id: created.id,
           label: created.label || t("terminal.newShell"),
           state: created.state,
           cwd: "",
           exitCode: null,
           lastOutputSeq: 0,
-        },
+        };
       }));
       newSessionId = created.id;
     } catch (err) {
@@ -371,16 +417,16 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
   async function createShell() {
     const optimisticId = `pending_${Date.now()}`;
     // Task 003: optimistically add the tab before the server responds.
-    setSessions((prev) =>
-      upsertSession(prev, {
+    setSessions(produce((draft) => {
+      draft[optimisticId] = {
         id: optimisticId,
         label: t("terminal.newShell"),
         state: "creating",
         cwd: "",
         exitCode: null,
         lastOutputSeq: 0,
-      }),
-    );
+      };
+    }));
     setActiveId(optimisticId);
 
     try {
@@ -396,26 +442,23 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
       });
       const created = response.session;
       // Remove the optimistic placeholder, insert the real session.
-      setSessions((prev) => {
-        const next = { ...prev };
-        delete next[optimisticId];
-        return upsertSession(next, {
+      setSessions(produce((draft) => {
+        delete draft[optimisticId];
+        draft[created.id] = {
           id: created.id,
           label: created.label || t("terminal.newShell"),
           state: created.state,
           cwd: "",
           exitCode: null,
           lastOutputSeq: 0,
-        });
-      });
+        };
+      }));
       setActiveId(created.id);
     } catch (err) {
       // Remove the optimistic placeholder on failure.
-      setSessions((prev) => {
-        const next = { ...prev };
-        delete next[optimisticId];
-        return next;
-      });
+      setSessions(produce((draft) => {
+        delete draft[optimisticId];
+      }));
       setActiveId(null);
       setListError(toTerminalError(err));
     }
@@ -491,7 +534,7 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
               disabled={!activeId()}
               onClick={() => void splitView("horizontal")}
             >
-              {"⬓"}
+              <SplitHorizontalIcon size={16} />
             </button>
             <button
               type="button"
@@ -500,7 +543,7 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
               disabled={!activeId()}
               onClick={() => void splitView("vertical")}
             >
-              {"⬒"}
+              <SplitVerticalIcon size={16} />
             </button>
           </div>
           <button
@@ -562,12 +605,25 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
         )}
       </Show>
 
-      <Show when={listError()}>
-        {(error) => <ErrorBanner error={error()} />}
-      </Show>
-
       <Show when={paneRoot()} fallback={
-        <div class="terminal-surface__screen" ref={containerRef} />
+        <div class="terminal-surface__screen" ref={containerRef}>
+          <Show when={listError()}>
+            {(error) => (
+              <div class="terminal-surface__error-overlay">
+                <div class="terminal-surface__error-content">
+                  <ErrorBanner error={error()} />
+                  <button
+                    type="button"
+                    class="button"
+                    onClick={() => setListError(null)}
+                  >
+                    {t("common.close")}
+                  </button>
+                </div>
+              </div>
+            )}
+          </Show>
+        </div>
       }>
         {(root) => (
           <div class="terminal-surface__screen">
@@ -580,16 +636,24 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
                 const leaf = leaves.find((l) => l.id === paneId);
                 if (leaf) setActiveId(leaf.sessionId);
               }}
-              renderLeaf={(sessionId, _paneId) => (
-                <div
-                  class="terminal-surface__screen"
-                  ref={(el) => {
-                    if (sessionId === activeId()) {
-                      containerRef = el;
-                    }
-                  }}
-                />
-              )}
+              renderLeaf={(sessionId, _paneId) => {
+                const [el, setEl] = createSignal<HTMLDivElement>();
+                // When this leaf becomes the active session, update containerRef
+                // so attach() mounts the renderer here. Use createEffect to
+                // react only when activeId changes, not on every render.
+                createEffect(() => {
+                  const div = el();
+                  if (div && sessionId === activeId()) {
+                    containerRef = div;
+                  }
+                });
+                return (
+                  <div
+                    class="terminal-surface__screen"
+                    ref={setEl}
+                  />
+                );
+              }}
             />
           </div>
         )}

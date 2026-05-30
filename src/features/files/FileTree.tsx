@@ -1,6 +1,7 @@
 import { createSignal, For, Show } from "solid-js";
 import { t } from "../../i18n";
 import { ConfirmDialog, ErrorBanner } from "../feedback";
+import { FilePlusIcon, FolderPlusIcon } from "../shell/icons";
 import type { FilesApi } from "./api";
 import { type FileError, toFileError } from "./errors";
 import { getDirIcon, getFileIcon, isHiddenFile } from "./icons";
@@ -20,6 +21,7 @@ export interface FileTreeProps {
   projectId: string;
   selectedPath: string | null;
   onOpenFile: (path: string) => void;
+  onOpenFilePinned?: (path: string) => void;
 }
 
 type Pending =
@@ -184,7 +186,7 @@ export function FileTree(props: FileTreeProps) {
             disabled={busy()}
             onClick={() => startPending({ mode: "new-file", parent: "" })}
           >
-            +F
+            <FilePlusIcon size={14} />
           </button>
           <button
             type="button"
@@ -194,7 +196,7 @@ export function FileTree(props: FileTreeProps) {
             disabled={busy()}
             onClick={() => startPending({ mode: "new-folder", parent: "" })}
           >
-            +D
+            <FolderPlusIcon size={14} />
           </button>
           <button
             type="button"
@@ -237,6 +239,7 @@ export function FileTree(props: FileTreeProps) {
                   busy={busy()}
                   onToggle={() => void onToggle(node)}
                   onOpen={() => props.onOpenFile(node.path)}
+                  onOpenPinned={() => props.onOpenFilePinned?.(node.path)}
                   onNewFile={() =>
                     startPending({ mode: "new-file", parent: node.path })
                   }
@@ -294,6 +297,7 @@ function FileTreeRow(props: {
   busy: boolean;
   onToggle: () => void;
   onOpen: () => void;
+  onOpenPinned?: () => void;
   onNewFile: () => void;
   onNewFolder: () => void;
   onRename: () => void;
@@ -319,6 +323,9 @@ function FileTreeRow(props: {
           type="button"
           class="file-tree__label"
           onClick={() => (isDir() ? props.onToggle() : props.onOpen())}
+          onDblClick={() => {
+            if (!isDir()) props.onOpenPinned?.();
+          }}
         >
           <span class="file-tree__icon" aria-hidden="true">
             {isDir() ? (props.node.expanded ? "▾" : "▸") : "·"}
@@ -342,7 +349,7 @@ function FileTreeRow(props: {
               disabled={props.busy}
               onClick={props.onNewFile}
             >
-              +F
+              <FilePlusIcon size={12} />
             </button>
             <button
               type="button"
@@ -352,7 +359,7 @@ function FileTreeRow(props: {
               disabled={props.busy}
               onClick={props.onNewFolder}
             >
-              +D
+              <FolderPlusIcon size={12} />
             </button>
           </Show>
           <button

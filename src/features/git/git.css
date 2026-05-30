@@ -1,8 +1,18 @@
+/* Review surface layout */
+.review-surface {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .git-review {
   display: grid;
   grid-template-columns: minmax(280px, 360px) 1fr;
   gap: var(--space-3);
-  height: 100%;
+  flex: 1;
   min-height: 0;
   padding: var(--space-3);
 }
@@ -144,6 +154,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.git-group__header-actions {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.git-group__bulk--danger {
+  color: var(--owox-danger);
 }
 
 .git-group__title {
@@ -295,15 +315,14 @@
 
 /* ---- Commit Log ---- */
 .commit-log {
-  display: grid;
-  grid-template-columns: minmax(280px, 1fr) 2fr;
+  display: flex;
+  flex-direction: column;
   min-height: 0;
-  height: 100%;
+  flex: 1;
   width: 100%;
 }
 
 .commit-log__list {
-  border-right: 1px solid var(--owox-border);
   overflow-y: auto;
   padding: var(--space-2);
   display: flex;
@@ -339,6 +358,41 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--space-2);
+}
+
+.commit-log__hash-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.commit-log__copy {
+  border: none;
+  background: transparent;
+  color: var(--owox-text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px var(--space-1);
+  border-radius: var(--radius-sm);
+  line-height: 1;
+  opacity: 0;
+  transition: opacity var(--motion-micro) var(--ease-standard);
+}
+
+.commit-log__item:hover .commit-log__copy {
+  opacity: 1;
+}
+
+.commit-log__copy:hover {
+  color: var(--owox-accent);
+  background: var(--owox-surface-2);
+}
+
+.commit-log__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 .commit-log__hash {

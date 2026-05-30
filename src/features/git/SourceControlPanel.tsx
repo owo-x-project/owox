@@ -333,6 +333,14 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
             }
             : undefined
         }
+        bulkDanger={
+          changesPaths(groups()).length > 0
+            ? {
+              label: t("review.discardAll"),
+              onClick: () => startDiscard(changesPaths(groups())),
+            }
+            : undefined
+        }
         selected={(path) => selected(path, "changes")}
         onSelect={(path) => props.onSelect({ path, group: "changes" })}
         rowAction={(file) => ({
@@ -396,6 +404,7 @@ function FileGroup(props: {
   files: GroupedFile[];
   busy: boolean;
   bulk?: { label: string; onClick: () => void };
+  bulkDanger?: { label: string; onClick: () => void };
   selected: (path: string) => boolean;
   onSelect: (path: string) => void;
   rowAction?: (file: GroupedFile) => RowAction;
@@ -409,18 +418,32 @@ function FileGroup(props: {
             {props.title}
             <span class="git-group__count muted"> {props.files.length}</span>
           </h3>
-          <Show when={props.bulk}>
-            {(bulk) => (
-              <button
-                type="button"
-                class="button button--ghost git-group__bulk"
-                disabled={props.busy}
-                onClick={() => bulk().onClick()}
-              >
-                {bulk().label}
-              </button>
-            )}
-          </Show>
+          <div class="git-group__header-actions">
+            <Show when={props.bulk}>
+              {(bulk) => (
+                <button
+                  type="button"
+                  class="button button--ghost git-group__bulk"
+                  disabled={props.busy}
+                  onClick={() => bulk().onClick()}
+                >
+                  {bulk().label}
+                </button>
+              )}
+            </Show>
+            <Show when={props.bulkDanger}>
+              {(danger) => (
+                <button
+                  type="button"
+                  class="button button--ghost git-group__bulk git-group__bulk--danger"
+                  disabled={props.busy}
+                  onClick={() => danger().onClick()}
+                >
+                  {danger().label}
+                </button>
+              )}
+            </Show>
+          </div>
         </header>
         <ul class="git-group__list">
           <For each={props.files}>

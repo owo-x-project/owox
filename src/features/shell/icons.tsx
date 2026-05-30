@@ -12,6 +12,10 @@ import {
   Command,
   Settings,
   Search,
+  Columns2,
+  Rows2,
+  FilePlus,
+  FolderPlus,
 } from "lucide-solid";
 
 export {
@@ -28,4 +32,8 @@ export {
   Command as CommandIcon,
   Settings as SettingsIcon,
   Search as SearchIcon,
+  Columns2 as SplitHorizontalIcon,
+  Rows2 as SplitVerticalIcon,
+  FilePlus as FilePlusIcon,
+  FolderPlus as FolderPlusIcon,
 };

@@ -12,6 +12,11 @@ export type {
   RendererSize,
   TerminalRenderer,
 } from "./types";
+export {
+  DEFAULT_SCROLLBACK,
+  getTerminalScrollback,
+  setTerminalScrollback,
+} from "./xterm-renderer";
 
 /**
  * Provisional default renderer. xterm.js is the stable baseline; ghostty-web is

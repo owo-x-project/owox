@@ -96,6 +96,17 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
           </button>
         </div>
 
+        <div class="activity-bar__search-group">
+          <button
+            type="button"
+            class="activity-bar__btn"
+            aria-label={t("launcher.searchPlaceholder")}
+            onClick={() => ws.toggleCommandLauncher()}
+          >
+            <SearchIcon size={18} />
+          </button>
+        </div>
+
         <div class="activity-bar__top">
           <button
             type="button"
@@ -165,17 +176,6 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
 
       {/* Content area with gradient border */}
       <div class="workspace-content">
-        {/* Command bar trigger */}
-        <button
-          type="button"
-          class="command-bar"
-          onClick={() => ws.toggleCommandLauncher()}
-        >
-          <SearchIcon size={14} />
-          <span class="command-bar__label">{t("launcher.searchPlaceholder")}</span>
-          <kbd class="command-bar__shortcut">⌘K</kbd>
-        </button>
-
         {/* Panels */}
         <div class="workspace-panels">
           <Show when={sidebarOpen()}>

@@ -1,6 +1,6 @@
 import { createSignal, For, Show } from "solid-js";
 import { ErrorBanner, toErrorView } from "../feedback";
-import { GitApi, type GitDiffMode } from "./api";
+import { GitApi } from "./api";
 import {
   type Commit,
   type CommitLogResponse,
@@ -18,8 +18,7 @@ export function CommitLog(props: CommitLogProps) {
     null,
   );
   const [hasMore, setHasMore] = createSignal(true);
-  const [selectedHash, setSelectedHash] = createSignal<string | null>(null);
-  const [diffContent, setDiffContent] = createSignal<string | null>(null);
+  const [copiedHash, setCopiedHash] = createSignal<string | null>(null);
 
   const api = () => new GitApi(props.projectId);
 
@@ -42,18 +41,12 @@ export function CommitLog(props: CommitLogProps) {
     }
   };
 
-  const selectCommit = async (hash: string) => {
-    setSelectedHash(hash);
-    setDiffContent(null);
-    try {
-      const result = await api().diff(
-        `commit:${hash}` as unknown as GitDiffMode,
-      );
-      setDiffContent(result.patch);
-    } catch (e: unknown) {
-      setError(toErrorView(e));
-    }
-  };
+  function copyHash(hash: string) {
+    void navigator.clipboard.writeText(hash).then(() => {
+      setCopiedHash(hash);
+      setTimeout(() => setCopiedHash(null), 1500);
+    });
+  }
 
   // Load on mount
   loadCommits();
@@ -67,26 +60,30 @@ export function CommitLog(props: CommitLogProps) {
       <div class="commit-log__list">
         <For each={commits()}>
           {(commit) => (
-            <button
-              type="button"
-              class="commit-log__item"
-              classList={{
-                "commit-log__item--selected":
-                  selectedHash() === commit.hash,
-              }}
-              onClick={() => selectCommit(commit.hash)}
-            >
+            <div class="commit-log__item">
               <div class="commit-log__item-header">
-                <span class="commit-log__hash">{commit.short_hash}</span>
-                <span class="commit-log__date">
-                  {relativeTime(commit.date)}
+                <span class="commit-log__hash-group">
+                  <span class="commit-log__hash">{commit.short_hash}</span>
+                  <button
+                    type="button"
+                    class="commit-log__copy"
+                    title="Copy full hash"
+                    onClick={() => copyHash(commit.hash)}
+                  >
+                    {copiedHash() === commit.hash ? "✓" : "⎘"}
+                  </button>
+                </span>
+                <span class="commit-log__meta">
+                  <span class="commit-log__author">{commit.author}</span>
+                  <span class="commit-log__date">
+                    {relativeTime(commit.date)}
+                  </span>
                 </span>
               </div>
               <div class="commit-log__message">
                 {commit.message.split("\n")[0]}
               </div>
-              <div class="commit-log__author">{commit.author}</div>
-            </button>
+            </div>
           )}
         </For>
 
@@ -104,15 +101,6 @@ export function CommitLog(props: CommitLogProps) {
           <div class="commit-log__loading">Loading...</div>
         </Show>
       </div>
-
-      <Show when={selectedHash() && diffContent()}>
-        <div class="commit-log__diff">
-          <div class="commit-log__diff-header">
-            <span class="commit-log__hash">{selectedHash()}</span>
-          </div>
-          <pre class="commit-log__diff-content">{diffContent()}</pre>
-        </div>
-      </Show>
     </div>
   );
 }

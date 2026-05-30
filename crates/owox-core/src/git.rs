@@ -555,22 +555,34 @@ pub fn diff(
     offset: u64,
     limit: u64,
 ) -> Result<GitDiff, GitError> {
-    let staged = match mode {
-        "staged" => true,
-        "unstaged" => false,
-        _ => {
+    // Determine diff args based on mode.
+    let mode_args: Vec<String> = if mode == "staged" {
+        vec!["--cached".to_string()]
+    } else if mode == "unstaged" {
+        vec![]
+    } else if let Some(hash) = mode.strip_prefix("commit:") {
+        // Validate hash to prevent command injection: only hex chars allowed.
+        if hash.is_empty() || !hash.chars().all(|c| c.is_ascii_hexdigit()) {
             return Err(GitError::Operation {
                 kind: GitErrorKind::Validation,
-                message: "mode must be 'unstaged' or 'staged'".to_string(),
+                message: "commit hash must be a valid hex string".to_string(),
                 exit_code: None,
             });
         }
+        // Show diff for a specific commit vs its parent.
+        vec![format!("{hash}^..{hash}")]
+    } else {
+        return Err(GitError::Operation {
+            kind: GitErrorKind::Validation,
+            message: "mode must be 'unstaged', 'staged', or 'commit:<hash>'".to_string(),
+            exit_code: None,
+        });
     };
 
     // Summary via numstat.
     let mut numstat_args: Vec<&str> = vec!["diff", "--numstat"];
-    if staged {
-        numstat_args.push("--cached");
+    for arg in &mode_args {
+        numstat_args.push(arg.as_str());
     }
     if let Some(path) = path {
         numstat_args.push("--");
@@ -585,8 +597,8 @@ pub fn diff(
 
     // Full patch text.
     let mut patch_args: Vec<&str> = vec!["diff"];
-    if staged {
-        patch_args.push("--cached");
+    for arg in &mode_args {
+        patch_args.push(arg.as_str());
     }
     if let Some(path) = path {
         patch_args.push("--");
@@ -790,6 +802,82 @@ fn exec_git(repo: &Path, op: GitOp, args: &[String]) -> Result<OperationResult, 
         stdout,
         stderr,
     })
+}
+
+// ---------------------------------------------------------------------------
+// Commit log
+// ---------------------------------------------------------------------------
+
+/// One commit entry from `git log`.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct CommitEntry {
+    pub hash: String,
+    pub short_hash: String,
+    pub author: String,
+    pub author_email: String,
+    pub date: String,
+    pub message: String,
+    pub parent_hashes: Vec<String>,
+}
+
+/// Response for the commit log endpoint.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct CommitLog {
+    pub commits: Vec<CommitEntry>,
+    pub total: usize,
+}
+
+/// Read the commit log with pagination.
+pub fn commit_log(repo: &Path, offset: usize, limit: usize) -> Result<CommitLog, GitError> {
+    // First, get total count.
+    let count_output = run_git(repo, &["rev-list", "--count", "HEAD"])?;
+    let total = if count_output.status.success() {
+        String::from_utf8_lossy(&count_output.stdout)
+            .trim()
+            .parse::<usize>()
+            .unwrap_or(0)
+    } else {
+        0
+    };
+
+    let skip = offset.to_string();
+    let max = limit.to_string();
+    let format = "--format=%H%x00%h%x00%an%x00%ae%x00%aI%x00%s%x00%P";
+    let output = run_git(
+        repo,
+        &["log", format, &format!("--skip={skip}"), &format!("--max-count={max}"), "HEAD"],
+    )?;
+    if !output.status.success() {
+        let stderr = redact_secrets(&String::from_utf8_lossy(&output.stderr));
+        return Err(operation_error(&stderr, output.status.code()));
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let commits = stdout
+        .lines()
+        .filter(|line| !line.is_empty())
+        .filter_map(|line| {
+            let parts: Vec<&str> = line.splitn(7, '\0').collect();
+            if parts.len() < 6 {
+                return None;
+            }
+            Some(CommitEntry {
+                hash: parts[0].to_string(),
+                short_hash: parts[1].to_string(),
+                author: parts[2].to_string(),
+                author_email: parts[3].to_string(),
+                date: parts[4].to_string(),
+                message: parts[5].to_string(),
+                parent_hashes: if parts.len() > 6 && !parts[6].is_empty() {
+                    parts[6].split(' ').map(|s| s.to_string()).collect()
+                } else {
+                    vec![]
+                },
+            })
+        })
+        .collect();
+
+    Ok(CommitLog { commits, total })
 }
 
 fn run_git(repo: &Path, args: &[&str]) -> Result<std::process::Output, GitError> {

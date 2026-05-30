@@ -68,6 +68,8 @@ export const ja: Locale = {
     empty: "空のリポジトリ。",
     newFileInRoot: "ルートに新しいファイル",
     newFolderInRoot: "ルートに新しいフォルダ",
+    closeUnsaved: "未保存の変更があります",
+    discardClose: "破棄して閉じる",
   },
   review: {
     title: "レビュー",
@@ -183,6 +185,8 @@ export const ja: Locale = {
     languageDescription: "UIの表示言語",
     theme: "テーマ",
     themeDescription: "ライト / ダーク",
+    terminalScrollback: "ターミナルログ保持行数",
+    terminalScrollbackDescription: "最大スクロールバック行数（新規セッションで適用）",
     done: "完了",
   },
 };

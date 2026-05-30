@@ -23,6 +23,12 @@ export class XtermRenderer implements TerminalRenderer {
   private inputCb: ((data: string) => void) | null = null;
   private resizeCb: ((size: RendererSize) => void) | null = null;
   private disposables: IDisposable[] = [];
+  private resizeObserver: ResizeObserver | null = null;
+  private scrollback: number;
+
+  constructor(scrollback?: number) {
+    this.scrollback = scrollback ?? getTerminalScrollback();
+  }
 
   mount(el: HTMLElement): void {
     // Read owox theme tokens from CSS custom properties so the terminal
@@ -35,7 +41,7 @@ export class XtermRenderer implements TerminalRenderer {
       cursorBlink: true,
       fontSize: 13,
       fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
-      scrollback: 10000,
+      scrollback: this.scrollback,
       allowProposedApi: true,
       theme: {
         background: v("--owox-bg", "#0f1216"),
@@ -68,6 +74,11 @@ export class XtermRenderer implements TerminalRenderer {
 
     term.open(el);
 
+    // Defer the initial fit so the container has settled its layout.
+    requestAnimationFrame(() => {
+      fitAddon.fit();
+    });
+
     // Map xterm's input + resize events onto the adapter callbacks. onData
     // covers keystrokes, IME-composed text and paste (delivered as one string).
     this.disposables.push(term.onData((data) => this.inputCb?.(data)));
@@ -79,6 +90,18 @@ export class XtermRenderer implements TerminalRenderer {
 
     this.term = term;
     this.fitAddon = fitAddon;
+
+    // Auto-fit when the container element is resized, debounced to prevent
+    // infinite resize loops (e.g. when split panes trigger cascading layout).
+    let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+    this.resizeObserver = new ResizeObserver(() => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        resizeTimer = null;
+        this.fitAddon?.fit();
+      }, 50);
+    });
+    this.resizeObserver.observe(el);
   }
 
   write(data: string): void {
@@ -107,6 +130,8 @@ export class XtermRenderer implements TerminalRenderer {
   }
 
   dispose(): void {
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
     for (const d of this.disposables) {
       d.dispose();
     }
@@ -117,4 +142,26 @@ export class XtermRenderer implements TerminalRenderer {
     this.inputCb = null;
     this.resizeCb = null;
   }
+}
+
+/** Default terminal scrollback line count. */
+export const DEFAULT_SCROLLBACK = 3000;
+
+const SCROLLBACK_KEY = "owox:terminalScrollback";
+
+/** Read the user-configured scrollback value from localStorage. */
+export function getTerminalScrollback(): number {
+  if (typeof localStorage === "undefined") return DEFAULT_SCROLLBACK;
+  const stored = localStorage.getItem(SCROLLBACK_KEY);
+  if (stored) {
+    const n = Number.parseInt(stored, 10);
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  return DEFAULT_SCROLLBACK;
+}
+
+/** Persist the scrollback setting to localStorage. */
+export function setTerminalScrollback(value: number): void {
+  if (typeof localStorage === "undefined") return;
+  localStorage.setItem(SCROLLBACK_KEY, String(Math.max(100, Math.floor(value))));
 }

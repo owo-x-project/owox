@@ -4,6 +4,9 @@ import UnoCSS from "unocss/vite";
 
 export default defineConfig({
   plugins: [UnoCSS(), solid()],
+  build: {
+    chunkSizeWarningLimit: 1200,
+  },
   server: {
     port: 5173,
     proxy: {

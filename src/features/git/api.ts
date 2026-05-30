@@ -42,8 +42,8 @@ export interface GitBranchesResponse {
   branches: GitBranch[];
 }
 
-/** Diff mode: working-tree (`unstaged`) or index (`staged`). */
-export type GitDiffMode = "unstaged" | "staged";
+/** Diff mode: working-tree (`unstaged`), index (`staged`), or commit (`commit:<hash>`). */
+export type GitDiffMode = "unstaged" | "staged" | `commit:${string}`;
 
 /** Response of `GET /git/diff`. `patch` is a byte window over the full diff. */
 export interface GitDiffResponse {

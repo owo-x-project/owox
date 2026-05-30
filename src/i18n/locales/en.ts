@@ -66,6 +66,8 @@ export const en = {
     empty: "Empty repository.",
     newFileInRoot: "New file in root",
     newFolderInRoot: "New folder in root",
+    closeUnsaved: "Unsaved changes",
+    discardClose: "Discard and close",
   },
   review: {
     title: "Review",
@@ -181,6 +183,8 @@ export const en = {
     languageDescription: "UI display language",
     theme: "Theme",
     themeDescription: "Light / Dark",
+    terminalScrollback: "Terminal log lines",
+    terminalScrollbackDescription: "Max scrollback lines (applied on new sessions)",
     done: "Done",
   },
 } as const;

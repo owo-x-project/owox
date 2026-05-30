@@ -1,5 +1,6 @@
 /* Dark theme (default, matches existing) */
-[data-theme="dark"], :root {
+[data-theme="dark"],
+:root {
   --owox-bg: #0f1216;
   --owox-surface: #171b21;
   --owox-surface-2: #1e242c;

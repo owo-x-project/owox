@@ -230,10 +230,10 @@ export const ReviewSurface: Component<SurfaceProps> = (props) => {
                       error={
                         diffError()
                           ? {
-                              kind: diffError()?.kind ?? "unknown",
-                              message: diffError()?.message ?? "",
-                              nextAction: diffError()?.nextAction,
-                            }
+                            kind: diffError()?.kind ?? "unknown",
+                            message: diffError()?.message ?? "",
+                            nextAction: diffError()?.nextAction,
+                          }
                           : null
                       }
                       summary={diffResource()?.summary}

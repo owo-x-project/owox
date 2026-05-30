@@ -102,7 +102,7 @@ code {
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background var(--motion-micro) var(--ease-standard),
-              color var(--motion-micro) var(--ease-standard);
+    color var(--motion-micro) var(--ease-standard);
   position: relative;
 }
 
@@ -142,8 +142,15 @@ code {
 }
 
 @keyframes sidebar-in {
-  from { width: 0; opacity: 0; }
-  to { width: 260px; opacity: 1; }
+  from {
+    width: 0;
+    opacity: 0;
+  }
+
+  to {
+    width: 260px;
+    opacity: 1;
+  }
 }
 
 /* ---- Main Surface ---- */
@@ -165,19 +172,19 @@ code {
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
   transition: background var(--motion-micro) var(--ease-standard),
-              transform var(--motion-micro) var(--ease-standard),
-              box-shadow var(--motion-micro) var(--ease-standard);
+    transform var(--motion-micro) var(--ease-standard),
+    box-shadow var(--motion-micro) var(--ease-standard);
 }
 
 .button:hover:not(:disabled) {
   background: var(--owox-surface-2);
   transform: scale(1.02);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .button:active:not(:disabled) {
   transform: scale(0.98);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .button--ghost {
@@ -278,7 +285,7 @@ code {
   outline: 1px solid transparent;
   outline-offset: -1px;
   transition: border-color var(--motion-micro) var(--ease-standard),
-              outline-color var(--motion-micro) var(--ease-standard);
+    outline-color var(--motion-micro) var(--ease-standard);
 }
 
 .project-item:hover:not(:disabled) {
@@ -618,7 +625,7 @@ code {
   overflow: auto;
 }
 
-.sheet__body > * {
+.sheet__body>* {
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
@@ -629,6 +636,7 @@ code {
     opacity: 0.4;
     transform: var(--sheet-from, translateY(8px));
   }
+
   to {
     opacity: 1;
     transform: none;
@@ -664,58 +672,102 @@ code {
   opacity: 0;
   transform: translateY(8px);
 }
+
 .surface-enter-active {
   opacity: 1;
   transform: translateY(0);
   transition: opacity var(--motion-standard) var(--ease-standard),
-              transform var(--motion-standard) var(--ease-standard);
+    transform var(--motion-standard) var(--ease-standard);
 }
+
 .surface-exit {
   opacity: 1;
   transform: translateY(0);
 }
+
 .surface-exit-active {
   opacity: 0;
   transform: translateY(-8px);
   transition: opacity var(--motion-standard) var(--ease-standard),
-              transform var(--motion-standard) var(--ease-standard);
+    transform var(--motion-standard) var(--ease-standard);
 }
 
 
 
-.main-surface > * {
+.main-surface>* {
   animation: surface-fade-in var(--motion-standard) var(--ease-standard);
 }
+
 @keyframes surface-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ---- List animations ---- */
 @keyframes list-item-in {
-  from { opacity: 0; transform: translateY(-8px); max-height: 0; }
-  to { opacity: 1; transform: translateY(0); max-height: 200px; }
-}
-@keyframes list-item-out {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-8px); }
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    max-height: 0;
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 200px;
+  }
 }
 
-.project-list__items > * {
+@keyframes list-item-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.project-list__items>* {
   animation: list-item-in 120ms var(--ease-standard) both;
 }
-.project-list__items > *:nth-child(1) { animation-delay: 0ms; }
-.project-list__items > *:nth-child(2) { animation-delay: 30ms; }
-.project-list__items > *:nth-child(3) { animation-delay: 60ms; }
-.project-list__items > *:nth-child(4) { animation-delay: 90ms; }
-.project-list__items > *:nth-child(5) { animation-delay: 120ms; }
+
+.project-list__items>*:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.project-list__items>*:nth-child(2) {
+  animation-delay: 30ms;
+}
+
+.project-list__items>*:nth-child(3) {
+  animation-delay: 60ms;
+}
+
+.project-list__items>*:nth-child(4) {
+  animation-delay: 90ms;
+}
+
+.project-list__items>*:nth-child(5) {
+  animation-delay: 120ms;
+}
 
 /* ---- Jitter prevention ---- */
 .main-surface {
   scrollbar-gutter: stable;
 }
 
-.button, .activity-bar__btn {
+.button,
+.activity-bar__btn {
   will-change: transform;
 }
 
@@ -734,6 +786,7 @@ code {
   justify-content: center;
   align-items: center;
 }
+
 .shortcut-help__backdrop {
   position: absolute;
   inset: 0;
@@ -742,6 +795,7 @@ code {
   cursor: default;
   background: rgba(0, 0, 0, 0.45);
 }
+
 .shortcut-help {
   position: relative;
   width: min(480px, 92vw);
@@ -752,6 +806,7 @@ code {
   border-radius: var(--radius);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
+
 .shortcut-help__header {
   display: flex;
   justify-content: space-between;
@@ -759,16 +814,20 @@ code {
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--owox-border);
 }
+
 .shortcut-help__header h2 {
   margin: 0;
   font-size: 16px;
 }
+
 .shortcut-help__body {
   padding: var(--space-3) var(--space-4);
 }
+
 .shortcut-help__category {
   margin-bottom: var(--space-4);
 }
+
 .shortcut-help__category-label {
   margin: 0 0 var(--space-2);
   font-size: 12px;
@@ -776,6 +835,7 @@ code {
   letter-spacing: 0.06em;
   color: var(--owox-text-muted);
 }
+
 .shortcut-help__item {
   display: flex;
   justify-content: space-between;
@@ -783,6 +843,7 @@ code {
   padding: var(--space-1) 0;
   font-size: 13px;
 }
+
 .shortcut-help__kbd {
   font-family: ui-monospace, SFMono-Regular, monospace;
   font-size: 12px;
@@ -793,7 +854,10 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     /* biome-ignore lint/complexity/noImportantStyles: defeats class-level transition specificity for the reduced-motion reset (caelestia theme mandates prefers-reduced-motion support). */
     animation-duration: 0.01ms !important;
     /* biome-ignore lint/complexity/noImportantStyles: see above. */
@@ -813,8 +877,10 @@ code {
 
 .notification-badge {
   position: absolute;
-  top: 2px; right: 2px;
-  min-width: 14px; height: 14px;
+  top: 2px;
+  right: 2px;
+  min-width: 14px;
+  height: 14px;
   border-radius: 7px;
   background: var(--owox-danger);
   color: white;

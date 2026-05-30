@@ -200,16 +200,20 @@
 .git-row__state--modified {
   color: var(--owox-warning);
 }
+
 .git-row__state--added,
 .git-row__state--untracked {
   color: var(--owox-success);
 }
+
 .git-row__state--deleted {
   color: var(--owox-danger);
 }
+
 .git-row__state--renamed {
   color: var(--owox-accent);
 }
+
 .git-row__state--conflicted {
   color: var(--owox-danger);
 }
@@ -403,12 +407,15 @@
 .git-error--auth {
   border-left-color: var(--owox-warning);
 }
+
 .git-error--conflict {
   border-left-color: var(--owox-danger);
 }
+
 .git-error--network {
   border-left-color: var(--owox-accent);
 }
+
 .git-error--not_found {
   border-left-color: var(--owox-text-muted);
 }

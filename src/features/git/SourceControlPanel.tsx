@@ -297,13 +297,13 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
         bulk={
           groups().staged.length > 0
             ? {
-                label: t("review.unstageAll"),
-                onClick: () =>
-                  props.onOperation({
-                    op: "unstage",
-                    paths: stagedPaths(groups()),
-                  }),
-              }
+              label: t("review.unstageAll"),
+              onClick: () =>
+                props.onOperation({
+                  op: "unstage",
+                  paths: stagedPaths(groups()),
+                }),
+            }
             : undefined
         }
         selected={(path) => selected(path, "staged")}
@@ -324,13 +324,13 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
         bulk={
           changesPaths(groups()).length > 0
             ? {
-                label: t("review.stageAll"),
-                onClick: () =>
-                  props.onOperation({
-                    op: "stage",
-                    paths: changesPaths(groups()),
-                  }),
-              }
+              label: t("review.stageAll"),
+              onClick: () =>
+                props.onOperation({
+                  op: "stage",
+                  paths: changesPaths(groups()),
+                }),
+            }
             : undefined
         }
         selected={(path) => selected(path, "changes")}

@@ -102,7 +102,7 @@ export class GitApi {
   constructor(
     private readonly projectId: string,
     private readonly baseUrl = "",
-  ) {}
+  ) { }
 
   private base(): string {
     return `/api/projects/${encodeURIComponent(this.projectId)}/git`;

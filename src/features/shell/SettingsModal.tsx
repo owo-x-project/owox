@@ -1,13 +1,11 @@
 import { createSignal, Show } from "solid-js";
-import { t } from "../../i18n";
-import { getLocale, setLocale } from "../../i18n";
+import { getLocale, setLocale, t } from "../../i18n";
 import {
   getTerminalScrollback,
   setTerminalScrollback,
-  DEFAULT_SCROLLBACK,
 } from "../terminal/renderer";
-import { useTheme, type ThemeMode } from "./theme";
 import { MoonIcon, SunIcon } from "./icons";
+import { useTheme } from "./theme";
 
 export interface SettingsModalProps {
   open: boolean;
@@ -16,7 +14,9 @@ export interface SettingsModalProps {
 
 export function SettingsModal(props: SettingsModalProps) {
   const { theme, setTheme } = useTheme();
-  const [scrollback, setScrollbackLocal] = createSignal(getTerminalScrollback());
+  const [scrollback, setScrollbackLocal] = createSignal(
+    getTerminalScrollback(),
+  );
 
   return (
     <Show when={props.open}>
@@ -42,14 +42,20 @@ export function SettingsModal(props: SettingsModalProps) {
 
           <div class="settings-modal__row">
             <div class="settings-modal__label">
-              <span class="settings-modal__label-title">{t("settings.language")}</span>
-              <span class="settings-modal__label-desc">{t("settings.languageDescription")}</span>
+              <span class="settings-modal__label-title">
+                {t("settings.language")}
+              </span>
+              <span class="settings-modal__label-desc">
+                {t("settings.languageDescription")}
+              </span>
             </div>
             <div class="settings-modal__toggle-group">
               <button
                 type="button"
                 class="settings-modal__toggle-btn"
-                classList={{ "settings-modal__toggle-btn--active": getLocale() === "ja" }}
+                classList={{
+                  "settings-modal__toggle-btn--active": getLocale() === "ja",
+                }}
                 onClick={() => setLocale("ja")}
               >
                 日本語
@@ -57,7 +63,9 @@ export function SettingsModal(props: SettingsModalProps) {
               <button
                 type="button"
                 class="settings-modal__toggle-btn"
-                classList={{ "settings-modal__toggle-btn--active": getLocale() === "en" }}
+                classList={{
+                  "settings-modal__toggle-btn--active": getLocale() === "en",
+                }}
                 onClick={() => setLocale("en")}
               >
                 English
@@ -69,14 +77,20 @@ export function SettingsModal(props: SettingsModalProps) {
 
           <div class="settings-modal__row">
             <div class="settings-modal__label">
-              <span class="settings-modal__label-title">{t("settings.theme")}</span>
-              <span class="settings-modal__label-desc">{t("settings.themeDescription")}</span>
+              <span class="settings-modal__label-title">
+                {t("settings.theme")}
+              </span>
+              <span class="settings-modal__label-desc">
+                {t("settings.themeDescription")}
+              </span>
             </div>
             <div class="settings-modal__toggle-group">
               <button
                 type="button"
                 class="settings-modal__toggle-btn"
-                classList={{ "settings-modal__toggle-btn--active": theme() === "light" }}
+                classList={{
+                  "settings-modal__toggle-btn--active": theme() === "light",
+                }}
                 onClick={() => setTheme("light")}
               >
                 <SunIcon size={14} />
@@ -85,7 +99,9 @@ export function SettingsModal(props: SettingsModalProps) {
               <button
                 type="button"
                 class="settings-modal__toggle-btn"
-                classList={{ "settings-modal__toggle-btn--active": theme() === "dark" }}
+                classList={{
+                  "settings-modal__toggle-btn--active": theme() === "dark",
+                }}
                 onClick={() => setTheme("dark")}
               >
                 <MoonIcon size={14} />
@@ -98,8 +114,12 @@ export function SettingsModal(props: SettingsModalProps) {
 
           <div class="settings-modal__row">
             <div class="settings-modal__label">
-              <span class="settings-modal__label-title">{t("settings.terminalScrollback")}</span>
-              <span class="settings-modal__label-desc">{t("settings.terminalScrollbackDescription")}</span>
+              <span class="settings-modal__label-title">
+                {t("settings.terminalScrollback")}
+              </span>
+              <span class="settings-modal__label-desc">
+                {t("settings.terminalScrollbackDescription")}
+              </span>
             </div>
             <input
               type="number"

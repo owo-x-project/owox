@@ -24,7 +24,7 @@ owox を使うと、ブラウザ上で端末を開いてコマンドを実行し
 [リリースページ](https://github.com/owoDra/owox/releases)からお使いの環境に合った圧縮ファイルをダウンロードし、展開してください。中に含まれる `owox-server` がサーバー本体、`dist/` フォルダがブラウザ画面の本体です。
 
 ```bash
-# 例：リナックス x64 の場合
+# 例：Linuxx64 の場合
 tar xzf owox-v0.1.0-x86_64-unknown-linux-gnu.tar.gz
 cd owox
 OWOX_WORKSPACE_ROOT=/path/to/your/repos ./owox-server
@@ -43,7 +43,7 @@ docker compose up --build
 
 ### ソースコードからビルドする
 
-必要なもの：Rust 1.85 以上、ノード 20 以上、Git、Bash。
+必要なもの：Rust 1.85 以上、Node 20 以上、Git、Bash。
 
 ```bash
 git clone https://github.com/owoDra/owox.git

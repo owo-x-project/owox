@@ -24,15 +24,26 @@ const DURATIONS: Record<ToastKind, number> = {
   error: 5000,
 };
 
-export function addToast(kind: ToastKind, message: string, detail?: string): string {
+export function addToast(
+  kind: ToastKind,
+  message: string,
+  detail?: string,
+): string {
   const id = `toast-${++idCounter}`;
   const isFatal = kind === "error";
   const duration = isFatal ? 0 : DURATIONS[kind];
-  const toast: Toast = { id, kind, message, detail, duration, timestamp: Date.now() };
+  const toast: Toast = {
+    id,
+    kind,
+    message,
+    detail,
+    duration,
+    timestamp: Date.now(),
+  };
 
-  setToasts(prev => [toast, ...prev].slice(0, 5));
-  setHistory(prev => [toast, ...prev].slice(0, 100));
-  setUnreadCount(n => n + 1);
+  setToasts((prev) => [toast, ...prev].slice(0, 5));
+  setHistory((prev) => [toast, ...prev].slice(0, 100));
+  setUnreadCount((n) => n + 1);
 
   if (duration > 0) {
     setTimeout(() => removeToast(id), duration);
@@ -41,14 +52,25 @@ export function addToast(kind: ToastKind, message: string, detail?: string): str
 }
 
 export function removeToast(id: string) {
-  setToasts(prev => prev.filter(t => t.id !== id));
+  setToasts((prev) => prev.filter((t) => t.id !== id));
 }
 
-export function getToasts() { return toasts; }
-export function getHistory() { return history; }
-export function getUnreadCount() { return unreadCount; }
-export function markAllRead() { setUnreadCount(0); }
-export function clearHistory() { setHistory([]); setUnreadCount(0); }
+export function getToasts() {
+  return toasts;
+}
+export function getHistory() {
+  return history;
+}
+export function getUnreadCount() {
+  return unreadCount;
+}
+export function markAllRead() {
+  setUnreadCount(0);
+}
+export function clearHistory() {
+  setHistory([]);
+  setUnreadCount(0);
+}
 export function removeFromHistory(id: string) {
-  setHistory(prev => prev.filter(t => t.id !== id));
+  setHistory((prev) => prev.filter((t) => t.id !== id));
 }

@@ -24,18 +24,22 @@
   --owox-glow-purple: rgba(139, 92, 246, 0.85);
   --owox-glow-blue: rgba(99, 102, 241, 0.65);
   --owox-glow-cyan: rgba(6, 182, 212, 0.85);
-  --owox-panel-border: linear-gradient(135deg,
-      var(--owox-glow-purple),
-      var(--owox-glow-blue),
-      var(--owox-glow-cyan));
-  --owox-panel-glow: 0 0 30px rgba(139, 92, 246, 0.18),
-    0 0 60px rgba(59, 130, 246, 0.12),
+  --owox-panel-border: linear-gradient(
+    135deg,
+    var(--owox-glow-purple),
+    var(--owox-glow-blue),
+    var(--owox-glow-cyan)
+  );
+  --owox-panel-glow:
+    0 0 30px rgba(139, 92, 246, 0.18), 0 0 60px rgba(59, 130, 246, 0.12),
     0 0 100px rgba(6, 182, 212, 0.1);
-  --owox-gradient-bg: linear-gradient(135deg,
-      rgba(139, 92, 246, 0.22),
-      rgba(99, 102, 241, 0.14),
-      rgba(59, 130, 246, 0.14),
-      rgba(6, 182, 212, 0.22));
+  --owox-gradient-bg: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.22),
+    rgba(99, 102, 241, 0.14),
+    rgba(59, 130, 246, 0.14),
+    rgba(6, 182, 212, 0.22)
+  );
 }
 
 /* Light theme */
@@ -61,13 +65,15 @@
   --owox-glow-purple: rgba(139, 92, 246, 0.4);
   --owox-glow-blue: rgba(99, 102, 241, 0.3);
   --owox-glow-cyan: rgba(6, 182, 212, 0.4);
-  --owox-panel-glow: 0 0 30px rgba(139, 92, 246, 0.06),
-    0 0 60px rgba(59, 130, 246, 0.04);
-  --owox-gradient-bg: linear-gradient(135deg,
-      rgba(139, 92, 246, 0.08),
-      rgba(99, 102, 241, 0.05),
-      rgba(59, 130, 246, 0.05),
-      rgba(6, 182, 212, 0.08));
+  --owox-panel-glow:
+    0 0 30px rgba(139, 92, 246, 0.06), 0 0 60px rgba(59, 130, 246, 0.04);
+  --owox-gradient-bg: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.08),
+    rgba(99, 102, 241, 0.05),
+    rgba(59, 130, 246, 0.05),
+    rgba(6, 182, 212, 0.08)
+  );
 }
 
 /* Auto theme (media query for OS detection) */
@@ -94,12 +100,14 @@
     --owox-glow-purple: rgba(139, 92, 246, 0.4);
     --owox-glow-blue: rgba(99, 102, 241, 0.3);
     --owox-glow-cyan: rgba(6, 182, 212, 0.4);
-    --owox-panel-glow: 0 0 30px rgba(139, 92, 246, 0.06),
-      0 0 60px rgba(59, 130, 246, 0.04);
-    --owox-gradient-bg: linear-gradient(135deg,
-        rgba(139, 92, 246, 0.08),
-        rgba(99, 102, 241, 0.05),
-        rgba(59, 130, 246, 0.05),
-        rgba(6, 182, 212, 0.08));
+    --owox-panel-glow:
+      0 0 30px rgba(139, 92, 246, 0.06), 0 0 60px rgba(59, 130, 246, 0.04);
+    --owox-gradient-bg: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.08),
+      rgba(99, 102, 241, 0.05),
+      rgba(59, 130, 246, 0.05),
+      rgba(6, 182, 212, 0.08)
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { createSignal, createMemo, For, Show } from "solid-js";
+import { createMemo, createSignal, For, Show } from "solid-js";
 import { t } from "../../i18n";
 import { ErrorBanner, type ErrorView, toErrorView } from "../feedback";
 import {
@@ -11,7 +11,13 @@ import {
   rememberFailed,
   rememberRecent,
 } from "../terminal";
-import { SearchIcon, TerminalIcon, FilesIcon, ReviewIcon, CommandIcon } from "./icons";
+import {
+  CommandIcon,
+  FilesIcon,
+  ReviewIcon,
+  SearchIcon,
+  TerminalIcon,
+} from "./icons";
 import { ACTIVE_SURFACES, type ActiveSurface } from "./state";
 
 export interface CommandLauncherProps {
@@ -47,18 +53,6 @@ interface LauncherItem {
   action: () => void;
 }
 
-const SURFACE_ICONS: Record<string, typeof TerminalIcon> = {
-  terminal: TerminalIcon,
-  files: FilesIcon,
-  review: ReviewIcon,
-};
-
-const SURFACE_LABELS: Record<string, string> = {
-  terminal: "ターミナル",
-  files: "ファイル",
-  review: "レビュー",
-};
-
 export function CommandLauncher(props: CommandLauncherProps) {
   const [query, setQuery] = createSignal("");
   const [history, setHistory] = createSignal<LauncherHistory>(emptyHistory());
@@ -66,7 +60,9 @@ export function CommandLauncher(props: CommandLauncherProps) {
   const [busy, setBusy] = createSignal(false);
   const [selectedIndex, setSelectedIndex] = createSignal(0);
 
-  const isTerminalMode = createMemo(() => query().startsWith("> ") || query() === ">");
+  const isTerminalMode = createMemo(
+    () => query().startsWith("> ") || query() === ">",
+  );
 
   const terminalCommand = createMemo(() => {
     if (!isTerminalMode()) return "";
@@ -250,7 +246,10 @@ export function CommandLauncher(props: CommandLauncherProps) {
             <input
               class="command-launcher__search-input"
               type="text"
-              placeholder={t("launcher.searchPlaceholder") || "コマンドまたはファイル名… ( > でターミナル実行 )"}
+              placeholder={
+                t("launcher.searchPlaceholder") ||
+                "コマンドまたはファイル名… ( > でターミナル実行 )"
+              }
               value={query()}
               autofocus
               onInput={(e) => {
@@ -264,12 +263,19 @@ export function CommandLauncher(props: CommandLauncherProps) {
           {/* Terminal mode */}
           <Show when={isTerminalMode()}>
             <div class="command-launcher__terminal-hint">
-              <Show when={props.projectId} fallback={
-                <p class="command-launcher__empty muted">{t("launcher.noProject")}</p>
-              }>
+              <Show
+                when={props.projectId}
+                fallback={
+                  <p class="command-launcher__empty muted">
+                    {t("launcher.noProject")}
+                  </p>
+                }
+              >
                 <div class="command-launcher__terminal-row">
                   <span class="command-launcher__terminal-prompt">&gt;_</span>
-                  <span>{terminalCommand() || t("launcher.commandPlaceholder")}</span>
+                  <span>
+                    {terminalCommand() || t("launcher.commandPlaceholder")}
+                  </span>
                   <span class="command-launcher__terminal-action">
                     {busy() ? t("launcher.starting") : "ターミナルで実行 ↵"}
                   </span>
@@ -296,18 +302,31 @@ export function CommandLauncher(props: CommandLauncherProps) {
                           <button
                             type="button"
                             class="command-launcher__result-item"
-                            classList={{ "command-launcher__result-item--selected": selectedIndex() === myIndex }}
+                            classList={{
+                              "command-launcher__result-item--selected":
+                                selectedIndex() === myIndex,
+                            }}
                             onClick={() => item.action()}
                             onMouseEnter={() => setSelectedIndex(myIndex)}
                           >
                             <span class="command-launcher__result-icon">
-                              {item.icon === "terminal" && <TerminalIcon size={16} />}
+                              {item.icon === "terminal" && (
+                                <TerminalIcon size={16} />
+                              )}
                               {item.icon === "files" && <FilesIcon size={16} />}
-                              {item.icon === "review" && <ReviewIcon size={16} />}
-                              {item.icon === "project" && <CommandIcon size={16} />}
+                              {item.icon === "review" && (
+                                <ReviewIcon size={16} />
+                              )}
+                              {item.icon === "project" && (
+                                <CommandIcon size={16} />
+                              )}
                             </span>
-                            <span class="command-launcher__result-label">{item.label}</span>
-                            <span class="command-launcher__result-detail">{item.detail}</span>
+                            <span class="command-launcher__result-label">
+                              {item.label}
+                            </span>
+                            <span class="command-launcher__result-detail">
+                              {item.detail}
+                            </span>
                           </button>
                         );
                       }}

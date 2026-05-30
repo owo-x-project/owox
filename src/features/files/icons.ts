@@ -87,7 +87,10 @@ const DIR_ICONS: Record<string, { icon: string; color: string }> = {
 export function getFileIcon(name: string): { label: string; color: string } {
   const nameIcon = NAME_MAP[name];
   if (nameIcon && FILE_ICONS[nameIcon]) {
-    return { label: FILE_ICONS[nameIcon].svg, color: FILE_ICONS[nameIcon].color };
+    return {
+      label: FILE_ICONS[nameIcon].svg,
+      color: FILE_ICONS[nameIcon].color,
+    };
   }
 
   const ext = name.split(".").pop()?.toLowerCase() ?? "";

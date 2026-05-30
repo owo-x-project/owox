@@ -202,7 +202,9 @@ export function FileTree(props: FileTreeProps) {
             type="button"
             class="file-tree__toggle-hidden"
             title={showHidden() ? t("files.hideHidden") : t("files.showHidden")}
-            aria-label={showHidden() ? t("files.hideHidden") : t("files.showHidden")}
+            aria-label={
+              showHidden() ? t("files.hideHidden") : t("files.showHidden")
+            }
             onClick={toggleHidden}
           >
             {showHidden() ? "◉" : "◎"}

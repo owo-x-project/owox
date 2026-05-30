@@ -116,7 +116,8 @@ code {
   color: var(--owox-text-muted);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background var(--motion-micro) var(--ease-standard),
+  transition:
+    background var(--motion-micro) var(--ease-standard),
     color var(--motion-micro) var(--ease-standard);
   position: relative;
 }
@@ -132,7 +133,7 @@ code {
 
 /* Active indicator bar (left edge) */
 .activity-bar__btn--active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 25%;
@@ -192,7 +193,15 @@ code {
   border: 2px solid transparent;
   background-image:
     linear-gradient(var(--owox-bg), var(--owox-bg)),
-    var(--owox-panel-border, linear-gradient(135deg, var(--owox-glow-purple), var(--owox-glow-blue), var(--owox-glow-cyan)));
+    var(
+      --owox-panel-border,
+      linear-gradient(
+        135deg,
+        var(--owox-glow-purple),
+        var(--owox-glow-blue),
+        var(--owox-glow-cyan)
+      )
+    );
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: var(--owox-panel-glow);
@@ -202,11 +211,16 @@ code {
 }
 
 .workspace-content::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -8px;
   border-radius: 24px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.08), rgba(6, 182, 212, 0.18));
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.18),
+    rgba(59, 130, 246, 0.08),
+    rgba(6, 182, 212, 0.18)
+  );
   filter: blur(24px);
   z-index: -1;
   pointer-events: none;
@@ -240,7 +254,8 @@ code {
   font-size: 13px;
   font-family: inherit;
   cursor: pointer;
-  transition: color var(--motion-micro) var(--ease-standard),
+  transition:
+    color var(--motion-micro) var(--ease-standard),
     background var(--motion-micro) var(--ease-standard),
     box-shadow var(--motion-micro) var(--ease-standard);
   white-space: nowrap;
@@ -291,7 +306,8 @@ code {
   border-radius: var(--radius-sm);
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
-  transition: background var(--motion-micro) var(--ease-standard),
+  transition:
+    background var(--motion-micro) var(--ease-standard),
     transform var(--motion-micro) var(--ease-standard),
     box-shadow var(--motion-micro) var(--ease-standard);
 }
@@ -325,10 +341,6 @@ code {
   background: var(--owox-accent-soft);
 }
 
-
-
-
-
 /* --------------------------------------------------- surface placeholders */
 
 .surface-placeholder {
@@ -342,11 +354,13 @@ code {
   width: 100%;
   height: 100%;
   justify-content: center;
-  background: linear-gradient(135deg,
-      rgba(139, 92, 246, 0.25) 0%,
-      rgba(99, 102, 241, 0.2) 25%,
-      rgba(59, 130, 246, 0.2) 50%,
-      rgba(6, 182, 212, 0.25) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.25) 0%,
+    rgba(99, 102, 241, 0.2) 25%,
+    rgba(59, 130, 246, 0.2) 50%,
+    rgba(6, 182, 212, 0.25) 100%
+  );
 }
 
 .surface-placeholder__title {
@@ -412,7 +426,8 @@ code {
   cursor: pointer;
   outline: 1px solid transparent;
   outline-offset: -1px;
-  transition: border-color var(--motion-micro) var(--ease-standard),
+  transition:
+    border-color var(--motion-micro) var(--ease-standard),
     outline-color var(--motion-micro) var(--ease-standard),
     background var(--motion-micro) var(--ease-standard);
 }
@@ -530,7 +545,9 @@ code {
   background: var(--owox-surface);
   border: 1px solid var(--owox-border);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), var(--owox-panel-glow);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    var(--owox-panel-glow);
 }
 
 /* Search-style input */
@@ -769,8 +786,6 @@ code {
  *   smartphone < 640px, tablet < 1024px, else desktop.
  */
 
-
-
 /* --------------------------------------------------------------- sheets ---- */
 
 .sheet__overlay {
@@ -855,7 +870,7 @@ code {
   overflow: auto;
 }
 
-.sheet__body>* {
+.sheet__body > * {
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
@@ -906,7 +921,8 @@ code {
 .surface-enter-active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity var(--motion-standard) var(--ease-standard),
+  transition:
+    opacity var(--motion-standard) var(--ease-standard),
     transform var(--motion-standard) var(--ease-standard);
 }
 
@@ -918,13 +934,12 @@ code {
 .surface-exit-active {
   opacity: 0;
   transform: translateY(-8px);
-  transition: opacity var(--motion-standard) var(--ease-standard),
+  transition:
+    opacity var(--motion-standard) var(--ease-standard),
     transform var(--motion-standard) var(--ease-standard);
 }
 
-
-
-.main-surface>* {
+.main-surface > * {
   animation: surface-fade-in var(--motion-standard) var(--ease-standard);
 }
 
@@ -967,27 +982,27 @@ code {
   }
 }
 
-.project-list__items>* {
+.project-list__items > * {
   animation: list-item-in 120ms var(--ease-standard) both;
 }
 
-.project-list__items>*:nth-child(1) {
+.project-list__items > *:nth-child(1) {
   animation-delay: 0ms;
 }
 
-.project-list__items>*:nth-child(2) {
+.project-list__items > *:nth-child(2) {
   animation-delay: 30ms;
 }
 
-.project-list__items>*:nth-child(3) {
+.project-list__items > *:nth-child(3) {
   animation-delay: 60ms;
 }
 
-.project-list__items>*:nth-child(4) {
+.project-list__items > *:nth-child(4) {
   animation-delay: 90ms;
 }
 
-.project-list__items>*:nth-child(5) {
+.project-list__items > *:nth-child(5) {
   animation-delay: 120ms;
 }
 
@@ -1005,7 +1020,6 @@ code {
  * Media-query safety net: if the JS viewport class has not applied yet, narrow
  * widths still avoid squeezing drawers into an unusable column.
  */
-
 
 /* ---- Shortcut Help ---- */
 .shortcut-help__overlay {
@@ -1035,7 +1049,9 @@ code {
   backdrop-filter: blur(24px);
   border: 1px solid var(--owox-border);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), var(--owox-panel-glow);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    var(--owox-panel-glow);
 }
 
 .shortcut-help__header {
@@ -1085,7 +1101,6 @@ code {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {
@@ -1152,7 +1167,9 @@ code {
   background: var(--owox-surface);
   border: 1px solid var(--owox-border);
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), var(--owox-panel-glow);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    var(--owox-panel-glow);
 }
 
 .settings-modal__title {
@@ -1214,7 +1231,8 @@ code {
   font: inherit;
   font-size: 13px;
   cursor: pointer;
-  transition: background var(--motion-micro) var(--ease-standard),
+  transition:
+    background var(--motion-micro) var(--ease-standard),
     color var(--motion-micro) var(--ease-standard);
 }
 
@@ -1229,7 +1247,12 @@ code {
   padding: var(--space-3);
   border: none;
   border-radius: var(--radius);
-  background: linear-gradient(135deg, var(--owox-glow-purple), var(--owox-glow-blue), var(--owox-glow-cyan));
+  background: linear-gradient(
+    135deg,
+    var(--owox-glow-purple),
+    var(--owox-glow-blue),
+    var(--owox-glow-cyan)
+  );
   color: white;
   font: inherit;
   font-size: 15px;
@@ -1342,7 +1365,8 @@ code {
   border-radius: var(--radius-sm);
   background: transparent;
   font-family: inherit;
-  transition: color var(--motion-micro) var(--ease-standard),
+  transition:
+    color var(--motion-micro) var(--ease-standard),
     border-color var(--motion-micro) var(--ease-standard);
   white-space: nowrap;
   max-height: 120px;

@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
-import { t } from "../../i18n";
 import type { ApiError } from "../../api/contracts";
+import { t } from "../../i18n";
 import "./feedback.css";
 import { type ErrorView, isRecoverable } from "./error-view";
 
@@ -69,7 +69,11 @@ export function ErrorBanner(props: ErrorBannerProps) {
           </span>
         }
       >
-        {(logRef) => <span class="error-banner__log">{t("feedback.logRef")}: {logRef()}</span>}
+        {(logRef) => (
+          <span class="error-banner__log">
+            {t("feedback.logRef")}: {logRef()}
+          </span>
+        )}
       </Show>
 
       <Show when={props.onRetry}>

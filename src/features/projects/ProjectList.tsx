@@ -1,7 +1,7 @@
 import { createResource, For, Show } from "solid-js";
-import { t } from "../../i18n";
 import type { ApiClient } from "../../api/client";
 import type { ProjectResource } from "../../api/contracts";
+import { t } from "../../i18n";
 import { ErrorBanner } from "../feedback";
 import { toProjectListError } from "./errors";
 
@@ -32,7 +32,9 @@ export function ProjectList(props: ProjectListProps) {
 
       <Show
         when={!projects.loading}
-        fallback={<p class="muted project-list__state">{t("projects.loading")}</p>}
+        fallback={
+          <p class="muted project-list__state">{t("projects.loading")}</p>
+        }
       >
         <Show
           when={!projects.error}
@@ -48,9 +50,7 @@ export function ProjectList(props: ProjectListProps) {
           <Show
             when={(projects()?.projects ?? []).length > 0}
             fallback={
-              <p class="muted project-list__state">
-                {t("projects.noRepos")}
-              </p>
+              <p class="muted project-list__state">{t("projects.noRepos")}</p>
             }
           >
             <ul class="project-list__items">

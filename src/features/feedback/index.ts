@@ -17,9 +17,7 @@ export {
   isRecoverable,
   toErrorView,
 } from "./error-view";
-export {
-  ToastContainer,
-} from "./ToastContainer";
+export { ToastContainer } from "./ToastContainer";
 export {
   addToast,
   clearHistory,

@@ -297,13 +297,13 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
         bulk={
           groups().staged.length > 0
             ? {
-              label: t("review.unstageAll"),
-              onClick: () =>
-                props.onOperation({
-                  op: "unstage",
-                  paths: stagedPaths(groups()),
-                }),
-            }
+                label: t("review.unstageAll"),
+                onClick: () =>
+                  props.onOperation({
+                    op: "unstage",
+                    paths: stagedPaths(groups()),
+                  }),
+              }
             : undefined
         }
         selected={(path) => selected(path, "staged")}
@@ -324,21 +324,21 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
         bulk={
           changesPaths(groups()).length > 0
             ? {
-              label: t("review.stageAll"),
-              onClick: () =>
-                props.onOperation({
-                  op: "stage",
-                  paths: changesPaths(groups()),
-                }),
-            }
+                label: t("review.stageAll"),
+                onClick: () =>
+                  props.onOperation({
+                    op: "stage",
+                    paths: changesPaths(groups()),
+                  }),
+              }
             : undefined
         }
         bulkDanger={
           changesPaths(groups()).length > 0
             ? {
-              label: t("review.discardAll"),
-              onClick: () => startDiscard(changesPaths(groups())),
-            }
+                label: t("review.discardAll"),
+                onClick: () => startDiscard(changesPaths(groups())),
+              }
             : undefined
         }
         selected={(path) => selected(path, "changes")}
@@ -382,7 +382,11 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
                 : [(p() as { kind: "branch_checkout"; branch: string }).branch]
             }
             phrase={p().kind === "discard" ? "discard" : "checkout"}
-            confirmLabel={p().kind === "discard" ? t("review.discard") : t("review.switchBranch")}
+            confirmLabel={
+              p().kind === "discard"
+                ? t("review.discard")
+                : t("review.switchBranch")
+            }
             onCancel={cancelPending}
             onConfirm={confirmPending}
           />

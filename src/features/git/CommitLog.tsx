@@ -53,9 +53,7 @@ export function CommitLog(props: CommitLogProps) {
 
   return (
     <div class="commit-log">
-      <Show when={error()}>
-        {(err) => <ErrorBanner error={err()} />}
-      </Show>
+      <Show when={error()}>{(err) => <ErrorBanner error={err()} />}</Show>
 
       <div class="commit-log__list">
         <For each={commits()}>

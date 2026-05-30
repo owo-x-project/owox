@@ -142,11 +142,7 @@ export function LogView(props: LogViewProps) {
 
       <Show
         when={props.logId !== null}
-        fallback={
-          <p class="log-view__state muted">
-            {t("log.noLog")}
-          </p>
-        }
+        fallback={<p class="log-view__state muted">{t("log.noLog")}</p>}
       >
         <Show when={status() !== "loading"} fallback={<LoadingState />}>
           <Show
@@ -213,9 +209,7 @@ function LoadingState() {
 function NotFoundState(props: { deleted: boolean }) {
   return (
     <p class="log-view__state muted">
-      {props.deleted
-        ? t("log.deleted")
-        : t("log.notFound")}
+      {props.deleted ? t("log.deleted") : t("log.notFound")}
     </p>
   );
 }

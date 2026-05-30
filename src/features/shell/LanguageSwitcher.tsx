@@ -1,4 +1,4 @@
-import { getLocale, setLocale, getAvailableLocales } from "../../i18n";
+import { getAvailableLocales, getLocale, setLocale } from "../../i18n";
 import { LanguagesIcon } from "./icons";
 
 export function LanguageSwitcher() {
@@ -11,6 +11,7 @@ export function LanguageSwitcher() {
 
   return (
     <button
+      type="button"
       class="activity-bar__btn"
       onClick={toggle}
       title={`Language: ${getLocale().toUpperCase()}`}

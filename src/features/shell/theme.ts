@@ -6,7 +6,8 @@ const STORAGE_KEY = "owox-theme";
 
 function getInitialTheme(): ThemeMode {
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark" || stored === "auto") return stored;
+  if (stored === "light" || stored === "dark" || stored === "auto")
+    return stored;
   return "auto";
 }
 

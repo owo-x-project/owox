@@ -1,11 +1,19 @@
-import { Match, Switch, For } from "solid-js";
-import type { PaneNode, LeafPane, SplitPane } from "./pane-model";
+import type { JSX } from "solid-js";
+import { For, Match, Switch } from "solid-js";
+import type { LeafPane, PaneNode, SplitPane } from "./pane-model";
 
 export interface SplitPaneProps {
   node: PaneNode;
   activeId: string | null;
   onActivate: (paneId: string) => void;
-  renderLeaf: (sessionId: string, paneId: string) => any;
+  renderLeaf: (sessionId: string, paneId: string) => JSX.Element;
+}
+
+function handlePaneKeyDown(event: KeyboardEvent, onActivate: () => void) {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    onActivate();
+  }
 }
 
 export function SplitPaneView(props: SplitPaneProps) {
@@ -15,10 +23,18 @@ export function SplitPaneView(props: SplitPaneProps) {
         {(() => {
           const leaf = props.node as LeafPane;
           return (
+            /* biome-ignore lint/a11y/useSemanticElements: pane wrapper contains terminal content and cannot be a button element */
             <div
               class="terminal-pane"
-              classList={{ "terminal-pane--active": props.activeId === leaf.id }}
+              classList={{
+                "terminal-pane--active": props.activeId === leaf.id,
+              }}
+              role="button"
+              tabIndex={0}
               onClick={() => props.onActivate(leaf.id)}
+              onKeyDown={(event) =>
+                handlePaneKeyDown(event, () => props.onActivate(leaf.id))
+              }
             >
               {props.renderLeaf(leaf.sessionId, leaf.id)}
             </div>
@@ -46,9 +62,7 @@ export function SplitPaneView(props: SplitPaneProps) {
               <For each={split.children}>
                 {(child, i) => (
                   <>
-                    {i() > 0 && (
-                      <div class="terminal-split__handle" />
-                    )}
+                    {i() > 0 && <div class="terminal-split__handle" />}
                     <SplitPaneView
                       node={child}
                       activeId={props.activeId}

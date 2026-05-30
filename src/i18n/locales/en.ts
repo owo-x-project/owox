@@ -9,7 +9,8 @@ export const en = {
     loading: "Loading...",
     error: "Error",
     noProjectSelected: "No project selected",
-    selectProject: "Select a project from the left drawer to open its workspace.",
+    selectProject:
+      "Select a project from the left drawer to open its workspace.",
     loadMore: "Load more",
     comingSoon: "Coming soon",
   },
@@ -113,9 +114,11 @@ export const en = {
     conflictHint: "Conflict — resolve the conflicting changes and retry.",
     networkHint: "Network failure — check connectivity and retry.",
     notFoundHint: "Not found — the target no longer exists.",
-    permissionHint: "Permission denied — you may not have access to this target.",
+    permissionHint:
+      "Permission denied — you may not have access to this target.",
     timeoutHint: "Timed out — the operation took too long; try again.",
-    boundaryHint: "Out of bounds — the target is outside the workspace boundary.",
+    boundaryHint:
+      "Out of bounds — the target is outside the workspace boundary.",
     validationHint: "Invalid input — correct the highlighted fields and retry.",
   },
   log: {
@@ -124,7 +127,8 @@ export const en = {
     loadMore: "Load more",
     clearLog: "Clear log",
     loading: "Loading log…",
-    noLog: "No log selected. A log opens here when a session or command produces one.",
+    noLog:
+      "No log selected. A log opens here when a session or command produces one.",
     deleted: "Log deleted. This action cannot be undone.",
     notFound: "Log unavailable — it may have been deleted or never existed.",
     endOfLog: "End of log.",
@@ -136,7 +140,8 @@ export const en = {
     unavailable: "Unavailable",
     noProjects: "No projects found",
     loading: "Loading projects…",
-    noRepos: "No Git repositories found directly under the workspace root. Add a project with a .git directory to get started.",
+    noRepos:
+      "No Git repositories found directly under the workspace root. Add a project with a .git directory to get started.",
   },
   plugins: {
     title: "Plugin commands",
@@ -184,10 +189,13 @@ export const en = {
     theme: "Theme",
     themeDescription: "Light / Dark",
     terminalScrollback: "Terminal log lines",
-    terminalScrollbackDescription: "Max scrollback lines (applied on new sessions)",
+    terminalScrollbackDescription:
+      "Max scrollback lines (applied on new sessions)",
     done: "Done",
   },
 } as const;
 
-type DeepStringify<T> = T extends string ? string : { [K in keyof T]: DeepStringify<T[K]> };
+type DeepStringify<T> = T extends string
+  ? string
+  : { [K in keyof T]: DeepStringify<T[K]> };
 export type Locale = DeepStringify<typeof en>;

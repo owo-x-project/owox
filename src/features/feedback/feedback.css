@@ -149,7 +149,9 @@
   backdrop-filter: blur(24px);
   border: 1px solid var(--owox-border);
   border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), var(--owox-panel-glow);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    var(--owox-panel-glow);
 }
 
 .confirm-dialog__title {

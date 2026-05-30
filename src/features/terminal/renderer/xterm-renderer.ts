@@ -163,5 +163,8 @@ export function getTerminalScrollback(): number {
 /** Persist the scrollback setting to localStorage. */
 export function setTerminalScrollback(value: number): void {
   if (typeof localStorage === "undefined") return;
-  localStorage.setItem(SCROLLBACK_KEY, String(Math.max(100, Math.floor(value))));
+  localStorage.setItem(
+    SCROLLBACK_KEY,
+    String(Math.max(100, Math.floor(value))),
+  );
 }

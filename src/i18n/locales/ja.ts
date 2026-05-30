@@ -116,9 +116,11 @@ export const ja: Locale = {
     networkHint: "ネットワーク障害 — 接続を確認して再試行してください。",
     notFoundHint: "見つかりません — 対象が存在しません。",
     permissionHint: "権限不足 — この対象へのアクセス権がない可能性があります。",
-    timeoutHint: "タイムアウト — 操作に時間がかかりすぎました。再試行してください。",
+    timeoutHint:
+      "タイムアウト — 操作に時間がかかりすぎました。再試行してください。",
     boundaryHint: "範囲外 — 対象はワークスペース境界の外にあります。",
-    validationHint: "入力が無効 — ハイライトされたフィールドを修正して再試行してください。",
+    validationHint:
+      "入力が無効 — ハイライトされたフィールドを修正して再試行してください。",
   },
   log: {
     title: "ログ",
@@ -126,7 +128,8 @@ export const ja: Locale = {
     loadMore: "もっと読み込む",
     clearLog: "ログをクリア",
     loading: "ログを読み込み中…",
-    noLog: "ログ未選択。セッションやコマンドがログを生成するとここに表示されます。",
+    noLog:
+      "ログ未選択。セッションやコマンドがログを生成するとここに表示されます。",
     deleted: "ログ削除済み。この操作は取り消せません。",
     notFound: "ログが利用できません — 削除済みか存在しない可能性があります。",
     endOfLog: "ログの末尾。",
@@ -138,7 +141,8 @@ export const ja: Locale = {
     unavailable: "利用不可",
     noProjects: "プロジェクトが見つかりません",
     loading: "プロジェクトを読み込み中…",
-    noRepos: "ワークスペースルート直下に Git リポジトリが見つかりません。.git ディレクトリのあるプロジェクトを追加してください。",
+    noRepos:
+      "ワークスペースルート直下に Git リポジトリが見つかりません。.git ディレクトリのあるプロジェクトを追加してください。",
   },
   plugins: {
     title: "プラグインコマンド",
@@ -153,7 +157,8 @@ export const ja: Locale = {
     close: "コマンドランチャーを閉じる",
     title: "コマンドランチャー",
     searchPlaceholder: "コマンドまたはファイル名… ( > でターミナル実行 )",
-    noProject: "ターミナルセッションを開始するにはプロジェクトを選択してください。",
+    noProject:
+      "ターミナルセッションを開始するにはプロジェクトを選択してください。",
     command: "コマンド",
     commandPlaceholder: "デフォルトシェルの場合は空欄",
     arguments: "引数",
@@ -186,7 +191,8 @@ export const ja: Locale = {
     theme: "テーマ",
     themeDescription: "ライト / ダーク",
     terminalScrollback: "ターミナルログ保持行数",
-    terminalScrollbackDescription: "最大スクロールバック行数（新規セッションで適用）",
+    terminalScrollbackDescription:
+      "最大スクロールバック行数（新規セッションで適用）",
     done: "完了",
   },
 };

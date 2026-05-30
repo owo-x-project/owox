@@ -60,7 +60,11 @@ export function removePane(root: PaneNode, targetId: string): PaneNode | null {
     .filter((c): c is PaneNode => c !== null);
   if (remaining.length === 0) return null;
   if (remaining.length === 1) return remaining[0];
-  return { ...root, children: remaining, sizes: remaining.map(() => 100 / remaining.length) };
+  return {
+    ...root,
+    children: remaining,
+    sizes: remaining.map(() => 100 / remaining.length),
+  };
 }
 
 export function findLeaves(root: PaneNode): LeafPane[] {

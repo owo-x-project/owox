@@ -1,14 +1,5 @@
-import {
-  type Component,
-  createMemo,
-  createSignal,
-  For,
-  onCleanup,
-  onMount,
-  Show,
-} from "solid-js";
+import { type Component, createMemo, createSignal, For, Show } from "solid-js";
 import { t } from "../../i18n";
-import { isTouchDevice } from "../../utils/platform";
 import { ConfirmDialog } from "../feedback";
 import type { SurfaceProps } from "../shell/placeholders";
 import { classifyViewport } from "../shell/state";
@@ -90,7 +81,10 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
     const onMove = (ev: MouseEvent) => {
       const delta = ev.clientX - startX;
       const containerWidth = containerRef?.clientWidth ?? 1000;
-      const newWidth = Math.max(MIN_TREE_WIDTH, Math.min(startWidth + delta, containerWidth - MIN_TREE_WIDTH));
+      const newWidth = Math.max(
+        MIN_TREE_WIDTH,
+        Math.min(startWidth + delta, containerWidth - MIN_TREE_WIDTH),
+      );
       setTreeWidth(newWidth);
     };
 
@@ -114,7 +108,10 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
       if (!t) return;
       const delta = t.clientX - startX;
       const containerWidth = containerRef?.clientWidth ?? 1000;
-      const newWidth = Math.max(MIN_TREE_WIDTH, Math.min(startWidth + delta, containerWidth - MIN_TREE_WIDTH));
+      const newWidth = Math.max(
+        MIN_TREE_WIDTH,
+        Math.min(startWidth + delta, containerWidth - MIN_TREE_WIDTH),
+      );
       setTreeWidth(newWidth);
     };
 
@@ -131,7 +128,8 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
 
   /** On smartphone, when a file is opened the editor takes full screen. */
   const isSmartphone = () =>
-    typeof window !== "undefined" && classifyViewport(window.innerWidth) === "smartphone";
+    typeof window !== "undefined" &&
+    classifyViewport(window.innerWidth) === "smartphone";
 
   const [mobileEditorActive, setMobileEditorActive] = createSignal(false);
 
@@ -154,13 +152,31 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
     return idx === -1 ? path : path.slice(idx + 1);
   }
 
+  function activateTab(path: string) {
+    setActiveTab(path);
+  }
+
+  function handleTabKeyDown(event: KeyboardEvent, path: string) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      activateTab(path);
+    }
+  }
+
+  const treeStyle = () =>
+    isSmartphone()
+      ? { "flex-shrink": 1 }
+      : { width: `${treeWidth()}px`, "flex-shrink": 0 };
+
   return (
     <div
       class="files-surface"
-      classList={{ "files-surface--editor-active": mobileEditorActive() && isSmartphone() }}
+      classList={{
+        "files-surface--editor-active": mobileEditorActive() && isSmartphone(),
+      }}
       ref={containerRef}
     >
-      <div class="files-surface__tree" style={{ width: `${treeWidth()}px`, "flex-shrink": 0 }}>
+      <div class="files-surface__tree" style={treeStyle()}>
         <FileTree
           api={api()}
           projectId={props.projectId}
@@ -188,21 +204,33 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
           <div class="editor-tabs" role="tablist">
             <For each={openPaths()}>
               {(path) => (
-                <button
-                  type="button"
+                <div
                   role="tab"
                   class="editor-tab"
                   classList={{ "editor-tab--active": path === activeTab() }}
                   aria-selected={path === activeTab()}
-                  onClick={() => setActiveTab(path)}
+                  aria-label={
+                    dirtyPaths().has(path)
+                      ? `${baseName(path)} (unsaved changes)`
+                      : undefined
+                  }
+                  tabIndex={path === activeTab() ? 0 : -1}
+                  onClick={() => activateTab(path)}
+                  onKeyDown={(event) => handleTabKeyDown(event, path)}
                 >
                   <Show when={dirtyPaths().has(path)}>
-                    <span class="editor-tab__dirty" aria-label="unsaved changes">●</span>
+                    <span
+                      class="editor-tab__dirty"
+                      aria-hidden="true"
+                      title="unsaved changes"
+                    >
+                      ●
+                    </span>
                   </Show>
                   <span class="editor-tab__name">{baseName(path)}</span>
-                  <span
+                  <button
+                    type="button"
                     class="editor-tab__close"
-                    role="button"
                     aria-label={t("common.close")}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -210,8 +238,8 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
                     }}
                   >
                     ×
-                  </span>
-                </button>
+                  </button>
+                </div>
               )}
             </For>
           </div>

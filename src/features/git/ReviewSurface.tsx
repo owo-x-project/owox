@@ -170,7 +170,9 @@ export const ReviewSurface: Component<SurfaceProps> = (props) => {
         <button
           type="button"
           class="review-tabs__tab"
-          classList={{ "review-tabs__tab--active": activeTab() === "working-tree" }}
+          classList={{
+            "review-tabs__tab--active": activeTab() === "working-tree",
+          }}
           onClick={() => setActiveTab("working-tree")}
         >
           {t("review.workingTree")}
@@ -230,10 +232,10 @@ export const ReviewSurface: Component<SurfaceProps> = (props) => {
                       error={
                         diffError()
                           ? {
-                            kind: diffError()?.kind ?? "unknown",
-                            message: diffError()?.message ?? "",
-                            nextAction: diffError()?.nextAction,
-                          }
+                              kind: diffError()?.kind ?? "unknown",
+                              message: diffError()?.message ?? "",
+                              nextAction: diffError()?.nextAction,
+                            }
                           : null
                       }
                       summary={diffResource()?.summary}

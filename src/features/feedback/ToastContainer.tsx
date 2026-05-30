@@ -19,7 +19,9 @@ export function ToastContainer() {
             </span>
             <div class="toast__content">
               <span class="toast__message">{toast.message}</span>
-              {toast.detail && <span class="toast__detail">{toast.detail}</span>}
+              {toast.detail && (
+                <span class="toast__detail">{toast.detail}</span>
+              )}
             </div>
             <button
               type="button"

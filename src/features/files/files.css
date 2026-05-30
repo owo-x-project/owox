@@ -115,6 +115,10 @@
   opacity: 1;
 }
 
+.editor-tab:focus-within .editor-tab__close {
+  opacity: 1;
+}
+
 .editor-tab__close:hover {
   background: var(--owox-danger);
   color: white;
@@ -452,7 +456,7 @@
   }
 
   .files-surface__handle::after {
-    content: '';
+    content: "";
     display: block;
     width: 4px;
     height: 32px;
@@ -481,7 +485,7 @@
   }
 
   .files-surface__tree {
-    width: 100% !important;
+    width: 100%;
     flex-shrink: 1;
     max-width: none;
     border-right: none;

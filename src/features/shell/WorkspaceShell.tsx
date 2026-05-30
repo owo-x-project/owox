@@ -9,8 +9,8 @@ import {
 } from "solid-js";
 import type { ApiClient } from "../../api/client";
 import { t } from "../../i18n";
-import { ToastContainer } from "../feedback/ToastContainer";
 import { NotificationPanel } from "../feedback/NotificationPanel";
+import { ToastContainer } from "../feedback/ToastContainer";
 import { getUnreadCount } from "../feedback/toast-store";
 import { FilesSurface } from "../files";
 import { ReviewSurface } from "../git";
@@ -22,21 +22,18 @@ import {
   TerminalSurface,
 } from "../terminal";
 import { CommandLauncher } from "./CommandLauncher";
-import { SettingsModal } from "./SettingsModal";
-import { ShortcutHelp } from "./ShortcutHelp";
 import {
+  BellIcon,
   CommandIcon,
-  TerminalIcon,
   FilesIcon,
   ReviewIcon,
-  BellIcon,
-  SettingsIcon,
   SearchIcon,
+  SettingsIcon,
+  TerminalIcon,
 } from "./icons";
-import {
-  type ActiveSurface,
-  createWorkspaceStore,
-} from "./state";
+import { SettingsModal } from "./SettingsModal";
+import { ShortcutHelp } from "./ShortcutHelp";
+import { createWorkspaceStore } from "./state";
 import { useViewport } from "./useViewport";
 
 export interface WorkspaceShellProps {
@@ -60,7 +57,12 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
       event.preventDefault();
       ws.toggleCommandLauncher();
     }
-    if (event.key === "?" && !event.metaKey && !event.ctrlKey && !event.altKey) {
+    if (
+      event.key === "?" &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.altKey
+    ) {
       const tag = (event.target as HTMLElement)?.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       event.preventDefault();
@@ -81,9 +83,7 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   return (
-    <div
-      class="workspace-shell"
-    >
+    <div class="workspace-shell">
       {/* Activity Bar */}
       <nav class="activity-bar" aria-label="Activity Bar">
         <div class="activity-bar__brand-area">
@@ -111,7 +111,10 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
           <button
             type="button"
             class="activity-bar__btn"
-            classList={{ "activity-bar__btn--active": ws.state.activeSurface === "terminal" }}
+            classList={{
+              "activity-bar__btn--active":
+                ws.state.activeSurface === "terminal",
+            }}
             aria-label={t("terminal.title")}
             disabled={!ws.hasProject()}
             onClick={() => ws.setSurface("terminal")}
@@ -121,7 +124,9 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
           <button
             type="button"
             class="activity-bar__btn"
-            classList={{ "activity-bar__btn--active": ws.state.activeSurface === "files" }}
+            classList={{
+              "activity-bar__btn--active": ws.state.activeSurface === "files",
+            }}
             aria-label={t("files.title")}
             disabled={!ws.hasProject()}
             onClick={() => ws.setSurface("files")}
@@ -131,7 +136,9 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
           <button
             type="button"
             class="activity-bar__btn"
-            classList={{ "activity-bar__btn--active": ws.state.activeSurface === "review" }}
+            classList={{
+              "activity-bar__btn--active": ws.state.activeSurface === "review",
+            }}
             aria-label={t("review.title")}
             disabled={!ws.hasProject()}
             onClick={() => ws.setSurface("review")}

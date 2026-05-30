@@ -36,9 +36,7 @@ export function PluginCommandList(props: PluginCommandListProps) {
   return (
     <section class="plugin-commands" aria-label="Plugin commands">
       <p class="plugin-commands__title">{t("plugins.title")}</p>
-      <p class="plugin-commands__note muted">
-        {t("plugins.reserved")}
-      </p>
+      <p class="plugin-commands__note muted">{t("plugins.reserved")}</p>
 
       <Show when={commands.error}>
         <div class="plugin-commands__error" aria-live="polite">

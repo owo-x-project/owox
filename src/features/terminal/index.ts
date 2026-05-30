@@ -12,6 +12,17 @@ export {
   TerminalApi,
 } from "./api";
 export {
+  createLeaf,
+  findLeaves,
+  type LeafPane,
+  type PaneNode,
+  removePane,
+  type SplitDirection,
+  type SplitPane,
+  splitPane,
+} from "./pane-model";
+export { type SplitPaneProps, SplitPaneView } from "./SplitPane";
+export {
   applyOutputSeq,
   applyTermState,
   type CommandHistoryEntry,
@@ -34,17 +45,6 @@ export {
   upsertSession,
   validateLauncherInput,
 } from "./session-model";
-export {
-  createLeaf,
-  findLeaves,
-  type LeafPane,
-  type PaneNode,
-  removePane,
-  type SplitDirection,
-  type SplitPane,
-  splitPane,
-} from "./pane-model";
-export { SplitPaneView, type SplitPaneProps } from "./SplitPane";
 export { TerminalSurface } from "./TerminalSurface";
 export {
   eventsSocketUrl,

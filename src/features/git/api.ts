@@ -1,4 +1,5 @@
 import { apiRequest } from "../../api/http";
+import type { CommitLogResponse } from "./commit-model";
 
 /** State of a single file as reported by `git status`. */
 export type GitFileState =
@@ -159,6 +160,19 @@ export class GitApi {
         method: "POST",
         body: JSON.stringify(body),
       },
+      this.baseUrl,
+    );
+  }
+
+  /** Paginated commit log. */
+  log(offset = 0, limit = 30): Promise<CommitLogResponse> {
+    const query = new URLSearchParams({
+      offset: String(offset),
+      limit: String(limit),
+    });
+    return apiRequest<CommitLogResponse>(
+      `${this.base()}/log?${query.toString()}`,
+      undefined,
       this.baseUrl,
     );
   }

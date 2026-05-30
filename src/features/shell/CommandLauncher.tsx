@@ -1,4 +1,5 @@
 import { createSignal, For, Show } from "solid-js";
+import { t } from "../../i18n";
 import { ErrorBanner, type ErrorView, toErrorView } from "../feedback";
 import { PluginCommandList } from "../plugins";
 import {
@@ -34,7 +35,7 @@ const DEFAULT_COLS = 120;
 const DEFAULT_ROWS = 32;
 
 function toLauncherError(error: unknown): ErrorView {
-  return toErrorView(error, "Failed to start session");
+  return toErrorView(error, t("launcher.failedToStart"));
 }
 
 /**
@@ -118,7 +119,7 @@ export function CommandLauncher(props: CommandLauncherProps) {
         // Command-not-found: session exists but never started.
         setHistory((prev) => rememberFailed(prev, historyEntry));
         setError(
-          toLauncherError(new Error("Command failed to start (not found).")),
+          toLauncherError(new Error(t("launcher.commandNotFound"))),
         );
         props.onSessionCreated();
         return;
@@ -141,14 +142,14 @@ export function CommandLauncher(props: CommandLauncherProps) {
         <button
           type="button"
           class="command-launcher__backdrop"
-          aria-label="Close command launcher"
+          aria-label={t("launcher.close")}
           onClick={close}
         />
         <div
           class="command-launcher"
           role="dialog"
           aria-modal="true"
-          aria-label="Command launcher"
+          aria-label={t("launcher.title")}
           onKeyDown={(event) => {
             if (event.key === "Escape") {
               close();
@@ -159,7 +160,7 @@ export function CommandLauncher(props: CommandLauncherProps) {
             when={props.projectId !== null}
             fallback={
               <p class="command-launcher__empty muted">
-                Select a project before starting a terminal session.
+                {t("launcher.noProject")}
               </p>
             }
           >
@@ -171,11 +172,11 @@ export function CommandLauncher(props: CommandLauncherProps) {
               }}
             >
               <label class="command-launcher__field">
-                <span class="command-launcher__field-label">Command</span>
+                <span class="command-launcher__field-label">{t("launcher.command")}</span>
                 <input
                   class="command-launcher__field-input"
                   type="text"
-                  placeholder="Leave empty for the default shell"
+                  placeholder={t("launcher.commandPlaceholder")}
                   value={input().command}
                   autofocus
                   onInput={(e) => patch({ command: e.currentTarget.value })}
@@ -188,7 +189,7 @@ export function CommandLauncher(props: CommandLauncherProps) {
               </label>
 
               <label class="command-launcher__field">
-                <span class="command-launcher__field-label">Arguments</span>
+                <span class="command-launcher__field-label">{t("launcher.arguments")}</span>
                 <input
                   class="command-launcher__field-input"
                   type="text"
@@ -205,7 +206,7 @@ export function CommandLauncher(props: CommandLauncherProps) {
 
               <label class="command-launcher__field">
                 <span class="command-launcher__field-label">
-                  Working directory (repo-relative)
+                  {t("launcher.workingDir")}
                 </span>
                 <input
                   class="command-launcher__field-input"
@@ -223,7 +224,7 @@ export function CommandLauncher(props: CommandLauncherProps) {
 
               <label class="command-launcher__field">
                 <span class="command-launcher__field-label">
-                  Environment (KEY=VALUE per line, optional)
+                  {t("launcher.env")}
                 </span>
                 <textarea
                   class="command-launcher__field-textarea"
@@ -244,12 +245,12 @@ export function CommandLauncher(props: CommandLauncherProps) {
                 class="button command-launcher__submit"
                 disabled={busy()}
               >
-                {busy() ? "Starting…" : "Start session"}
+                {busy() ? t("launcher.starting") : t("launcher.startSession")}
               </button>
             </form>
 
             <Show when={history().recent.length > 0}>
-              <p class="command-launcher__history-title">Recent</p>
+              <p class="command-launcher__history-title">{t("launcher.recent")}</p>
               <ul class="command-launcher__list">
                 <For each={history().recent}>
                   {(entry) => (
@@ -268,7 +269,7 @@ export function CommandLauncher(props: CommandLauncherProps) {
             </Show>
 
             <Show when={history().failed.length > 0}>
-              <p class="command-launcher__history-title">Failed</p>
+              <p class="command-launcher__history-title">{t("launcher.failed")}</p>
               <ul class="command-launcher__list">
                 <For each={history().failed}>
                   {(entry) => (

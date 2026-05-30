@@ -1,4 +1,5 @@
 import { createResource, For, Show } from "solid-js";
+import { t } from "../../i18n";
 import { ErrorBanner, type ErrorView, toErrorView } from "../feedback";
 import { describeContribution, PluginApi, type PluginCommand } from "./api";
 
@@ -34,9 +35,9 @@ export function PluginCommandList(props: PluginCommandListProps) {
 
   return (
     <section class="plugin-commands" aria-label="Plugin commands">
-      <p class="plugin-commands__title">Plugin commands</p>
+      <p class="plugin-commands__title">{t("plugins.title")}</p>
       <p class="plugin-commands__note muted">
-        Reserved in v0 — display only, not runnable.
+        {t("plugins.reserved")}
       </p>
 
       <Show when={commands.error}>
@@ -46,14 +47,14 @@ export function PluginCommandList(props: PluginCommandListProps) {
       </Show>
 
       <Show when={commands.loading}>
-        <p class="plugin-commands__loading muted">Loading…</p>
+        <p class="plugin-commands__loading muted">{t("plugins.loading")}</p>
       </Show>
 
       <Show
         when={!commands.loading && (commands()?.commands.length ?? 0) > 0}
         fallback={
           <Show when={!commands.loading && !commands.error}>
-            <p class="plugin-commands__empty muted">No plugin commands.</p>
+            <p class="plugin-commands__empty muted">{t("plugins.empty")}</p>
           </Show>
         }
       >
@@ -82,13 +83,13 @@ function PluginCommandItem(props: { command: PluginCommand }) {
           "plugin-commands__entry--dangerous": props.command.dangerous,
         }}
         disabled
-        title="Reserved in v0 — plugin commands are not runnable."
+        title={t("plugins.reservedTooltip")}
       >
-        <span class="plugin-commands__badge">plugin</span>
+        <span class="plugin-commands__badge">{t("plugins.badge")}</span>
         <span class="plugin-commands__entry-title">{props.command.title}</span>
         <span class="plugin-commands__category">{props.command.category}</span>
         <Show when={props.command.dangerous}>
-          <span class="plugin-commands__danger">dangerous</span>
+          <span class="plugin-commands__danger">{t("plugins.dangerous")}</span>
         </Show>
         <Show when={hint()}>
           <span class="plugin-commands__hint muted">{hint()}</span>

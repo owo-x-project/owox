@@ -13,8 +13,8 @@
 }
 
 .files-surface__tree {
-  border-right: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border-right: 1px solid var(--owox-border);
+  background: var(--owox-surface);
   overflow: auto;
   min-height: 0;
 }
@@ -39,10 +39,10 @@
   justify-content: space-between;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--owox-border);
   position: sticky;
   top: 0;
-  background: var(--color-surface);
+  background: var(--owox-surface);
 }
 
 .file-tree__title {
@@ -80,11 +80,11 @@
 }
 
 .file-tree__row:hover {
-  background: var(--color-surface-2);
+  background: var(--owox-surface-2);
 }
 
 .file-tree__row--selected {
-  background: var(--color-accent-soft);
+  background: var(--owox-accent-soft);
 }
 
 .file-tree__label {
@@ -95,7 +95,7 @@
   min-width: 0;
   border: none;
   background: transparent;
-  color: var(--color-text);
+  color: var(--owox-text);
   cursor: pointer;
   padding: var(--space-1) 0;
   text-align: left;
@@ -104,12 +104,20 @@
 .file-tree__icon {
   width: 12px;
   flex: none;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
 .file-tree__kind {
-  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
   font-size: 12px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  font-weight: 600;
+  font-family: ui-monospace, SFMono-Regular, monospace;
 }
 
 .file-tree__name {
@@ -134,7 +142,31 @@
 }
 
 .file-tree__action--danger:hover {
-  color: var(--color-danger);
+  color: var(--owox-danger);
+}
+
+/* ---------------------------------------- hidden files & toggle */
+
+.file-tree__row--hidden {
+  opacity: 0.5;
+}
+
+.file-tree__toggle-hidden {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--owox-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.file-tree__toggle-hidden:hover {
+  background: var(--owox-surface-2);
+  color: var(--owox-text);
 }
 
 /* ----------------------------------------------------- tree inline dialog */
@@ -142,8 +174,8 @@
 .file-tree__dialog {
   margin: var(--space-2) var(--space-3);
   padding: var(--space-3);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border-strong);
+  background: var(--owox-surface-2);
+  border: 1px solid var(--owox-border-strong);
   border-radius: var(--radius);
 }
 
@@ -161,9 +193,9 @@
 .file-tree__input {
   width: 100%;
   padding: var(--space-1) var(--space-2);
-  background: var(--color-bg);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+  background: var(--owox-bg);
+  color: var(--owox-text);
+  border: 1px solid var(--owox-border);
   border-radius: var(--radius-sm);
 }
 
@@ -181,7 +213,7 @@
 
 .file-tree__delete-warn {
   margin: 0;
-  color: var(--color-danger);
+  color: var(--owox-danger);
 }
 
 .file-tree__delete-hint {
@@ -190,8 +222,8 @@
 }
 
 .file-tree__delete-button {
-  border-color: var(--color-danger);
-  color: var(--color-danger);
+  border-color: var(--owox-danger);
+  color: var(--owox-danger);
 }
 
 .file-tree__delete-button:disabled {
@@ -215,7 +247,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--owox-border);
 }
 
 .editor__path {
@@ -230,7 +262,7 @@
 }
 
 .editor__dirty {
-  color: var(--color-warning);
+  color: var(--owox-warning);
 }
 
 .editor__meta {
@@ -241,13 +273,13 @@
 }
 
 .editor__readonly {
-  color: var(--color-warning);
+  color: var(--owox-warning);
   background: rgba(224, 175, 104, 0.16);
 }
 
 .editor__truncated {
-  color: var(--color-text-muted);
-  background: var(--color-surface-2);
+  color: var(--owox-text-muted);
+  background: var(--owox-surface-2);
 }
 
 .editor__state,

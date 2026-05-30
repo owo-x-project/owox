@@ -1,0 +1,61 @@
+/* Dark theme (default, matches existing) */
+[data-theme="dark"], :root {
+  --owox-bg: #0f1216;
+  --owox-surface: #171b21;
+  --owox-surface-2: #1e242c;
+  --owox-chrome: rgba(23, 27, 33, 0.82);
+  --owox-border: #2a313b;
+  --owox-border-strong: #3a434f;
+  --owox-text: #e6e9ee;
+  --owox-text-muted: #9aa4b2;
+  --owox-accent: #7aa2f7;
+  --owox-accent-soft: rgba(122, 162, 247, 0.16);
+  --owox-danger: #f7768e;
+  --owox-warning: #e0af68;
+  --owox-success: #9ece6a;
+  --owox-primary: #0077cc;
+  --owox-primary-soft: rgba(0, 119, 204, 0.16);
+  --owox-chrome-glass: rgba(23, 27, 33, 0.72);
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --owox-bg: #f5f7fa;
+  --owox-surface: #ffffff;
+  --owox-surface-2: #e6e9ee;
+  --owox-chrome: rgba(255, 255, 255, 0.82);
+  --owox-border: #cdd3dc;
+  --owox-border-strong: #b4bdca;
+  --owox-text: #1e242c;
+  --owox-text-muted: #5c6678;
+  --owox-accent: #0077cc;
+  --owox-accent-soft: rgba(0, 119, 204, 0.12);
+  --owox-danger: #d93a52;
+  --owox-warning: #c4890a;
+  --owox-success: #5a9e1e;
+  --owox-primary: #0077cc;
+  --owox-primary-soft: rgba(0, 119, 204, 0.12);
+  --owox-chrome-glass: rgba(255, 255, 255, 0.72);
+}
+
+/* Auto theme (media query for OS detection) */
+@media (prefers-color-scheme: light) {
+  [data-theme="auto"] {
+    --owox-bg: #f5f7fa;
+    --owox-surface: #ffffff;
+    --owox-surface-2: #e6e9ee;
+    --owox-chrome: rgba(255, 255, 255, 0.82);
+    --owox-border: #cdd3dc;
+    --owox-border-strong: #b4bdca;
+    --owox-text: #1e242c;
+    --owox-text-muted: #5c6678;
+    --owox-accent: #0077cc;
+    --owox-accent-soft: rgba(0, 119, 204, 0.12);
+    --owox-danger: #d93a52;
+    --owox-warning: #c4890a;
+    --owox-success: #5a9e1e;
+    --owox-primary: #0077cc;
+    --owox-primary-soft: rgba(0, 119, 204, 0.12);
+    --owox-chrome-glass: rgba(255, 255, 255, 0.72);
+  }
+}

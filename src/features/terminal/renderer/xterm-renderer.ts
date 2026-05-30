@@ -25,36 +25,39 @@ export class XtermRenderer implements TerminalRenderer {
   private disposables: IDisposable[] = [];
 
   mount(el: HTMLElement): void {
+    // Read owox theme tokens from CSS custom properties so the terminal
+    // respects light/dark theme switching at runtime.
+    const style = getComputedStyle(document.documentElement);
+    const v = (name: string, fallback: string) =>
+      style.getPropertyValue(name).trim() || fallback;
+
     const term = new Terminal({
       cursorBlink: true,
       fontSize: 13,
       fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
       scrollback: 10000,
       allowProposedApi: true,
-      // Dark theme aligned with the app's caelestia-inspired tokens
-      // (src/styles.css). Kept in sync manually since the renderer cannot read
-      // CSS variables at construction.
       theme: {
-        background: "#0f1216",
-        foreground: "#e6e9ee",
-        cursor: "#7aa2f7",
-        cursorAccent: "#0f1216",
+        background: v("--owox-bg", "#0f1216"),
+        foreground: v("--owox-text", "#e6e9ee"),
+        cursor: v("--owox-accent", "#7aa2f7"),
+        cursorAccent: v("--owox-bg", "#0f1216"),
         selectionBackground: "rgba(122, 162, 247, 0.30)",
-        black: "#171b21",
-        brightBlack: "#3a434f",
-        red: "#f7768e",
-        brightRed: "#f7768e",
-        green: "#9ece6a",
-        brightGreen: "#9ece6a",
-        yellow: "#e0af68",
-        brightYellow: "#e0af68",
-        blue: "#7aa2f7",
-        brightBlue: "#7aa2f7",
+        black: v("--owox-surface", "#171b21"),
+        brightBlack: v("--owox-border-strong", "#3a434f"),
+        red: v("--owox-danger", "#f7768e"),
+        brightRed: v("--owox-danger", "#f7768e"),
+        green: v("--owox-success", "#9ece6a"),
+        brightGreen: v("--owox-success", "#9ece6a"),
+        yellow: v("--owox-warning", "#e0af68"),
+        brightYellow: v("--owox-warning", "#e0af68"),
+        blue: v("--owox-accent", "#7aa2f7"),
+        brightBlue: v("--owox-accent", "#7aa2f7"),
         magenta: "#bb9af7",
         brightMagenta: "#bb9af7",
         cyan: "#7dcfff",
         brightCyan: "#7dcfff",
-        white: "#e6e9ee",
+        white: v("--owox-text", "#e6e9ee"),
         brightWhite: "#ffffff",
       },
     });

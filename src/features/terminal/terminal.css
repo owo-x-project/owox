@@ -14,8 +14,8 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border-bottom: 1px solid var(--owox-border);
+  background: var(--owox-surface);
 }
 
 .terminal-surface__tabs {
@@ -32,18 +32,18 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--owox-border);
   border-radius: var(--radius-sm);
-  background: var(--color-surface-2);
-  color: var(--color-text-muted);
+  background: var(--owox-surface-2);
+  color: var(--owox-text-muted);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .terminal-surface__tab--active {
-  color: var(--color-text);
-  border-color: var(--color-border-strong);
-  background: var(--color-bg);
+  color: var(--owox-text);
+  border-color: var(--owox-border-strong);
+  background: var(--owox-bg);
 }
 
 .terminal-surface__tab-label {
@@ -71,7 +71,7 @@
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   font-size: 12px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--owox-border);
 }
 
 .terminal-surface__state {
@@ -80,29 +80,29 @@
   letter-spacing: 0.06em;
   padding: 1px var(--space-2);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
+  border: 1px solid var(--owox-border);
+  color: var(--owox-text-muted);
 }
 
 .terminal-surface__state[data-state="running"] {
-  color: var(--color-success);
-  border-color: var(--color-success);
+  color: var(--owox-success);
+  border-color: var(--owox-success);
 }
 
 .terminal-surface__state[data-state="creating"] {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
+  color: var(--owox-accent);
+  border-color: var(--owox-accent);
 }
 
 .terminal-surface__state[data-state="failed"] {
-  color: var(--color-danger);
-  border-color: var(--color-danger);
+  color: var(--owox-danger);
+  border-color: var(--owox-danger);
 }
 
 .terminal-surface__state[data-state="exited"],
 .terminal-surface__state[data-state="terminated"] {
-  color: var(--color-warning);
-  border-color: var(--color-warning);
+  color: var(--owox-warning);
+  border-color: var(--owox-warning);
 }
 
 .terminal-surface__link {
@@ -110,25 +110,77 @@
 }
 
 .terminal-surface__link[data-link="live"] {
-  color: var(--color-success);
+  color: var(--owox-success);
 }
 
 .terminal-surface__link[data-link="reconnecting"] {
-  color: var(--color-danger);
+  color: var(--owox-danger);
 }
 
 .terminal-surface__link[data-link="connecting"] {
-  color: var(--color-accent);
+  color: var(--owox-accent);
 }
 
 .terminal-surface__screen {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  background: var(--color-bg);
+  background: var(--owox-bg);
   padding: var(--space-2);
   overflow: hidden;
 }
+
+/* Task 001-003: Tab bar with state badges and add button. */
+.terminal-tabs {
+  display: flex;
+  gap: 2px;
+  padding: var(--space-1) var(--space-2);
+  background: var(--owox-surface);
+  border-bottom: 1px solid var(--owox-border);
+  overflow-x: auto;
+  align-items: center;
+}
+.terminal-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--owox-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: background var(--motion-micro) var(--ease-standard);
+}
+.terminal-tab:hover { background: var(--owox-surface-2); color: var(--owox-text); }
+.terminal-tab--active { background: var(--owox-accent-soft); color: var(--owox-text); border-color: var(--owox-accent); }
+.terminal-tab--exited { opacity: 0.6; }
+.terminal-tab__badge {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.terminal-tab__badge--creating { background: var(--owox-warning); }
+.terminal-tab__badge--running { background: var(--owox-success); }
+.terminal-tab__badge--exited { background: var(--owox-text-muted); }
+.terminal-tab__badge--failed { background: var(--owox-danger); }
+.terminal-tabs__add {
+  width: 28px; height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--owox-text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.terminal-tabs__add:hover { background: var(--owox-surface-2); color: var(--owox-text); }
 
 /* Command launcher session form (phase 03). */
 .command-launcher__form {
@@ -148,23 +200,23 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
 .command-launcher__field-input,
 .command-launcher__field-textarea {
   width: 100%;
   padding: var(--space-2);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--owox-border);
   border-radius: var(--radius-sm);
-  background: var(--color-surface-2);
-  color: var(--color-text);
+  background: var(--owox-surface-2);
+  color: var(--owox-text);
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   font-size: 13px;
 }
 
 .command-launcher__field-error {
-  color: var(--color-danger);
+  color: var(--owox-danger);
   font-size: 12px;
 }
 
@@ -176,7 +228,7 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
   margin: var(--space-2) 0 var(--space-1);
 }
 
@@ -189,16 +241,78 @@
   padding: var(--space-1) var(--space-2);
   border: none;
   background: transparent;
-  color: var(--color-text);
+  color: var(--owox-text);
   cursor: pointer;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   font-size: 12px;
 }
 
 .command-launcher__history-item:hover {
-  background: var(--color-accent-soft);
+  background: var(--owox-accent-soft);
 }
 
 .command-launcher__history-item--failed {
-  color: var(--color-danger);
+  color: var(--owox-danger);
+}
+
+/* Task 004: Tab close button. */
+.terminal-tab__close {
+  opacity: 0;
+  width: 16px; height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 2px;
+  padding: 0;
+}
+.terminal-tab:hover .terminal-tab__close { opacity: 1; }
+.terminal-tab__close:hover { background: var(--owox-danger); color: white; }
+
+/* Task 005: Split pane layout. */
+.terminal-split {
+  display: grid;
+  width: 100%;
+  height: 100%;
+}
+.terminal-split--horizontal {
+  grid-auto-flow: column;
+}
+.terminal-split__handle {
+  background: var(--owox-border);
+  transition: background var(--motion-micro) var(--ease-standard);
+}
+.terminal-split--horizontal > .terminal-split__handle {
+  cursor: col-resize;
+  width: 4px;
+  min-width: 4px;
+}
+.terminal-split--vertical > .terminal-split__handle {
+  cursor: row-resize;
+  height: 4px;
+  min-height: 4px;
+}
+.terminal-split__handle:hover {
+  background: var(--owox-accent);
+}
+.terminal-pane {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+.terminal-pane--active {
+  outline: 1px solid var(--owox-accent);
+  outline-offset: -1px;
+}
+.terminal-toolbar {
+  display: flex;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  align-items: center;
+  margin-left: auto;
 }

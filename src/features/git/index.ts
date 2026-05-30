@@ -14,6 +14,12 @@ export {
   type GitStatusFile,
   type GitStatusResponse,
 } from "./api";
+export { CommitLog, type CommitLogProps } from "./CommitLog";
+export {
+  type Commit,
+  type CommitLogResponse,
+  relativeTime,
+} from "./commit-model";
 export type { GitError } from "./errors";
 export { ReviewSurface } from "./ReviewSurface";
 export type { SourceControlPanelProps } from "./SourceControlPanel";

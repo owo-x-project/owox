@@ -3,27 +3,10 @@
  * dark, calm, Material Design 3-ish tokens. Translucent surfaces are limited to
  * workspace chrome (status bar, drawers, panel, launcher); the central surface
  * stays opaque for readability of terminal / editor / diff content.
+ *
+ * Color tokens are defined in src/theme/tokens.css (light/dark/auto).
  */
 :root {
-  /* Base surfaces */
-  --color-bg: #0f1216;
-  --color-surface: #171b21;
-  --color-surface-2: #1e242c;
-  --color-chrome: rgba(23, 27, 33, 0.82);
-  --color-border: #2a313b;
-  --color-border-strong: #3a434f;
-
-  /* Text */
-  --color-text: #e6e9ee;
-  --color-text-muted: #9aa4b2;
-
-  /* Accent / semantic */
-  --color-accent: #7aa2f7;
-  --color-accent-soft: rgba(122, 162, 247, 0.16);
-  --color-danger: #f7768e;
-  --color-warning: #e0af68;
-  --color-success: #9ece6a;
-
   /* Spacing scale */
   --space-1: 4px;
   --space-2: 8px;
@@ -40,8 +23,8 @@
   --motion-sheet: 220ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 
-  color: var(--color-text);
-  background: var(--color-bg);
+  color: var(--owox-text);
+  background: var(--owox-bg);
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
@@ -65,98 +48,136 @@ code {
 }
 
 .muted {
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
-/* ------------------------------------------------------------------ shell */
-
+/* ---- Workspace Shell (VSCode-style) ---- */
 .workspace-shell {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 48px auto 1fr;
+  grid-template-rows: 1fr;
   min-height: 100vh;
-  background: var(--color-bg);
+  background: var(--owox-bg);
 }
 
-.status-bar {
+.workspace-shell:not(.workspace-shell--sidebar-open) {
+  grid-template-columns: 48px 1fr;
+}
+
+/* ---- Activity Bar ---- */
+.activity-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-2) 0;
+  background: var(--owox-surface);
+  border-right: 1px solid var(--owox-border);
+  z-index: 10;
+}
+
+.activity-bar__top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.activity-bar__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.activity-bar__btn {
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: 48px;
-  padding: 0 var(--space-4);
-  background: var(--color-chrome);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.status-bar__group {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-}
-
-.status-bar__brand {
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.status-bar__project {
-  color: var(--color-text-muted);
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.surface-switcher {
-  display: flex;
-  gap: var(--space-1);
-  padding: 3px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-}
-
-.surface-switcher__tab {
+  justify-content: center;
   border: none;
   background: transparent;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
   border-radius: var(--radius-sm);
-  padding: var(--space-1) var(--space-3);
   cursor: pointer;
-  transition: background var(--motion-micro) var(--ease-standard);
+  transition: background var(--motion-micro) var(--ease-standard),
+              color var(--motion-micro) var(--ease-standard);
+  position: relative;
 }
 
-.surface-switcher__tab:hover:not(:disabled) {
-  color: var(--color-text);
-  background: var(--color-surface-2);
+.activity-bar__btn:hover {
+  color: var(--owox-text);
+  background: var(--owox-surface-2);
 }
 
-.surface-switcher__tab--active {
-  color: var(--color-text);
-  background: var(--color-accent-soft);
+.activity-bar__btn--active {
+  color: var(--owox-accent);
 }
 
-.surface-switcher__tab:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+/* Active indicator bar (left edge) */
+.activity-bar__btn--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 25%;
+  bottom: 25%;
+  width: 2px;
+  background: var(--owox-accent);
+  border-radius: 1px;
+}
+
+.activity-bar__brand {
+  color: var(--owox-accent);
+  margin-bottom: var(--space-2);
+}
+
+/* ---- Sidebar (extends from activity bar) ---- */
+.sidebar {
+  width: 260px;
+  background: var(--owox-surface);
+  border-right: 1px solid var(--owox-border);
+  overflow-y: auto;
+  animation: sidebar-in var(--motion-standard) var(--ease-standard);
+}
+
+@keyframes sidebar-in {
+  from { width: 0; opacity: 0; }
+  to { width: 260px; opacity: 1; }
+}
+
+/* ---- Main Surface ---- */
+.main-surface {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  background: var(--owox-bg);
 }
 
 /* ------------------------------------------------------------- buttons */
 
 .button {
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
+  border: 1px solid var(--owox-border);
+  background: var(--owox-surface);
+  color: var(--owox-text);
   border-radius: var(--radius-sm);
   padding: var(--space-1) var(--space-3);
   cursor: pointer;
-  transition: background var(--motion-micro) var(--ease-standard);
+  transition: background var(--motion-micro) var(--ease-standard),
+              transform var(--motion-micro) var(--ease-standard),
+              box-shadow var(--motion-micro) var(--ease-standard);
 }
 
-.button:hover {
-  background: var(--color-surface-2);
+.button:hover:not(:disabled) {
+  background: var(--owox-surface-2);
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .button--ghost {
@@ -173,56 +194,13 @@ code {
 }
 
 .button[aria-pressed="true"] {
-  border-color: var(--color-border-strong);
-  background: var(--color-accent-soft);
+  border-color: var(--owox-border-strong);
+  background: var(--owox-accent-soft);
 }
 
-/* ------------------------------------------------------------- body grid */
 
-.workspace-body {
-  display: grid;
-  grid-template-columns:
-    minmax(240px, 300px)
-    minmax(0, 1fr)
-    minmax(240px, 320px);
-  min-height: 0;
-}
 
-/* Collapse drawer tracks when closed so the surface can use the full width. */
-.workspace-shell:not(.workspace-shell--left-open) .workspace-body {
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
-}
 
-.workspace-shell:not(.workspace-shell--right-open) .workspace-body {
-  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
-}
-
-.workspace-shell:not(.workspace-shell--left-open):not(
-    .workspace-shell--right-open
-  )
-  .workspace-body {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.drawer {
-  background: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-  overflow-y: auto;
-  min-height: 0;
-}
-
-.drawer--right {
-  border-right: none;
-  border-left: 1px solid var(--color-border);
-}
-
-.active-surface {
-  background: var(--color-bg);
-  min-width: 0;
-  min-height: 0;
-  overflow: auto;
-  display: flex;
-}
 
 /* --------------------------------------------------- surface placeholders */
 
@@ -244,15 +222,15 @@ code {
 .surface-placeholder__detail {
   margin: 0;
   max-width: 42ch;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
 .badge {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-accent);
-  background: var(--color-accent-soft);
+  color: var(--owox-accent);
+  background: var(--owox-accent-soft);
   border-radius: 999px;
   padding: 2px var(--space-2);
 }
@@ -268,7 +246,7 @@ code {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
 .project-list__state {
@@ -291,22 +269,25 @@ code {
   gap: var(--space-1);
   width: 100%;
   text-align: left;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  background: var(--owox-surface-2);
+  border: 1px solid var(--owox-border);
   border-radius: var(--radius-sm);
   color: inherit;
   padding: var(--space-2) var(--space-3);
   cursor: pointer;
-  transition: border-color var(--motion-micro) var(--ease-standard);
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  transition: border-color var(--motion-micro) var(--ease-standard),
+              outline-color var(--motion-micro) var(--ease-standard);
 }
 
 .project-item:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
+  outline-color: var(--owox-border-strong);
 }
 
 .project-item--selected {
-  border-color: var(--color-accent);
-  background: var(--color-accent-soft);
+  border-color: var(--owox-accent);
+  background: var(--owox-accent-soft);
 }
 
 .project-item--unavailable {
@@ -322,16 +303,16 @@ code {
   display: flex;
   gap: var(--space-2);
   font-size: 12px;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
 .project-item__status--unavailable {
-  color: var(--color-danger);
+  color: var(--owox-danger);
 }
 
 .project-item__warnings {
   font-size: 11px;
-  color: var(--color-warning);
+  color: var(--owox-warning);
 }
 
 /* ------------------------------------------------------------ error display */
@@ -340,8 +321,8 @@ code {
   display: grid;
   gap: var(--space-2);
   padding: var(--space-3);
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-danger);
+  background: var(--owox-surface-2);
+  border: 1px solid var(--owox-danger);
   border-radius: var(--radius-sm);
 }
 
@@ -355,12 +336,12 @@ code {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-danger);
+  color: var(--owox-danger);
 }
 
 .error-display__target {
   font-size: 12px;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
 .error-display__message {
@@ -369,44 +350,17 @@ code {
 
 .error-display__action {
   margin: 0;
-  color: var(--color-accent);
+  color: var(--owox-accent);
   font-size: 13px;
 }
 
 .error-display__log {
   font-size: 12px;
-  color: var(--color-text-muted);
+  color: var(--owox-text-muted);
 }
 
 .error-display__log--missing {
   font-style: italic;
-}
-
-/* ------------------------------------------------------------ bottom panel */
-
-.bottom-panel {
-  background: var(--color-chrome);
-  backdrop-filter: blur(12px);
-  border-top: 1px solid var(--color-border);
-  max-height: 30vh;
-  overflow: auto;
-}
-
-.bottom-panel__inner {
-  padding: var(--space-3) var(--space-4);
-}
-
-.bottom-panel__toggle {
-  position: fixed;
-  right: var(--space-4);
-  bottom: var(--space-4);
-  z-index: 5;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-radius: 999px;
-  padding: var(--space-1) var(--space-3);
-  cursor: pointer;
 }
 
 /* --------------------------------------------------------- command launcher */
@@ -418,7 +372,7 @@ code {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 12vh;
+  padding-top: 80px;
 }
 
 .command-launcher__backdrop {
@@ -432,13 +386,15 @@ code {
 
 .command-launcher {
   position: relative;
-  width: min(560px, 92vw);
+  width: min(640px, 92vw);
+  max-height: 70vh;
+  overflow-y: auto;
   display: grid;
   gap: var(--space-2);
   padding: var(--space-3);
-  background: var(--color-chrome);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--color-border-strong);
+  background: var(--owox-surface);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--owox-border-strong);
   border-radius: var(--radius);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
@@ -447,15 +403,16 @@ code {
   width: 100%;
   padding: var(--space-3);
   font-size: 15px;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  color: var(--owox-text);
+  background: var(--owox-surface);
+  border: 1px solid var(--owox-border);
   border-radius: var(--radius-sm);
+  transition: border-color var(--motion-standard) var(--ease-standard);
 }
 
 .command-launcher__input:focus {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: var(--owox-accent);
 }
 
 .command-launcher__list {
@@ -478,7 +435,7 @@ code {
 }
 
 .command-launcher__error {
-  color: var(--color-danger);
+  color: var(--owox-danger);
   font-size: 13px;
   min-height: 0;
 }
@@ -491,7 +448,7 @@ code {
  * since no execute endpoint exists.
  */
 .plugin-commands {
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--owox-border);
   padding: var(--space-2) var(--space-3);
 }
 
@@ -527,7 +484,7 @@ code {
   width: 100%;
   text-align: left;
   padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--owox-border);
   border-radius: var(--radius-sm);
   background: transparent;
   color: inherit;
@@ -536,7 +493,7 @@ code {
 }
 
 .plugin-commands__entry--dangerous {
-  border-color: var(--color-danger);
+  border-color: var(--owox-danger);
 }
 
 .plugin-commands__badge {
@@ -545,7 +502,7 @@ code {
   letter-spacing: 0.04em;
   padding: 1px var(--space-2);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--owox-border);
 }
 
 .plugin-commands__entry-title {
@@ -560,7 +517,7 @@ code {
 .plugin-commands__danger {
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-danger);
+  color: var(--owox-danger);
 }
 
 .plugin-commands__hint {
@@ -576,44 +533,7 @@ code {
  *   smartphone < 640px, tablet < 1024px, else desktop.
  */
 
-/* -------- tablet: drawers overlay the surface to preserve its width -------- */
-.workspace-shell--tablet .workspace-body {
-  position: relative;
-  grid-template-columns: minmax(0, 1fr);
-}
 
-.workspace-shell--tablet .drawer {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: min(320px, 80vw);
-  z-index: 8;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
-}
-
-.workspace-shell--tablet .drawer--left {
-  left: 0;
-}
-
-.workspace-shell--tablet .drawer--right {
-  right: 0;
-}
-
-/* ----------------- smartphone: terminal base surface fills ----------------- */
-.workspace-shell--smartphone {
-  grid-template-rows: auto 1fr;
-}
-
-.active-surface--mobile-base {
-  background: var(--color-bg);
-  min-width: 0;
-  min-height: 0;
-  overflow: auto;
-}
-
-.workspace-shell--smartphone .surface-switcher {
-  display: none;
-}
 
 /* --------------------------------------------------------------- sheets ---- */
 
@@ -655,8 +575,8 @@ code {
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border-strong);
+  background: var(--owox-surface);
+  border: 1px solid var(--owox-border-strong);
   box-shadow: 0 0 48px rgba(0, 0, 0, 0.55);
   animation: sheet-in var(--motion-sheet) var(--ease-standard);
 }
@@ -687,7 +607,7 @@ code {
 .sheet__header {
   flex: 0 0 auto;
   padding: var(--space-2) var(--space-3);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--owox-border);
 }
 
 .sheet__body {
@@ -731,22 +651,177 @@ code {
   --sheet-from: translateY(-16px);
 }
 
+/* ---- Focus ring ---- */
+.button:focus-visible,
+.command-launcher__input:focus-visible {
+  outline: 2px solid var(--owox-accent);
+  outline-offset: 2px;
+  transition: outline-color var(--motion-micro) var(--ease-standard);
+}
+
+/* ---- Page transitions ---- */
+.surface-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.surface-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--motion-standard) var(--ease-standard),
+              transform var(--motion-standard) var(--ease-standard);
+}
+.surface-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.surface-exit-active {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity var(--motion-standard) var(--ease-standard),
+              transform var(--motion-standard) var(--ease-standard);
+}
+
+
+
+.main-surface > * {
+  animation: surface-fade-in var(--motion-standard) var(--ease-standard);
+}
+@keyframes surface-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- List animations ---- */
+@keyframes list-item-in {
+  from { opacity: 0; transform: translateY(-8px); max-height: 0; }
+  to { opacity: 1; transform: translateY(0); max-height: 200px; }
+}
+@keyframes list-item-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+.project-list__items > * {
+  animation: list-item-in 120ms var(--ease-standard) both;
+}
+.project-list__items > *:nth-child(1) { animation-delay: 0ms; }
+.project-list__items > *:nth-child(2) { animation-delay: 30ms; }
+.project-list__items > *:nth-child(3) { animation-delay: 60ms; }
+.project-list__items > *:nth-child(4) { animation-delay: 90ms; }
+.project-list__items > *:nth-child(5) { animation-delay: 120ms; }
+
+/* ---- Jitter prevention ---- */
+.main-surface {
+  scrollbar-gutter: stable;
+}
+
+.button, .activity-bar__btn {
+  will-change: transform;
+}
+
 /*
  * Media-query safety net: if the JS viewport class has not applied yet, narrow
  * widths still avoid squeezing drawers into an unusable column.
  */
-@media (max-width: 640px) {
-  .workspace-body {
-    grid-template-columns: minmax(0, 1fr);
-    grid-auto-rows: min-content;
-  }
+
+
+/* ---- Shortcut Help ---- */
+.shortcut-help__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.shortcut-help__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  cursor: default;
+  background: rgba(0, 0, 0, 0.45);
+}
+.shortcut-help {
+  position: relative;
+  width: min(480px, 92vw);
+  max-height: 70vh;
+  overflow-y: auto;
+  background: var(--owox-surface);
+  border: 1px solid var(--owox-border-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.shortcut-help__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--owox-border);
+}
+.shortcut-help__header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+.shortcut-help__body {
+  padding: var(--space-3) var(--space-4);
+}
+.shortcut-help__category {
+  margin-bottom: var(--space-4);
+}
+.shortcut-help__category-label {
+  margin: 0 0 var(--space-2);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--owox-text-muted);
+}
+.shortcut-help__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-1) 0;
+  font-size: 13px;
+}
+.shortcut-help__kbd {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 12px;
+  padding: 2px var(--space-2);
+  background: var(--owox-surface-2);
+  border: 1px solid var(--owox-border);
+  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, *::before, *::after {
     /* biome-ignore lint/complexity/noImportantStyles: defeats class-level transition specificity for the reduced-motion reset (caelestia theme mandates prefers-reduced-motion support). */
-    transition-duration: 0ms !important;
+    animation-duration: 0.01ms !important;
     /* biome-ignore lint/complexity/noImportantStyles: see above. */
-    animation-duration: 0ms !important;
+    animation-iteration-count: 1 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: see above. */
+    transition-duration: 0.01ms !important;
   }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .command-launcher {
+    background: var(--owox-surface);
+  }
+}
+
+/* --------------------------------------------------- notification badge */
+
+.notification-badge {
+  position: absolute;
+  top: 2px; right: 2px;
+  min-width: 14px; height: 14px;
+  border-radius: 7px;
+  background: var(--owox-danger);
+  color: white;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  font-weight: 600;
 }

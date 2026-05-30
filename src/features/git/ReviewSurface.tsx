@@ -3,8 +3,11 @@ import {
   createMemo,
   createResource,
   createSignal,
+  Match,
   Show,
+  Switch,
 } from "solid-js";
+import { t } from "../../i18n";
 import { LogView } from "../log";
 import type { SurfaceProps } from "../shell/placeholders";
 import {
@@ -13,6 +16,7 @@ import {
   type GitOp,
   type GitOperationRequest,
 } from "./api";
+import { CommitLog } from "./CommitLog";
 import { DiffView } from "./diff";
 import { type GitError, toGitError } from "./errors";
 import { SourceControlPanel } from "./SourceControlPanel";
@@ -25,6 +29,8 @@ import {
   withOutcome,
 } from "./status-model";
 import "./git.css";
+
+type ReviewTab = "working-tree" | "history";
 
 interface OperationInput {
   op: GitOp;
@@ -49,6 +55,7 @@ interface OperationInput {
 export const ReviewSurface: Component<SurfaceProps> = (props) => {
   const api = createMemo(() => new GitApi(props.projectId));
 
+  const [activeTab, setActiveTab] = createSignal<ReviewTab>("working-tree");
   const [refreshKey, setRefreshKey] = createSignal(0);
   const [busy, setBusy] = createSignal(false);
   const [opState, setOpState] = createSignal<OperationState>(
@@ -158,70 +165,99 @@ export const ReviewSurface: Component<SurfaceProps> = (props) => {
   }
 
   return (
-    <div class="review-surface git-review">
-      <div class="git-review__panel">
-        <SourceControlPanel
-          projectId={props.projectId}
-          status={statusBundle()?.status}
-          branches={statusBundle()?.branches}
-          loading={statusBundle.loading}
-          loadError={loadError()}
-          opState={opState()}
-          busy={busy()}
-          selection={selection()}
-          onSelect={setSelection}
-          onOperation={(body) => void runOperation(body)}
-          commitMessage={commitMessage()}
-          onCommitMessage={setCommitMessage}
-        />
-      </div>
-
-      <div class="git-review__diff">
-        <Show
-          when={selection()}
-          fallback={
-            <p class="muted git-review__diff-empty">
-              Select a changed file to view its diff.
-            </p>
-          }
+    <div class="review-surface">
+      <div class="review-tabs">
+        <button
+          type="button"
+          class="review-tabs__tab"
+          classList={{ "review-tabs__tab--active": activeTab() === "working-tree" }}
+          onClick={() => setActiveTab("working-tree")}
         >
-          {(sel) => (
-            <>
-              <p class="git-review__diff-head muted">
-                {sel().path}
-                <span class="git-review__diff-mode">
-                  {diffModeFor(sel().group)}
-                </span>
-              </p>
-              <DiffView
-                patch={diffResource()?.patch ?? ""}
-                binary={diffResource()?.binary ?? false}
-                truncated={diffResource()?.truncated ?? false}
-                loading={diffResource.loading}
-                error={
-                  diffError()
-                    ? {
-                        kind: diffError()?.kind ?? "unknown",
-                        message: diffError()?.message ?? "",
-                        nextAction: diffError()?.nextAction,
-                      }
-                    : null
-                }
-                summary={diffResource()?.summary}
-                onLoadMore={() => void loadMoreDiff()}
-              />
-            </>
-          )}
-        </Show>
-
-        <Show when={lastLogRef()}>
-          {(logRef) => (
-            <div class="git-review__log">
-              <LogView logId={logRef()} />
-            </div>
-          )}
-        </Show>
+          {t("review.workingTree")}
+        </button>
+        <button
+          type="button"
+          class="review-tabs__tab"
+          classList={{ "review-tabs__tab--active": activeTab() === "history" }}
+          onClick={() => setActiveTab("history")}
+        >
+          {t("review.history")}
+        </button>
       </div>
+
+      <Switch>
+        <Match when={activeTab() === "working-tree"}>
+          <div class="git-review">
+            <div class="git-review__panel">
+              <SourceControlPanel
+                projectId={props.projectId}
+                status={statusBundle()?.status}
+                branches={statusBundle()?.branches}
+                loading={statusBundle.loading}
+                loadError={loadError()}
+                opState={opState()}
+                busy={busy()}
+                selection={selection()}
+                onSelect={setSelection}
+                onOperation={(body) => void runOperation(body)}
+                commitMessage={commitMessage()}
+                onCommitMessage={setCommitMessage}
+              />
+            </div>
+
+            <div class="git-review__diff">
+              <Show
+                when={selection()}
+                fallback={
+                  <p class="muted git-review__diff-empty">
+                    {t("review.selectFile")}
+                  </p>
+                }
+              >
+                {(sel) => (
+                  <>
+                    <p class="git-review__diff-head muted">
+                      {sel().path}
+                      <span class="git-review__diff-mode">
+                        {diffModeFor(sel().group)}
+                      </span>
+                    </p>
+                    <DiffView
+                      patch={diffResource()?.patch ?? ""}
+                      binary={diffResource()?.binary ?? false}
+                      truncated={diffResource()?.truncated ?? false}
+                      loading={diffResource.loading}
+                      error={
+                        diffError()
+                          ? {
+                              kind: diffError()?.kind ?? "unknown",
+                              message: diffError()?.message ?? "",
+                              nextAction: diffError()?.nextAction,
+                            }
+                          : null
+                      }
+                      summary={diffResource()?.summary}
+                      onLoadMore={() => void loadMoreDiff()}
+                    />
+                  </>
+                )}
+              </Show>
+
+              <Show when={lastLogRef()}>
+                {(logRef) => (
+                  <div class="git-review__log">
+                    <LogView logId={logRef()} />
+                  </div>
+                )}
+              </Show>
+            </div>
+          </div>
+        </Match>
+
+        <Match when={activeTab() === "history"}>
+          <CommitLog projectId={props.projectId} />
+        </Match>
+      </Switch>
     </div>
   );
 };

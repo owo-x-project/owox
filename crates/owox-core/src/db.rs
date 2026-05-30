@@ -77,6 +77,11 @@ const MIGRATIONS: &[&str] = &[
         started_at INTEGER NOT NULL,
         ended_at INTEGER,
         log_id TEXT,
+        label TEXT,
+        cols INTEGER,
+        rows INTEGER,
+        exit_code INTEGER,
+        pid INTEGER,
         FOREIGN KEY(project_id) REFERENCES projects(id)
     )",
     "CREATE TABLE IF NOT EXISTS logs (
@@ -171,6 +176,11 @@ pub struct SessionRecord {
     pub started_at: i64,
     pub ended_at: Option<i64>,
     pub log_id: Option<String>,
+    pub label: Option<String>,
+    pub cols: Option<i64>,
+    pub rows: Option<i64>,
+    pub exit_code: Option<i64>,
+    pub pid: Option<i64>,
 }
 
 #[derive(Debug, Clone)]
@@ -178,15 +188,74 @@ pub struct SessionRepository {
     pool: SqlitePool,
 }
 
+/// Column tuple shared by session SELECT queries.
+type SessionRow = (
+    String,
+    String,
+    String,
+    String,
+    String,
+    i64,
+    Option<i64>,
+    Option<String>,
+    Option<String>,
+    Option<i64>,
+    Option<i64>,
+    Option<i64>,
+    Option<i64>,
+);
+
+const SESSION_COLUMNS: &str =
+    "id, project_id, command, cwd, state, started_at, ended_at, log_id, label, cols, rows, exit_code, pid";
+
+fn session_from_row(row: SessionRow) -> SessionRecord {
+    let (
+        id,
+        project_id,
+        command,
+        cwd,
+        state,
+        started_at,
+        ended_at,
+        log_id,
+        label,
+        cols,
+        rows,
+        exit_code,
+        pid,
+    ) = row;
+    SessionRecord {
+        id,
+        project_id,
+        command,
+        cwd,
+        state,
+        started_at,
+        ended_at,
+        log_id,
+        label,
+        cols,
+        rows,
+        exit_code,
+        pid,
+    }
+}
+
 impl SessionRepository {
     pub async fn upsert(&self, record: &SessionRecord) -> Result<(), sqlx::Error> {
         sqlx::query(
-            "INSERT INTO terminal_sessions (id, project_id, command, cwd, state, started_at, ended_at, log_id)
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+            "INSERT INTO terminal_sessions
+                (id, project_id, command, cwd, state, started_at, ended_at, log_id, label, cols, rows, exit_code, pid)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)
              ON CONFLICT(id) DO UPDATE SET
                 state = excluded.state,
                 ended_at = excluded.ended_at,
-                log_id = excluded.log_id",
+                log_id = excluded.log_id,
+                label = excluded.label,
+                cols = excluded.cols,
+                rows = excluded.rows,
+                exit_code = excluded.exit_code,
+                pid = excluded.pid",
         )
         .bind(&record.id)
         .bind(&record.project_id)
@@ -196,6 +265,55 @@ impl SessionRepository {
         .bind(record.started_at)
         .bind(record.ended_at)
         .bind(&record.log_id)
+        .bind(&record.label)
+        .bind(record.cols)
+        .bind(record.rows)
+        .bind(record.exit_code)
+        .bind(record.pid)
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
+
+    pub async fn list_by_project(
+        &self,
+        project_id: &str,
+    ) -> Result<Vec<SessionRecord>, sqlx::Error> {
+        let query = format!(
+            "SELECT {SESSION_COLUMNS} FROM terminal_sessions WHERE project_id = ?1 ORDER BY started_at DESC"
+        );
+        let rows = sqlx::query_as::<_, SessionRow>(&query)
+            .bind(project_id)
+            .fetch_all(&self.pool)
+            .await?;
+        Ok(rows.into_iter().map(session_from_row).collect())
+    }
+
+    pub async fn get(&self, session_id: &str) -> Result<Option<SessionRecord>, sqlx::Error> {
+        let query = format!("SELECT {SESSION_COLUMNS} FROM terminal_sessions WHERE id = ?1");
+        let row = sqlx::query_as::<_, SessionRow>(&query)
+            .bind(session_id)
+            .fetch_optional(&self.pool)
+            .await?;
+        Ok(row.map(session_from_row))
+    }
+
+    pub async fn update_state(
+        &self,
+        session_id: &str,
+        state: &str,
+        exit_code: Option<i64>,
+        ended_at: Option<i64>,
+    ) -> Result<(), sqlx::Error> {
+        sqlx::query(
+            "UPDATE terminal_sessions
+             SET state = ?2, exit_code = ?3, ended_at = ?4
+             WHERE id = ?1",
+        )
+        .bind(session_id)
+        .bind(state)
+        .bind(exit_code)
+        .bind(ended_at)
         .execute(&self.pool)
         .await?;
         Ok(())

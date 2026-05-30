@@ -1,0 +1,204 @@
+/* Terminal surface. Reuses the shared theme tokens from styles.css; only
+   terminal-specific layout lives here. */
+
+.terminal-surface {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.terminal-surface__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.terminal-surface__tabs {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-1);
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.terminal-surface__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.terminal-surface__tab--active {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+  background: var(--color-bg);
+}
+
+.terminal-surface__tab-label {
+  font-size: 13px;
+  max-width: 24ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.terminal-surface__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+}
+
+.terminal-surface__empty {
+  font-size: 13px;
+  padding: var(--space-1) 0;
+}
+
+.terminal-surface__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-size: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.terminal-surface__state {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.terminal-surface__state[data-state="running"] {
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.terminal-surface__state[data-state="creating"] {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.terminal-surface__state[data-state="failed"] {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.terminal-surface__state[data-state="exited"],
+.terminal-surface__state[data-state="terminated"] {
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.terminal-surface__link {
+  font-size: 11px;
+}
+
+.terminal-surface__link[data-link="live"] {
+  color: var(--color-success);
+}
+
+.terminal-surface__link[data-link="reconnecting"] {
+  color: var(--color-danger);
+}
+
+.terminal-surface__link[data-link="connecting"] {
+  color: var(--color-accent);
+}
+
+.terminal-surface__screen {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background: var(--color-bg);
+  padding: var(--space-2);
+  overflow: hidden;
+}
+
+/* Command launcher session form (phase 03). */
+.command-launcher__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+}
+
+.command-launcher__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.command-launcher__field-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.command-launcher__field-input,
+.command-launcher__field-textarea {
+  width: 100%;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+}
+
+.command-launcher__field-error {
+  color: var(--color-danger);
+  font-size: 12px;
+}
+
+.command-launcher__submit {
+  align-self: flex-start;
+}
+
+.command-launcher__history-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin: var(--space-2) 0 var(--space-1);
+}
+
+.command-launcher__history-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+}
+
+.command-launcher__history-item:hover {
+  background: var(--color-accent-soft);
+}
+
+.command-launcher__history-item--failed {
+  color: var(--color-danger);
+}

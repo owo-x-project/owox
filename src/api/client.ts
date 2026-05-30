@@ -1,36 +1,28 @@
-import type { ApiErrorResponse, ProjectsResponse } from "./contracts";
+import type { ProjectResource, ProjectsResponse } from "./contracts";
+import { ApiClientError, apiRequest } from "./http";
 
+export { ApiClientError };
+
+/**
+ * Project / workspace API surface. Other domains (files, logs, git, terminal)
+ * own their own `features/<domain>/api.ts` modules built on {@link apiRequest}.
+ */
 export class ApiClient {
   constructor(private readonly baseUrl = "") {}
 
-  async listProjects(): Promise<ProjectsResponse> {
-    return this.request<ProjectsResponse>("/api/projects");
+  listProjects(): Promise<ProjectsResponse> {
+    return apiRequest<ProjectsResponse>(
+      "/api/projects",
+      undefined,
+      this.baseUrl,
+    );
   }
 
-  private async request<T>(path: string, init?: RequestInit): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...init?.headers,
-      },
-      ...init,
-    });
-
-    if (!response.ok) {
-      const error = (await response.json()) as ApiErrorResponse;
-      throw new ApiClientError(error, response.status);
-    }
-
-    return (await response.json()) as T;
-  }
-}
-
-export class ApiClientError extends Error {
-  constructor(
-    readonly response: ApiErrorResponse,
-    readonly status: number,
-  ) {
-    super(response.error.message);
+  getProject(projectId: string): Promise<{ project: ProjectResource }> {
+    return apiRequest<{ project: ProjectResource }>(
+      `/api/projects/${encodeURIComponent(projectId)}`,
+      undefined,
+      this.baseUrl,
+    );
   }
 }

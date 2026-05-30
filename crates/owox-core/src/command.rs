@@ -140,10 +140,10 @@ pub fn validate_confirmation(
         return Err(CommandExecutionError::ConfirmationRequired(requirement));
     }
 
-    if let Some(phrase) = &requirement.phrase {
-        if confirmation.phrase.as_deref() != Some(phrase.as_str()) {
-            return Err(CommandExecutionError::ConfirmationRequired(requirement));
-        }
+    if let Some(phrase) = &requirement.phrase
+        && confirmation.phrase.as_deref() != Some(phrase.as_str())
+    {
+        return Err(CommandExecutionError::ConfirmationRequired(requirement));
     }
 
     Ok(())

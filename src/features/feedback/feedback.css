@@ -1,0 +1,202 @@
+/* Shared feedback module styles (SPEC-shared-error-display +
+ * SPEC-shared-destructive-confirmation). Reuses the theme variables defined in
+ * src/styles.css; no fixed dimensions that break on narrow screens. */
+
+/* ----------------------------------------------------------- error banner */
+
+.error-banner {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-danger);
+  border-left-width: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.error-banner--toast {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.error-banner--modal {
+  width: min(560px, 92vw);
+}
+
+/* Per-kind accent: tints the left border so kinds are distinguishable. */
+.error-banner--auth {
+  border-left-color: var(--color-warning);
+}
+.error-banner--conflict {
+  border-left-color: var(--color-warning);
+}
+.error-banner--network {
+  border-left-color: var(--color-accent);
+}
+.error-banner--not_found {
+  border-left-color: var(--color-text-muted);
+}
+.error-banner--permission {
+  border-left-color: var(--color-warning);
+}
+.error-banner--timeout {
+  border-left-color: var(--color-accent);
+}
+.error-banner--boundary {
+  border-left-color: var(--color-danger);
+}
+.error-banner--validation {
+  border-left-color: var(--color-warning);
+}
+.error-banner--unknown {
+  border-left-color: var(--color-danger);
+}
+
+.error-banner__head {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.error-banner__kind {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-danger);
+}
+
+.error-banner__target {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.error-banner__message {
+  margin: 0;
+}
+
+.error-banner__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.error-banner__action {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: 13px;
+}
+
+.error-banner__fields {
+  margin: 0;
+  padding-left: var(--space-4);
+  display: grid;
+  gap: var(--space-1);
+  font-size: 13px;
+}
+
+.error-banner__field code {
+  color: var(--color-warning);
+}
+
+.error-banner__log {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.error-banner__log--missing {
+  font-style: italic;
+}
+
+.error-banner__retry {
+  justify-self: start;
+}
+
+/* ----------------------------------------------------------- confirm dialog */
+
+.confirm-dialog__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 12vh var(--space-4) var(--space-4);
+}
+
+.confirm-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  cursor: default;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.confirm-dialog {
+  position: relative;
+  width: min(480px, 92vw);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-chrome);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.confirm-dialog__title {
+  margin: 0;
+  font-size: 15px;
+}
+
+.confirm-dialog__warn {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.confirm-dialog__targets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+  max-height: 30vh;
+  overflow: auto;
+  font-size: 13px;
+}
+
+.confirm-dialog__hint {
+  margin: 0;
+  font-size: 13px;
+}
+
+.confirm-dialog__input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.confirm-dialog__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.confirm-dialog__buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.confirm-dialog__confirm {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.confirm-dialog__confirm:disabled {
+  opacity: 0.5;
+}

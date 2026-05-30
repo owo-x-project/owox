@@ -127,4 +127,4 @@ v0 の完了判定・カバレッジは `docs/project/plan/v0/phase-06-plugin-pa
 
 ## ライセンス
 
-UNLICENSED（社内 / 個人利用）。
+MIT License. See [LICENSE](LICENSE).

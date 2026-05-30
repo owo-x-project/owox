@@ -7,7 +7,7 @@ resolver = "2"
 
 [workspace.package]
 edition = "2024"
-license = "UNLICENSED"
+license = "MIT"
 repository = "owox"
 
 [workspace.dependencies]
@@ -27,4 +27,3 @@ tower-http = { version = "0.6", features = ["fs", "trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 uuid = { version = "1.11", features = ["v4", "serde"] }
-

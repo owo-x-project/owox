@@ -1,0 +1,50 @@
+# owox v0 self-host example.
+#
+# One service: the owox-server container serving the WebUI + API/WS on :3000.
+#
+#   docker compose up --build
+#   open http://localhost:3000
+#
+# See docs/project/plan/v0/phase-06-plugin-packaging-release/PACKAGING.md
+
+services:
+  owox:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: owox:v0
+    # Map the in-container server port to the host.
+    ports:
+      - "3000:3000"
+    volumes:
+      # Workspace root: the host directory whose IMMEDIATE subdirectories are
+      # Git repos. owox discovers those repos as projects (only the repos
+      # directly under this root; see SPEC-shared-workspace-boundary).
+      #
+      # Replace ./workspace with the absolute path to YOUR repos directory,
+      # e.g.  /home/you/code:/workspace
+      # Mounted read-write so Git operations (commit, checkout, ...) and the
+      # file editor can write back to the repos. Use :ro if you only want
+      # read-only browsing.
+      - ./workspace:/workspace
+
+      # Named volume for managed SQLite + logs. This is what makes project /
+      # session / log metadata survive `docker compose down` and recreation.
+      # WITHOUT this volume, /data lives only in the container layer and is
+      # lost when the container is removed (ADR-0004: no volume => no
+      # persistence guarantee). Project source code is NOT stored here.
+      - owox-data:/data
+    environment:
+      # These match the image defaults; listed here so they are easy to see
+      # and override. Provider API keys are intentionally absent: they are the
+      # external AI CLI's responsibility, not owox's (see integrations/docker.md).
+      OWOX_WORKSPACE_ROOT: /workspace
+      OWOX_DATA_DIR: /data
+      OWOX_DATABASE_URL: "sqlite:///data/owox.sqlite3?mode=rwc"
+      OWOX_STATIC_DIR: /app/dist
+      # Optional: directory of plugins to load.
+      # OWOX_PLUGINS_DIR: /plugins
+    restart: unless-stopped
+
+volumes:
+  owox-data:

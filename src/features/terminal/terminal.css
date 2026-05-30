@@ -390,3 +390,142 @@
   align-items: center;
   margin-left: auto;
 }
+
+/* ==================================================================
+ * Responsive: Terminal surface
+ * ================================================================== */
+
+/* Touch: show close buttons, enlarge tap targets */
+@media (hover: none) {
+  .terminal-tab__close {
+    opacity: 1;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .terminal-tab {
+    padding: var(--space-2) var(--space-3);
+    min-height: 44px;
+  }
+
+  .terminal-tabs__add {
+    width: 40px;
+    height: 40px;
+  }
+
+  .terminal-split--horizontal>.terminal-split__handle {
+    width: 16px;
+    min-width: 16px;
+  }
+
+  .terminal-split--vertical>.terminal-split__handle {
+    height: 16px;
+    min-height: 16px;
+  }
+}
+
+/* Smartphone */
+@media (max-width: 639px) {
+  .terminal-surface__bar {
+    padding: var(--space-1) var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .terminal-surface__status {
+    font-size: 11px;
+    padding: var(--space-1) var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .terminal-surface__tab-label {
+    max-width: 16ch;
+  }
+
+  /* Hide split buttons on phone — single pane only */
+  .terminal-toolbar {
+    display: none;
+  }
+}
+
+/* ---- Terminal Accessory Keys Bar ---- */
+.terminal-accessory-bar {
+  display: none;
+  gap: 4px;
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--owox-border);
+  background: linear-gradient(180deg, var(--owox-surface-2), var(--owox-surface));
+  backdrop-filter: blur(12px);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+@media (hover: none) {
+  .terminal-accessory-bar {
+    display: flex;
+  }
+}
+
+.terminal-accessory-bar__key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 38px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--owox-border-strong);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  color: var(--owox-text);
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background var(--motion-micro) var(--ease-standard),
+    transform var(--motion-micro) var(--ease-standard),
+    box-shadow var(--motion-micro) var(--ease-standard);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.terminal-accessory-bar__key:active {
+  background: var(--owox-accent-soft);
+  transform: scale(0.95);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0), inset 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.terminal-accessory-bar__key--active {
+  background: linear-gradient(135deg, rgba(122, 162, 247, 0.25), rgba(122, 162, 247, 0.15));
+  border-color: var(--owox-accent);
+  color: var(--owox-accent);
+  box-shadow: 0 0 8px rgba(122, 162, 247, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.terminal-accessory-bar__key--shortcut {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--owox-text-muted);
+  background: transparent;
+  border-color: var(--owox-border);
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.terminal-accessory-bar__key--shortcut:active {
+  background: var(--owox-accent-soft);
+  color: var(--owox-text);
+  border-style: solid;
+}
+
+.terminal-accessory-bar__separator {
+  width: 1px;
+  height: 24px;
+  background: var(--owox-border-strong);
+  margin: 0 var(--space-1);
+  flex-shrink: 0;
+}

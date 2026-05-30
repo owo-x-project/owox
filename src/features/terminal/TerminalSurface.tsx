@@ -42,6 +42,7 @@ import {
   splitPane,
 } from "./pane-model";
 import { SplitHorizontalIcon, SplitVerticalIcon } from "../shell/icons";
+import { TerminalAccessoryBar } from "./TerminalAccessoryBar";
 import "./terminal.css";
 
 /** Map an unknown thrown value into the shared error-display contract. */
@@ -658,6 +659,10 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
           </div>
         )}
       </Show>
+
+      <TerminalAccessoryBar
+        onInput={(data) => socket?.sendInput(data)}
+      />
 
       <Show when={stopTarget()}>
         {(target) => (

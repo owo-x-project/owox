@@ -420,3 +420,110 @@
 .editor__cm .cm-editor {
   height: 100%;
 }
+
+/* ==================================================================
+ * Responsive: Files surface
+ * ================================================================== */
+
+/* Touch: always show row actions (hover is unreliable) */
+@media (hover: none) {
+  .file-tree__row-actions {
+    display: flex;
+  }
+
+  .file-tree__action {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .editor-tab__close {
+    opacity: 1;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .files-surface__handle {
+    width: 16px;
+    background: transparent;
+    border-left: 2px solid var(--owox-border);
+    border-right: 2px solid var(--owox-border);
+  }
+
+  .files-surface__handle::after {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 32px;
+    margin: auto;
+    background: var(--owox-text-muted);
+    border-radius: 2px;
+    opacity: 0.4;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1023px) {
+  .files-surface__tree {
+    max-width: 40vw;
+  }
+}
+
+/* Smartphone: tree ↔ editor toggle */
+@media (max-width: 639px) {
+  .files-surface {
+    flex-direction: column;
+  }
+
+  .files-surface__handle {
+    display: none;
+  }
+
+  .files-surface__tree {
+    width: 100% !important;
+    flex-shrink: 1;
+    max-width: none;
+    border-right: none;
+    border-bottom: 1px solid var(--owox-border);
+  }
+
+  /* When a file is open on mobile, tree is hidden (JS-toggled via inline style) */
+  .files-surface--editor-active .files-surface__tree {
+    display: none;
+  }
+
+  .files-surface--editor-active .files-surface__editor-area {
+    flex: 1;
+  }
+
+  .files-surface__editor-area {
+    min-height: 0;
+  }
+
+  /* Back-to-tree button (injected by component) */
+  .files-surface__back-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--owox-border);
+    color: var(--owox-accent);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+  }
+
+  .editor-tab {
+    padding: var(--space-2) var(--space-3);
+    font-size: 14px;
+  }
+
+  .editor__path {
+    font-size: 12px;
+  }
+}

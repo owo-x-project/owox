@@ -8,8 +8,10 @@ import {
   Show,
 } from "solid-js";
 import { t } from "../../i18n";
+import { isTouchDevice } from "../../utils/platform";
 import { ConfirmDialog } from "../feedback";
 import type { SurfaceProps } from "../shell/placeholders";
+import { classifyViewport } from "../shell/state";
 import { FilesApi } from "./api";
 import { Editor } from "./Editor";
 import { FileTree } from "./FileTree";
@@ -41,13 +43,8 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
 
   /**
    * Open a file: if already open, activate its tab. Otherwise add a new tab.
+   * On smartphone, switch to full-screen editor view.
    */
-  function openFile(path: string) {
-    if (!openPaths().includes(path)) {
-      setOpenPaths((prev) => [...prev, path]);
-    }
-    setActiveTab(path);
-  }
 
   function markDirty(path: string, dirty: boolean) {
     setDirtyPaths((prev) => {
@@ -82,7 +79,7 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
     });
   }
 
-  // Drag resize handle
+  // Drag resize handle (mouse + touch)
   let containerRef: HTMLDivElement | undefined;
 
   function onDragStart(e: MouseEvent) {
@@ -106,13 +103,63 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
     window.addEventListener("mouseup", onUp);
   }
 
+  function onTouchDragStart(e: TouchEvent) {
+    const touch = e.touches[0];
+    if (!touch) return;
+    const startX = touch.clientX;
+    const startWidth = treeWidth();
+
+    const onMove = (ev: TouchEvent) => {
+      const t = ev.touches[0];
+      if (!t) return;
+      const delta = t.clientX - startX;
+      const containerWidth = containerRef?.clientWidth ?? 1000;
+      const newWidth = Math.max(MIN_TREE_WIDTH, Math.min(startWidth + delta, containerWidth - MIN_TREE_WIDTH));
+      setTreeWidth(newWidth);
+    };
+
+    const onUp = () => {
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+      window.removeEventListener("touchcancel", onUp);
+    };
+
+    window.addEventListener("touchmove", onMove, { passive: true });
+    window.addEventListener("touchend", onUp);
+    window.addEventListener("touchcancel", onUp);
+  }
+
+  /** On smartphone, when a file is opened the editor takes full screen. */
+  const isSmartphone = () =>
+    typeof window !== "undefined" && classifyViewport(window.innerWidth) === "smartphone";
+
+  const [mobileEditorActive, setMobileEditorActive] = createSignal(false);
+
+  function openFile(path: string) {
+    if (!openPaths().includes(path)) {
+      setOpenPaths((prev) => [...prev, path]);
+    }
+    setActiveTab(path);
+    if (isSmartphone()) {
+      setMobileEditorActive(true);
+    }
+  }
+
+  function backToTree() {
+    setMobileEditorActive(false);
+  }
+
   function baseName(path: string): string {
     const idx = path.lastIndexOf("/");
     return idx === -1 ? path : path.slice(idx + 1);
   }
 
   return (
-    <div class="files-surface" ref={containerRef}>
+    <div
+      class="files-surface"
+      classList={{ "files-surface--editor-active": mobileEditorActive() && isSmartphone() }}
+      ref={containerRef}
+    >
       <div class="files-surface__tree" style={{ width: `${treeWidth()}px`, "flex-shrink": 0 }}>
         <FileTree
           api={api()}
@@ -122,8 +169,21 @@ export const FilesSurface: Component<SurfaceProps> = (props) => {
         />
       </div>
       {/* biome-ignore lint/a11y/noStaticElementInteractions: drag handle for pane resize */}
-      <div class="files-surface__handle" onMouseDown={onDragStart} />
+      <div
+        class="files-surface__handle"
+        onMouseDown={onDragStart}
+        onTouchStart={onTouchDragStart}
+      />
       <div class="files-surface__editor-area">
+        <Show when={mobileEditorActive() && isSmartphone()}>
+          <button
+            type="button"
+            class="files-surface__back-btn"
+            onClick={backToTree}
+          >
+            ← {t("files.title")}
+          </button>
+        </Show>
         <Show when={openPaths().length > 0}>
           <div class="editor-tabs" role="tablist">
             <For each={openPaths()}>

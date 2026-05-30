@@ -40,3 +40,10 @@
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   font-size: 13px;
 }
+
+/* Responsive: slightly larger terminal font on small touch screens */
+@media (hover: none) and (max-width: 1023px) {
+  .terminal-renderer {
+    padding: var(--space-1);
+  }
+}

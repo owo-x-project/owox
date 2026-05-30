@@ -479,3 +479,69 @@
   font-size: 0.82rem;
   color: var(--owox-text-muted);
 }
+
+/* ==================================================================
+ * Responsive: Git / Review surface
+ * ================================================================== */
+
+/* Touch: always show row actions */
+@media (hover: none) {
+  .git-row__actions {
+    display: inline-flex;
+  }
+
+  .commit-log__copy {
+    opacity: 1;
+  }
+
+  .git-row__label {
+    padding: var(--space-2) var(--space-2);
+    min-height: 44px;
+  }
+
+  .review-tabs__tab {
+    padding: var(--space-2) var(--space-3);
+    min-height: 44px;
+  }
+}
+
+/* Tablet: tighter grid */
+@media (max-width: 1023px) {
+  .git-review {
+    grid-template-columns: minmax(240px, 320px) 1fr;
+    gap: var(--space-2);
+    padding: var(--space-2);
+  }
+}
+
+/* Smartphone: single-column with panel ↔ diff toggle */
+@media (max-width: 639px) {
+  .git-review {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .git-review__panel {
+    max-height: 40vh;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--owox-border);
+  }
+
+  .git-review__diff {
+    min-height: 200px;
+  }
+
+  .git-panel__sync {
+    flex-direction: column;
+  }
+
+  .git-confirm__buttons {
+    flex-direction: column;
+  }
+
+  .git-confirm__buttons .button {
+    width: 100%;
+  }
+}

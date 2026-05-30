@@ -7,15 +7,19 @@ license.workspace = true
 [dependencies]
 anyhow.workspace = true
 axum.workspace = true
+futures.workspace = true
 owox-core = { path = "../../crates/owox-core" }
+rmp-serde.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 sqlx.workspace = true
 tokio.workspace = true
+tower-http.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+tokio-tungstenite = "0.24"
 tower.workspace = true
 

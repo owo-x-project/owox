@@ -26,6 +26,8 @@ services:
       - ..:/workspace:cached
       - ${HOME}/.ssh:/home/vscode/.ssh:ro
       - codex-home:/root/.codex
+      - claude-home:/home/vscode/.claude
+      - claude-json:/home/vscode/.claude-json
       - npm-global:/home/vscode/.npm-global
       - user-local:/home/vscode/.local
       - user-cache:/home/vscode/.cache
@@ -36,6 +38,8 @@ services:
       - host.docker.internal:host-gateway
 
 volumes:
+  claude-home:
+  claude-json:
   codex-home:
   npm-global:
   user-local:

@@ -1,0 +1,284 @@
+/*
+ * Files surface styles. Reuses theme tokens from src/styles.css (do not edit
+ * that file). Layout: file tree (left) + editor (right), both filling the
+ * active surface.
+ */
+
+.files-surface {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) minmax(0, 1fr);
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.files-surface__tree {
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+  overflow: auto;
+  min-height: 0;
+}
+
+.files-surface__editor {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+/* ------------------------------------------------------------- file tree */
+
+.file-tree {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.file-tree__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  background: var(--color-surface);
+}
+
+.file-tree__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.file-tree__actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.file-tree__state {
+  padding: var(--space-3);
+  margin: 0;
+}
+
+.file-tree__error {
+  padding: var(--space-2) var(--space-3);
+}
+
+.file-tree__list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1) 0;
+}
+
+.file-tree__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding-right: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.file-tree__row:hover {
+  background: var(--color-surface-2);
+}
+
+.file-tree__row--selected {
+  background: var(--color-accent-soft);
+}
+
+.file-tree__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: var(--space-1) 0;
+  text-align: left;
+}
+
+.file-tree__icon {
+  width: 12px;
+  flex: none;
+  color: var(--color-text-muted);
+}
+
+.file-tree__kind {
+  flex: none;
+  font-size: 12px;
+}
+
+.file-tree__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-tree__row-actions {
+  display: none;
+  gap: 2px;
+}
+
+.file-tree__row:hover .file-tree__row-actions {
+  display: flex;
+}
+
+.file-tree__action {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.file-tree__action--danger:hover {
+  color: var(--color-danger);
+}
+
+/* ----------------------------------------------------- tree inline dialog */
+
+.file-tree__dialog {
+  margin: var(--space-2) var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius);
+}
+
+.file-tree__dialog-title {
+  margin: 0 0 var(--space-2);
+  font-size: 13px;
+}
+
+.file-tree__dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.file-tree__input {
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.file-tree__dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.file-tree__delete {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.file-tree__delete-warn {
+  margin: 0;
+  color: var(--color-danger);
+}
+
+.file-tree__delete-hint {
+  margin: 0;
+  font-size: 12px;
+}
+
+.file-tree__delete-button {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.file-tree__delete-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------------- editor */
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+.editor__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.editor__path {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor__dirty {
+  color: var(--color-warning);
+}
+
+.editor__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+}
+
+.editor__readonly {
+  color: var(--color-warning);
+  background: rgba(224, 175, 104, 0.16);
+}
+
+.editor__truncated {
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+}
+
+.editor__state,
+.editor__binary {
+  padding: var(--space-3);
+  margin: 0;
+}
+
+.editor__conflict,
+.editor__error {
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.editor__conflict-hint {
+  margin: 0;
+  font-size: 12px;
+}
+
+.editor__cm {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.editor__cm--hidden {
+  display: none;
+}
+
+.editor__cm .cm-editor {
+  height: 100%;
+}

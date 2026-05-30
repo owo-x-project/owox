@@ -1,0 +1,95 @@
+/* Log viewer surface. Reuses the shared theme tokens from styles.css; only
+   log-specific layout lives here. */
+
+.log-view {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  padding: var(--space-3);
+  gap: var(--space-3);
+}
+
+.log-view__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.log-view__title {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.log-view__id {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 32ch;
+}
+
+.log-view__progress {
+  margin-left: auto;
+  font-size: 12px;
+}
+
+.log-view__state {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  font-size: 13px;
+}
+
+.log-view__content {
+  margin: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 70vh;
+  overflow: auto;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+  tab-size: 2;
+  color: var(--color-text);
+}
+
+.log-view__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.log-view__clear {
+  margin-left: auto;
+  color: var(--color-danger);
+}
+
+.log-view__confirm {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.log-view__confirm-text {
+  font-size: 13px;
+  color: var(--color-warning);
+}
+
+.log-view__confirm-yes {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}

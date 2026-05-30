@@ -1,0 +1,42 @@
+/*
+ * Terminal renderer styles. Reuses theme tokens from src/styles.css (do not
+ * edit that file). The container fills the active surface; xterm's own CSS is
+ * imported here (not in the TS module) so the renderer factory stays loadable
+ * under the node test environment.
+ */
+
+@import "@xterm/xterm/css/xterm.css";
+
+.terminal-renderer {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+  padding: var(--space-2);
+}
+
+/* xterm injects .xterm/.xterm-viewport into the container; fill the host. */
+.terminal-renderer .xterm,
+.terminal-renderer .xterm-viewport,
+.terminal-renderer .xterm-screen {
+  height: 100%;
+}
+
+.terminal-renderer .xterm-viewport {
+  background: transparent;
+}
+
+/* ghostty-web stub seam notice (GhosttyRenderer). */
+.terminal-renderer__unavailable {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+}

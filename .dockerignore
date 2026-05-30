@@ -1,0 +1,41 @@
+# Keep the Docker build context small and reproducible. Build artifacts and
+# local state are regenerated inside the image, never copied from the host.
+
+# Rust build output
+target/
+
+# JS deps + build output (the image runs `npm ci` / `npm run build` itself)
+node_modules/
+dist/
+
+# VCS
+.git/
+.gitignore
+
+# Local managed SQLite + logs (recreated under /data at runtime)
+*.sqlite
+*.sqlite3
+*.db
+.owox-data/
+.sqlx/
+
+# TS incremental build cache
+tsconfig.tsbuildinfo
+
+# Env / editor / OS cruft
+.env
+.env.*
+.devcontainer/
+.agents/
+.codex/
+.vscode/
+.idea/
+**/.DS_Store
+
+# Docs are not needed to build the image
+docs/
+
+# Don't recurse Docker/compose definitions into the context
+Dockerfile
+.dockerignore
+compose.yaml

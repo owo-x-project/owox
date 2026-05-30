@@ -8,6 +8,7 @@
   "workspaceFolder": "/workspace",
   "remoteUser": "root",
   "updateRemoteUserUID": true,
+  "postStartCommand": "([ -x /home/vscode/.local/bin/claude ] || curl -fsSL https://claude.ai/install.sh | bash)",
   "shutdownAction": "stopCompose",
   "overrideCommand": false,
   "remoteEnv": {

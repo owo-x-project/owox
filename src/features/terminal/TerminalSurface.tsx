@@ -134,7 +134,7 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
       for (const fid of failedIds) {
         api()
           .remove(fid)
-          .catch(() => {});
+          .catch(() => { });
       }
       setSessions(reconcile(sessionsFromList(alive)));
       const ids = alive.map((s) => s.id);
@@ -225,7 +225,7 @@ export const TerminalSurface: Component<SurfaceProps> = (props) => {
           }
           api()
             .remove(sessionId)
-            .catch(() => {});
+            .catch(() => { });
           return;
         }
         if (isFinished(info.state)) {

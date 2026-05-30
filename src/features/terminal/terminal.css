@@ -359,13 +359,13 @@
   transition: background var(--motion-micro) var(--ease-standard);
 }
 
-.terminal-split--horizontal > .terminal-split__handle {
+.terminal-split--horizontal>.terminal-split__handle {
   cursor: col-resize;
   width: 4px;
   min-width: 4px;
 }
 
-.terminal-split--vertical > .terminal-split__handle {
+.terminal-split--vertical>.terminal-split__handle {
   cursor: row-resize;
   height: 4px;
   min-height: 4px;
@@ -418,12 +418,12 @@
     height: 40px;
   }
 
-  .terminal-split--horizontal > .terminal-split__handle {
+  .terminal-split--horizontal>.terminal-split__handle {
     width: 16px;
     min-width: 16px;
   }
 
-  .terminal-split--vertical > .terminal-split__handle {
+  .terminal-split--vertical>.terminal-split__handle {
     height: 16px;
     min-height: 16px;
   }
@@ -458,11 +458,9 @@
   gap: 4px;
   padding: var(--space-2) var(--space-3);
   border-top: 1px solid var(--owox-border);
-  background: linear-gradient(
-    180deg,
-    var(--owox-surface-2),
-    var(--owox-surface)
-  );
+  background: linear-gradient(180deg,
+      var(--owox-surface-2),
+      var(--owox-surface));
   backdrop-filter: blur(12px);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -485,11 +483,9 @@
   padding: 0 var(--space-3);
   border: 1px solid var(--owox-border-strong);
   border-radius: 8px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.02)
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.02));
   color: var(--owox-text);
   font-family: ui-monospace, SFMono-Regular, monospace;
   font-size: 13px;
@@ -516,11 +512,9 @@
 }
 
 .terminal-accessory-bar__key--active {
-  background: linear-gradient(
-    135deg,
-    rgba(122, 162, 247, 0.25),
-    rgba(122, 162, 247, 0.15)
-  );
+  background: linear-gradient(135deg,
+      rgba(122, 162, 247, 0.25),
+      rgba(122, 162, 247, 0.15));
   border-color: var(--owox-accent);
   color: var(--owox-accent);
   box-shadow:

@@ -29,6 +29,7 @@ pub fn routes() -> AppRouter {
         .route("/api/projects/{project_id}/git/status", get(get_status))
         .route("/api/projects/{project_id}/git/diff", get(get_diff))
         .route("/api/projects/{project_id}/git/branches", get(get_branches))
+        .route("/api/projects/{project_id}/git/log", get(get_log))
         .route(
             "/api/projects/{project_id}/git/operations",
             post(post_operation),
@@ -53,6 +54,27 @@ async fn get_branches(
     let project = state.boundary.find_project(&project_id)?;
     let branches = git::branches(&project.path).map_err(|e| map_git_error(&state, e))?;
     Ok(Json(branches))
+}
+
+#[derive(Debug, Deserialize)]
+struct LogQuery {
+    #[serde(default)]
+    offset: Option<usize>,
+    #[serde(default)]
+    limit: Option<usize>,
+}
+
+async fn get_log(
+    State(state): State<AppState>,
+    Path(project_id): Path<String>,
+    Query(query): Query<LogQuery>,
+) -> Result<Json<git::CommitLog>, AppError> {
+    let project = state.boundary.find_project(&project_id)?;
+    let offset = query.offset.unwrap_or(0);
+    let limit = query.limit.unwrap_or(30).min(100);
+    let log = git::commit_log(&project.path, offset, limit)
+        .map_err(|e| map_git_error(&state, e))?;
+    Ok(Json(log))
 }
 
 #[derive(Debug, Deserialize)]

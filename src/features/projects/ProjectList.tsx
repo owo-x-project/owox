@@ -1,4 +1,5 @@
 import { createResource, For, Show } from "solid-js";
+import { t } from "../../i18n";
 import type { ApiClient } from "../../api/client";
 import type { ProjectResource } from "../../api/contracts";
 import { ErrorBanner } from "../feedback";
@@ -26,12 +27,12 @@ export function ProjectList(props: ProjectListProps) {
   return (
     <section class="project-list">
       <header class="project-list__header">
-        <h2>Projects</h2>
+        <h2>{t("projects.title")}</h2>
       </header>
 
       <Show
         when={!projects.loading}
-        fallback={<p class="muted project-list__state">Loading projects…</p>}
+        fallback={<p class="muted project-list__state">{t("projects.loading")}</p>}
       >
         <Show
           when={!projects.error}
@@ -48,8 +49,7 @@ export function ProjectList(props: ProjectListProps) {
             when={(projects()?.projects ?? []).length > 0}
             fallback={
               <p class="muted project-list__state">
-                No Git repositories found directly under the workspace root. Add
-                a project with a <code>.git</code> directory to get started.
+                {t("projects.noRepos")}
               </p>
             }
           >

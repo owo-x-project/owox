@@ -1,0 +1,101 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-binaries:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            exe_suffix: ""
+            archive_ext: tar.gz
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            exe_suffix: ".exe"
+            archive_ext: zip
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            exe_suffix: ""
+            archive_ext: tar.gz
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release-${{ matrix.target }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Build frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build server
+        run: cargo build --release --target ${{ matrix.target }} -p owox-server
+
+      - name: Stage release archive
+        shell: bash
+        run: |
+          mkdir -p staging/owox release-assets
+          cp "target/${{ matrix.target }}/release/owox-server${{ matrix.exe_suffix }}" "staging/owox/owox-server${{ matrix.exe_suffix }}"
+          cp -r dist staging/owox/dist
+
+      - name: Package Unix archive
+        if: matrix.archive_ext == 'tar.gz'
+        shell: bash
+        run: |
+          archive="owox-${{ github.ref_name }}-${{ matrix.target }}.tar.gz"
+          tar -czf "release-assets/$archive" -C staging owox
+          shasum -a 256 "release-assets/$archive" > "release-assets/$archive.sha256"
+
+      - name: Package Windows archive
+        if: matrix.archive_ext == 'zip'
+        shell: pwsh
+        run: |
+          $archive = "owox-${{ github.ref_name }}-${{ matrix.target }}.zip"
+          Compress-Archive -Path staging/owox/* -DestinationPath "release-assets/$archive"
+          Get-FileHash "release-assets/$archive" -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $archive" } | Set-Content "release-assets/$archive.sha256"
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-assets-${{ matrix.target }}
+          path: release-assets/*
+
+  github-release:
+    name: Publish GitHub Release
+    needs: build-binaries
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release assets
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-assets-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true

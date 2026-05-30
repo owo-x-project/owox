@@ -8,6 +8,9 @@ import { classifyViewport, type ViewportClass } from "./state";
  *
  * SSR / node-safe: when `window` is unavailable (tests, prerender) it returns a
  * static `desktop` signal and registers no listener.
+ *
+ * Resize events are debounced (100 ms) to avoid excessive re-classification
+ * during drag-resize or mobile orientation change animations.
  */
 export function useViewport(): () => ViewportClass {
   if (typeof window === "undefined") {
@@ -18,14 +21,21 @@ export function useViewport(): () => ViewportClass {
   const measure = (): ViewportClass => classifyViewport(window.innerWidth);
   const [viewport, setViewport] = createSignal<ViewportClass>(measure());
 
-  const update = () => setViewport(measure());
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const update = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => setViewport(measure()), 100);
+  };
 
   onMount(() => {
     window.addEventListener("resize", update);
     // Re-measure on mount in case the initial render happened before layout.
-    update();
+    setViewport(measure());
   });
-  onCleanup(() => window.removeEventListener("resize", update));
+  onCleanup(() => {
+    window.removeEventListener("resize", update);
+    clearTimeout(timer);
+  });
 
   return viewport;
 }

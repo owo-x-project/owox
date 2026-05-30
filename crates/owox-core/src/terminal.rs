@@ -13,7 +13,6 @@
 //! runtime — the bridge to async is the broadcast channel whose `send` is
 //! callable from a plain thread.
 
-use crate::command::redact_secrets;
 use crate::log_store::LogStore;
 use crate::workspace::{WorkspaceBoundary, WorkspaceError};
 use portable_pty::{CommandBuilder, MasterPty, PtySize, native_pty_system};
@@ -456,16 +455,18 @@ fn spawn_reader_thread(mut ctx: ReaderContext) {
             match ctx.reader.read(&mut buffer) {
                 Ok(0) => break, // EOF: child closed the PTY.
                 Ok(n) => {
-                    // @spec ops-log-retention-redaction: redact before persist+broadcast.
-                    let redacted = redact_secrets(&String::from_utf8_lossy(&buffer[..n]));
-                    if redacted.is_empty() {
+                    // PTY output is forwarded as-is; redaction via
+                    // split_whitespace destroys control chars (newlines, ANSI
+                    // escapes) and must not be applied to raw terminal streams.
+                    let text = String::from_utf8_lossy(&buffer[..n]).into_owned();
+                    if text.is_empty() {
                         continue;
                     }
-                    let _ = ctx.log_store.append(&ctx.log_id, redacted.as_bytes());
+                    let _ = ctx.log_store.append(&ctx.log_id, text.as_bytes());
                     let seq = ctx.seq.fetch_add(1, Ordering::SeqCst);
                     let _ = ctx.sender.send(TermChunk::Output {
                         seq,
-                        data: redacted,
+                        data: text,
                     });
                 }
                 Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,

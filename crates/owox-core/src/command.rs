@@ -222,10 +222,15 @@ fn run_with_cwd(request: &CommandRequest, cwd: PathBuf, now_ms: i64) -> Captured
 
 pub fn redact_secrets(input: &str) -> String {
     input
-        .split_whitespace()
-        .map(redact_token)
+        .lines()
+        .map(|line| {
+            line.split_whitespace()
+                .map(redact_token)
+                .collect::<Vec<_>>()
+                .join(" ")
+        })
         .collect::<Vec<_>>()
-        .join(" ")
+        .join("\n")
 }
 
 fn redact_token(token: &str) -> String {

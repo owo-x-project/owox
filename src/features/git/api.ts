@@ -1,4 +1,5 @@
 import { apiRequest } from "../../api/http";
+import type { CommitLogResponse } from "./commit-model";
 
 /** State of a single file as reported by `git status`. */
 export type GitFileState =
@@ -41,8 +42,8 @@ export interface GitBranchesResponse {
   branches: GitBranch[];
 }
 
-/** Diff mode: working-tree (`unstaged`) or index (`staged`). */
-export type GitDiffMode = "unstaged" | "staged";
+/** Diff mode: working-tree (`unstaged`), index (`staged`), or commit (`commit:<hash>`). */
+export type GitDiffMode = "unstaged" | "staged" | `commit:${string}`;
 
 /** Response of `GET /git/diff`. `patch` is a byte window over the full diff. */
 export interface GitDiffResponse {
@@ -101,7 +102,7 @@ export class GitApi {
   constructor(
     private readonly projectId: string,
     private readonly baseUrl = "",
-  ) {}
+  ) { }
 
   private base(): string {
     return `/api/projects/${encodeURIComponent(this.projectId)}/git`;
@@ -159,6 +160,19 @@ export class GitApi {
         method: "POST",
         body: JSON.stringify(body),
       },
+      this.baseUrl,
+    );
+  }
+
+  /** Paginated commit log. */
+  log(offset = 0, limit = 30): Promise<CommitLogResponse> {
+    const query = new URLSearchParams({
+      offset: String(offset),
+      limit: String(limit),
+    });
+    return apiRequest<CommitLogResponse>(
+      `${this.base()}/log?${query.toString()}`,
+      undefined,
       this.baseUrl,
     );
   }

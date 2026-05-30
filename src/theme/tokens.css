@@ -1,0 +1,105 @@
+/* Dark theme (default, matches existing) */
+[data-theme="dark"],
+:root {
+  --owox-shell-bg: #08080c;
+  --owox-bg: #0e1017;
+  --owox-surface: #141720;
+  --owox-surface-2: #1a1e28;
+  --owox-chrome: rgba(20, 23, 32, 0.85);
+  --owox-border: rgba(255, 255, 255, 0.06);
+  --owox-border-strong: rgba(255, 255, 255, 0.1);
+  --owox-text: #e6e9ee;
+  --owox-text-muted: #8892a4;
+  --owox-accent: #7aa2f7;
+  --owox-accent-soft: rgba(122, 162, 247, 0.16);
+  --owox-danger: #f7768e;
+  --owox-warning: #e0af68;
+  --owox-success: #9ece6a;
+  --owox-primary: #0077cc;
+  --owox-primary-soft: rgba(0, 119, 204, 0.16);
+  --owox-chrome-glass: rgba(14, 16, 23, 0.78);
+  --owox-bar-group-bg: rgba(255, 255, 255, 0.06);
+
+  /* Gradient glow system */
+  --owox-glow-purple: rgba(139, 92, 246, 0.85);
+  --owox-glow-blue: rgba(99, 102, 241, 0.65);
+  --owox-glow-cyan: rgba(6, 182, 212, 0.85);
+  --owox-panel-border: linear-gradient(135deg,
+      var(--owox-glow-purple),
+      var(--owox-glow-blue),
+      var(--owox-glow-cyan));
+  --owox-panel-glow: 0 0 30px rgba(139, 92, 246, 0.18),
+    0 0 60px rgba(59, 130, 246, 0.12),
+    0 0 100px rgba(6, 182, 212, 0.1);
+  --owox-gradient-bg: linear-gradient(135deg,
+      rgba(139, 92, 246, 0.22),
+      rgba(99, 102, 241, 0.14),
+      rgba(59, 130, 246, 0.14),
+      rgba(6, 182, 212, 0.22));
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --owox-shell-bg: #e8eaf0;
+  --owox-bg: #f5f7fa;
+  --owox-surface: #ffffff;
+  --owox-surface-2: #e6e9ee;
+  --owox-chrome: rgba(255, 255, 255, 0.82);
+  --owox-border: rgba(0, 0, 0, 0.08);
+  --owox-border-strong: rgba(0, 0, 0, 0.13);
+  --owox-text: #1e242c;
+  --owox-text-muted: #5c6678;
+  --owox-accent: #0077cc;
+  --owox-accent-soft: rgba(0, 119, 204, 0.12);
+  --owox-danger: #d93a52;
+  --owox-warning: #c4890a;
+  --owox-success: #5a9e1e;
+  --owox-primary: #0077cc;
+  --owox-primary-soft: rgba(0, 119, 204, 0.12);
+  --owox-chrome-glass: rgba(255, 255, 255, 0.72);
+  --owox-bar-group-bg: rgba(0, 0, 0, 0.06);
+  --owox-glow-purple: rgba(139, 92, 246, 0.4);
+  --owox-glow-blue: rgba(99, 102, 241, 0.3);
+  --owox-glow-cyan: rgba(6, 182, 212, 0.4);
+  --owox-panel-glow: 0 0 30px rgba(139, 92, 246, 0.06),
+    0 0 60px rgba(59, 130, 246, 0.04);
+  --owox-gradient-bg: linear-gradient(135deg,
+      rgba(139, 92, 246, 0.08),
+      rgba(99, 102, 241, 0.05),
+      rgba(59, 130, 246, 0.05),
+      rgba(6, 182, 212, 0.08));
+}
+
+/* Auto theme (media query for OS detection) */
+@media (prefers-color-scheme: light) {
+  [data-theme="auto"] {
+    --owox-shell-bg: #e8eaf0;
+    --owox-bg: #f5f7fa;
+    --owox-surface: #ffffff;
+    --owox-surface-2: #e6e9ee;
+    --owox-chrome: rgba(255, 255, 255, 0.82);
+    --owox-border: rgba(0, 0, 0, 0.08);
+    --owox-border-strong: rgba(0, 0, 0, 0.13);
+    --owox-text: #1e242c;
+    --owox-text-muted: #5c6678;
+    --owox-accent: #0077cc;
+    --owox-accent-soft: rgba(0, 119, 204, 0.12);
+    --owox-danger: #d93a52;
+    --owox-warning: #c4890a;
+    --owox-success: #5a9e1e;
+    --owox-primary: #0077cc;
+    --owox-primary-soft: rgba(0, 119, 204, 0.12);
+    --owox-chrome-glass: rgba(255, 255, 255, 0.72);
+    --owox-bar-group-bg: rgba(0, 0, 0, 0.06);
+    --owox-glow-purple: rgba(139, 92, 246, 0.4);
+    --owox-glow-blue: rgba(99, 102, 241, 0.3);
+    --owox-glow-cyan: rgba(6, 182, 212, 0.4);
+    --owox-panel-glow: 0 0 30px rgba(139, 92, 246, 0.06),
+      0 0 60px rgba(59, 130, 246, 0.04);
+    --owox-gradient-bg: linear-gradient(135deg,
+        rgba(139, 92, 246, 0.08),
+        rgba(99, 102, 241, 0.05),
+        rgba(59, 130, 246, 0.05),
+        rgba(6, 182, 212, 0.08));
+  }
+}

@@ -1,8 +1,12 @@
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
+import UnoCSS from "unocss/vite";
 
 export default defineConfig({
-  plugins: [solid()],
+  plugins: [UnoCSS(), solid()],
+  build: {
+    chunkSizeWarningLimit: 1200,
+  },
   server: {
     port: 5173,
     proxy: {

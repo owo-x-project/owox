@@ -347,6 +347,15 @@ impl SessionRepository {
         .await?;
         Ok(())
     }
+
+    /// Permanently remove a session record from the database.
+    pub async fn delete(&self, session_id: &str) -> Result<(), sqlx::Error> {
+        sqlx::query("DELETE FROM terminal_sessions WHERE id = ?1")
+            .bind(session_id)
+            .execute(&self.pool)
+            .await?;
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

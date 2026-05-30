@@ -1,4 +1,5 @@
 import { createSignal, For, Show } from "solid-js";
+import { t } from "../../i18n";
 import "./feedback.css";
 
 export interface ConfirmDialogProps {
@@ -56,7 +57,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         <button
           type="button"
           class="confirm-dialog__backdrop"
-          aria-label="Cancel"
+          aria-label={t("common.cancel")}
           onClick={cancel}
         />
         <div
@@ -80,7 +81,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
                 </>
               )}
             </Show>
-            <Show when={irreversible()}>This cannot be undone.</Show>
+            <Show when={irreversible()}>{t("feedback.cannotBeUndone")}</Show>
           </p>
 
           <Show when={props.targets.length > 0}>
@@ -118,7 +119,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
 
           <div class="confirm-dialog__buttons">
             <button type="button" class="button button--ghost" onClick={cancel}>
-              Cancel
+              {t("common.cancel")}
             </button>
             <button
               type="button"
@@ -126,7 +127,7 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
               disabled={!matches()}
               onClick={confirm}
             >
-              {props.confirmLabel ?? "Confirm"}
+              {props.confirmLabel ?? t("common.confirm")}
             </button>
           </div>
         </div>

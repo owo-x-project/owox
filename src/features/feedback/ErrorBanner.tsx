@@ -1,4 +1,5 @@
 import { Show } from "solid-js";
+import { t } from "../../i18n";
 import type { ApiError } from "../../api/contracts";
 import "./feedback.css";
 import { type ErrorView, isRecoverable } from "./error-view";
@@ -64,11 +65,11 @@ export function ErrorBanner(props: ErrorBannerProps) {
         when={props.error.logRef}
         fallback={
           <span class="error-banner__log error-banner__log--missing">
-            log unavailable
+            {t("feedback.logUnavailable")}
           </span>
         }
       >
-        {(logRef) => <span class="error-banner__log">log ref: {logRef()}</span>}
+        {(logRef) => <span class="error-banner__log">{t("feedback.logRef")}: {logRef()}</span>}
       </Show>
 
       <Show when={props.onRetry}>
@@ -78,7 +79,7 @@ export function ErrorBanner(props: ErrorBannerProps) {
             class="button button--ghost error-banner__retry"
             onClick={() => retry()()}
           >
-            Retry
+            {t("feedback.retry")}
           </button>
         )}
       </Show>
@@ -93,21 +94,21 @@ export function ErrorBanner(props: ErrorBannerProps) {
 function kindHint(kind: ApiError["kind"]): string | null {
   switch (kind) {
     case "auth":
-      return "Authentication failed — check your credentials.";
+      return t("feedback.authHint");
     case "conflict":
-      return "Conflict — resolve the conflicting changes and retry.";
+      return t("feedback.conflictHint");
     case "network":
-      return "Network failure — check connectivity and retry.";
+      return t("feedback.networkHint");
     case "not_found":
-      return "Not found — the target no longer exists.";
+      return t("feedback.notFoundHint");
     case "permission":
-      return "Permission denied — you may not have access to this target.";
+      return t("feedback.permissionHint");
     case "timeout":
-      return "Timed out — the operation took too long; try again.";
+      return t("feedback.timeoutHint");
     case "boundary":
-      return "Out of bounds — the target is outside the workspace boundary.";
+      return t("feedback.boundaryHint");
     case "validation":
-      return "Invalid input — correct the highlighted fields and retry.";
+      return t("feedback.validationHint");
     default:
       return null;
   }

@@ -1,4 +1,5 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
+import { t } from "../../i18n";
 import { ConfirmDialog, ErrorBanner } from "../feedback";
 import type { GitBranchesResponse, GitOp, GitStatusResponse } from "./api";
 import { checkoutToken, discardToken } from "./api";
@@ -136,11 +137,11 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
     setNewBranch("");
   }
 
-  const remoteOps: { op: GitOp; label: string }[] = [
-    { op: "fetch", label: "Fetch" },
-    { op: "pull", label: "Pull" },
-    { op: "push", label: "Push" },
-    { op: "sync", label: "Sync" },
+  const remoteOps: { op: GitOp; labelKey: string }[] = [
+    { op: "fetch", labelKey: "review.fetch" },
+    { op: "pull", labelKey: "review.pull" },
+    { op: "push", labelKey: "review.push" },
+    { op: "sync", labelKey: "review.sync" },
   ];
 
   return (
@@ -195,8 +196,8 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
             <input
               type="text"
               class="git-panel__input"
-              placeholder="new branch"
-              aria-label="New branch name"
+              placeholder={t("review.newBranch")}
+              aria-label={t("review.newBranch")}
               value={newBranch()}
               disabled={props.busy}
               onInput={(event) => setNewBranch(event.currentTarget.value)}
@@ -206,7 +207,7 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
               class="button button--ghost"
               disabled={props.busy || newBranch().trim() === ""}
             >
-              Create
+              {t("review.create")}
             </button>
           </form>
         </div>
@@ -221,7 +222,7 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
               disabled={props.busy}
               onClick={() => props.onOperation({ op: remote.op })}
             >
-              {remote.label}
+              {t(remote.labelKey)}
             </button>
           )}
         </For>
@@ -258,8 +259,8 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
         <textarea
           class="git-panel__commit-message"
           rows={2}
-          placeholder="Commit message (staged changes)"
-          aria-label="Commit message"
+          placeholder={t("review.commitPlaceholder")}
+          aria-label={t("review.commitMessage")}
           value={props.commitMessage}
           disabled={props.busy}
           onInput={(event) => props.onCommitMessage(event.currentTarget.value)}
@@ -275,12 +276,12 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
             })
           }
         >
-          Commit
+          {t("review.commit")}
         </button>
       </div>
 
       <FileGroup
-        title="Conflicts"
+        title={t("review.conflicts")}
         modifier="conflicted"
         files={groups().conflicted}
         busy={props.busy}
@@ -289,26 +290,26 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
       />
 
       <FileGroup
-        title="Staged Changes"
+        title={t("review.stagedChanges")}
         modifier="staged"
         files={groups().staged}
         busy={props.busy}
         bulk={
           groups().staged.length > 0
             ? {
-                label: "Unstage all",
-                onClick: () =>
-                  props.onOperation({
-                    op: "unstage",
-                    paths: stagedPaths(groups()),
-                  }),
-              }
+              label: t("review.unstageAll"),
+              onClick: () =>
+                props.onOperation({
+                  op: "unstage",
+                  paths: stagedPaths(groups()),
+                }),
+            }
             : undefined
         }
         selected={(path) => selected(path, "staged")}
         onSelect={(path) => props.onSelect({ path, group: "staged" })}
         rowAction={(file) => ({
-          label: "Unstage",
+          label: t("review.unstage"),
           glyph: "−",
           onClick: () =>
             props.onOperation({ op: "unstage", paths: [file.path] }),
@@ -316,26 +317,34 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
       />
 
       <FileGroup
-        title="Changes"
+        title={t("review.changes")}
         modifier="changes"
         files={groups().changes}
         busy={props.busy}
         bulk={
           changesPaths(groups()).length > 0
             ? {
-                label: "Stage all",
-                onClick: () =>
-                  props.onOperation({
-                    op: "stage",
-                    paths: changesPaths(groups()),
-                  }),
-              }
+              label: t("review.stageAll"),
+              onClick: () =>
+                props.onOperation({
+                  op: "stage",
+                  paths: changesPaths(groups()),
+                }),
+            }
+            : undefined
+        }
+        bulkDanger={
+          changesPaths(groups()).length > 0
+            ? {
+              label: t("review.discardAll"),
+              onClick: () => startDiscard(changesPaths(groups())),
+            }
             : undefined
         }
         selected={(path) => selected(path, "changes")}
         onSelect={(path) => props.onSelect({ path, group: "changes" })}
         rowAction={(file) => ({
-          label: "Stage",
+          label: t("review.stage"),
           glyph: "+",
           onClick: () => props.onOperation({ op: "stage", paths: [file.path] }),
         })}
@@ -343,14 +352,14 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
       />
 
       <FileGroup
-        title="Untracked"
+        title={t("review.untracked")}
         modifier="untracked"
         files={groups().untracked}
         busy={props.busy}
         selected={(path) => selected(path, "untracked")}
         onSelect={(path) => props.onSelect({ path, group: "untracked" })}
         rowAction={(file) => ({
-          label: "Stage",
+          label: t("review.stage"),
           glyph: "+",
           onClick: () => props.onOperation({ op: "stage", paths: [file.path] }),
         })}
@@ -363,8 +372,8 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
             open
             operation={
               p().kind === "discard"
-                ? "Discard changes"
-                : "Switch branch (dirty tree)"
+                ? t("review.discardChanges")
+                : t("review.switchBranch")
             }
             project={props.projectId}
             targets={
@@ -373,7 +382,7 @@ export function SourceControlPanel(props: SourceControlPanelProps) {
                 : [(p() as { kind: "branch_checkout"; branch: string }).branch]
             }
             phrase={p().kind === "discard" ? "discard" : "checkout"}
-            confirmLabel={p().kind === "discard" ? "Discard" : "Switch"}
+            confirmLabel={p().kind === "discard" ? t("review.discard") : t("review.switchBranch")}
             onCancel={cancelPending}
             onConfirm={confirmPending}
           />
@@ -395,6 +404,7 @@ function FileGroup(props: {
   files: GroupedFile[];
   busy: boolean;
   bulk?: { label: string; onClick: () => void };
+  bulkDanger?: { label: string; onClick: () => void };
   selected: (path: string) => boolean;
   onSelect: (path: string) => void;
   rowAction?: (file: GroupedFile) => RowAction;
@@ -408,18 +418,32 @@ function FileGroup(props: {
             {props.title}
             <span class="git-group__count muted"> {props.files.length}</span>
           </h3>
-          <Show when={props.bulk}>
-            {(bulk) => (
-              <button
-                type="button"
-                class="button button--ghost git-group__bulk"
-                disabled={props.busy}
-                onClick={() => bulk().onClick()}
-              >
-                {bulk().label}
-              </button>
-            )}
-          </Show>
+          <div class="git-group__header-actions">
+            <Show when={props.bulk}>
+              {(bulk) => (
+                <button
+                  type="button"
+                  class="button button--ghost git-group__bulk"
+                  disabled={props.busy}
+                  onClick={() => bulk().onClick()}
+                >
+                  {bulk().label}
+                </button>
+              )}
+            </Show>
+            <Show when={props.bulkDanger}>
+              {(danger) => (
+                <button
+                  type="button"
+                  class="button button--ghost git-group__bulk git-group__bulk--danger"
+                  disabled={props.busy}
+                  onClick={() => danger().onClick()}
+                >
+                  {danger().label}
+                </button>
+              )}
+            </Show>
+          </div>
         </header>
         <ul class="git-group__list">
           <For each={props.files}>
@@ -463,8 +487,8 @@ function FileGroup(props: {
                       <button
                         type="button"
                         class="button button--icon git-row__action--danger"
-                        title="Discard changes"
-                        aria-label={`Discard ${file.path}`}
+                        title={t("review.discardChanges")}
+                        aria-label={`${t("review.discard")} ${file.path}`}
                         disabled={props.busy}
                         onClick={() => discard()(file)}
                       >

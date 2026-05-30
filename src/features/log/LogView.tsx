@@ -1,5 +1,6 @@
 import { createEffect, createSignal, on, Show } from "solid-js";
 import { createStore } from "solid-js/store";
+import { t } from "../../i18n";
 import { ConfirmDialog, ErrorBanner } from "../feedback";
 import { LogApi } from "./api";
 import { isNotFound, type LogViewError, toLogViewError } from "./errors";
@@ -120,7 +121,7 @@ export function LogView(props: LogViewProps) {
   return (
     <section class="log-view">
       <header class="log-view__header">
-        <h2 class="log-view__title">Log</h2>
+        <h2 class="log-view__title">{t("log.title")}</h2>
         <Show when={props.logId}>
           {(logId) => (
             <span class="log-view__id" title={logId()}>
@@ -143,8 +144,7 @@ export function LogView(props: LogViewProps) {
         when={props.logId !== null}
         fallback={
           <p class="log-view__state muted">
-            No log selected. A log opens here when a session or command produces
-            one.
+            {t("log.noLog")}
           </p>
         }
       >
@@ -169,7 +169,7 @@ export function LogView(props: LogViewProps) {
               <footer class="log-view__footer">
                 <Show
                   when={!isComplete(model)}
-                  fallback={<span class="muted">End of log.</span>}
+                  fallback={<span class="muted">{t("log.endOfLog")}</span>}
                 >
                   <button
                     type="button"
@@ -177,7 +177,7 @@ export function LogView(props: LogViewProps) {
                     disabled={loadingMore()}
                     onClick={() => void loadMore()}
                   >
-                    {loadingMore() ? "Loading…" : "Load more"}
+                    {loadingMore() ? t("log.loadingMore") : t("log.loadMore")}
                   </button>
                 </Show>
 
@@ -186,7 +186,7 @@ export function LogView(props: LogViewProps) {
                   class="button button--ghost log-view__clear"
                   onClick={() => setConfirmingDelete(true)}
                 >
-                  Clear log
+                  {t("log.clearLog")}
                 </button>
               </footer>
             </Show>
@@ -196,26 +196,26 @@ export function LogView(props: LogViewProps) {
 
       <ConfirmDialog
         open={confirmingDelete()}
-        operation="Clear log"
+        operation={t("log.clearLog")}
         targets={props.logId ? [props.logId] : []}
         onCancel={() => setConfirmingDelete(false)}
         onConfirm={() => void confirmDelete()}
-        confirmLabel="Delete"
+        confirmLabel={t("log.delete")}
       />
     </section>
   );
 }
 
 function LoadingState() {
-  return <p class="log-view__state muted">Loading log…</p>;
+  return <p class="log-view__state muted">{t("log.loading")}</p>;
 }
 
 function NotFoundState(props: { deleted: boolean }) {
   return (
     <p class="log-view__state muted">
       {props.deleted
-        ? "Log deleted. This action cannot be undone."
-        : "Log unavailable — it may have been deleted or never existed."}
+        ? t("log.deleted")
+        : t("log.notFound")}
     </p>
   );
 }

@@ -1,125 +1,187 @@
-import { createSignal, For, Show } from "solid-js";
+import { createSignal, createMemo, For, Show } from "solid-js";
+import { t } from "../../i18n";
 import { ErrorBanner, type ErrorView, toErrorView } from "../feedback";
-import { PluginCommandList } from "../plugins";
 import {
   type CommandHistoryEntry,
   type CreatedSession,
   type CreateSessionRequest,
   describeCommand,
   emptyHistory,
-  emptyLauncherInput,
   type LauncherHistory,
-  type LauncherInput,
   rememberFailed,
   rememberRecent,
-  validateLauncherInput,
 } from "../terminal";
+import { SearchIcon, TerminalIcon, FilesIcon, ReviewIcon, CommandIcon } from "./icons";
+import { ACTIVE_SURFACES, type ActiveSurface } from "./state";
 
 export interface CommandLauncherProps {
   open: boolean;
   onClose: () => void;
-  /** The currently-selected project, or null when none is bound. */
   projectId: string | null;
-  /** Create a terminal session for the selected project. */
   createSession: (
     projectId: string,
     request: CreateSessionRequest,
   ) => Promise<CreatedSession>;
-  /** Switch the shell's active surface to the terminal. */
   onSessionCreated: () => void;
+  /** Switch the shell's active surface. */
+  onSwitchSurface?: (surface: ActiveSurface) => void;
+  /** Select a project by id. */
+  onSelectProject?: (projectId: string) => void;
+  /** Available project ids for switching. */
+  availableProjectIds?: string[];
 }
 
-/** Default terminal grid used for the create request. */
 const DEFAULT_COLS = 120;
 const DEFAULT_ROWS = 32;
 
 function toLauncherError(error: unknown): ErrorView {
-  return toErrorView(error, "Failed to start session");
+  return toErrorView(error, t("launcher.failedToStart"));
 }
 
-/**
- * Command launcher (`ux-command-launcher`). v0 phase 03 wires the top-modal
- * palette to terminal session creation: the user enters command + args + a
- * repo-relative cwd + optional env, then a session is POSTed for the selected
- * project and the shell switches to the terminal surface.
- *
- * Input constraints come from {@link validateLauncherInput} (no absolute /
- * boundary-escaping cwd; KEY=VALUE env; whitespace-split args). The launcher
- * never executes anything that crosses the workspace boundary — the server is
- * authoritative and any boundary error is surfaced inline. A session that comes
- * back `state:"failed"` (command not found) or a create error moves the command
- * to the failed list; a session that starts is remembered as recent.
- */
+interface LauncherItem {
+  id: string;
+  icon: string;
+  label: string;
+  detail?: string;
+  category: string;
+  action: () => void;
+}
+
+const SURFACE_ICONS: Record<string, typeof TerminalIcon> = {
+  terminal: TerminalIcon,
+  files: FilesIcon,
+  review: ReviewIcon,
+};
+
+const SURFACE_LABELS: Record<string, string> = {
+  terminal: "ターミナル",
+  files: "ファイル",
+  review: "レビュー",
+};
+
 export function CommandLauncher(props: CommandLauncherProps) {
-  const [input, setInput] = createSignal<LauncherInput>(emptyLauncherInput());
+  const [query, setQuery] = createSignal("");
   const [history, setHistory] = createSignal<LauncherHistory>(emptyHistory());
   const [error, setError] = createSignal<ErrorView | null>(null);
-  const [fieldErrors, setFieldErrors] = createSignal<
-    Record<string, string | undefined>
-  >({});
   const [busy, setBusy] = createSignal(false);
+  const [selectedIndex, setSelectedIndex] = createSignal(0);
 
-  function patch(part: Partial<LauncherInput>) {
-    setInput((prev) => ({ ...prev, ...part }));
-  }
+  const isTerminalMode = createMemo(() => query().startsWith("> ") || query() === ">");
+
+  const terminalCommand = createMemo(() => {
+    if (!isTerminalMode()) return "";
+    return query().slice(2).trim();
+  });
 
   function close() {
     setError(null);
-    setFieldErrors({});
+    setQuery("");
+    setSelectedIndex(0);
     props.onClose();
   }
 
-  function fillFrom(entry: CommandHistoryEntry) {
-    setInput({
-      command: entry.command,
-      args: entry.args.join(" "),
-      cwd: entry.cwd,
-      env: "",
-    });
+  const filteredItems = createMemo<LauncherItem[]>(() => {
+    const q = query().toLowerCase().trim();
+    if (isTerminalMode()) return [];
+
+    const items: LauncherItem[] = [];
+
+    // Command/terminal history
+    for (const entry of history().recent) {
+      items.push({
+        id: `recent-${describeCommand(entry)}`,
+        icon: "terminal",
+        label: `> ${describeCommand(entry)}`,
+        detail: t("launcher.recent"),
+        category: t("launcher.recent"),
+        action: () => runCommand(entry),
+      });
+    }
+
+    // Surface switching
+    for (const surface of ACTIVE_SURFACES) {
+      items.push({
+        id: `surface-${surface}`,
+        icon: surface,
+        label: `${t(`${surface}.title`)}`,
+        detail: surface,
+        category: "アプリ・ウィンドウ",
+        action: () => {
+          props.onSwitchSurface?.(surface);
+          close();
+        },
+      });
+    }
+
+    // Project switching
+    if (props.availableProjectIds) {
+      for (const pid of props.availableProjectIds) {
+        items.push({
+          id: `project-${pid}`,
+          icon: "project",
+          label: pid,
+          detail: "project",
+          category: t("projects.title"),
+          action: () => {
+            props.onSelectProject?.(pid);
+            close();
+          },
+        });
+      }
+    }
+
+    if (!q) return items;
+    return items.filter(
+      (item) =>
+        item.label.toLowerCase().includes(q) ||
+        (item.detail?.toLowerCase().includes(q) ?? false),
+    );
+  });
+
+  // Group items by category
+  const groupedItems = createMemo(() => {
+    const groups = new Map<string, LauncherItem[]>();
+    for (const item of filteredItems()) {
+      const existing = groups.get(item.category);
+      if (existing) {
+        existing.push(item);
+      } else {
+        groups.set(item.category, [item]);
+      }
+    }
+    return groups;
+  });
+
+  function runCommand(entry: CommandHistoryEntry) {
+    setQuery(`> ${describeCommand(entry)}`);
   }
 
-  async function submit() {
+  async function submitTerminal() {
     const projectId = props.projectId;
-    if (projectId === null || busy()) {
-      return;
-    }
-    setError(null);
-    const validation = validateLauncherInput(input());
-    if (!validation.valid || validation.parsed === null) {
-      const map: Record<string, string> = {};
-      for (const fe of validation.errors) {
-        map[fe.field] = fe.message;
-      }
-      setFieldErrors(map);
-      return;
-    }
-    setFieldErrors({});
+    if (!projectId || busy()) return;
 
-    const parsed = validation.parsed;
-    const historyEntry: CommandHistoryEntry = {
-      command: parsed.command,
-      args: parsed.args,
-      cwd: parsed.cwd,
-    };
+    const cmd = terminalCommand();
+    const parts = cmd.split(/\s+/).filter(Boolean);
+    const command = parts[0] || "";
+    const args = parts.slice(1);
+
+    const historyEntry: CommandHistoryEntry = { command, args, cwd: "." };
     const request: CreateSessionRequest = {
-      cwd: parsed.cwd,
-      command: parsed.command,
-      args: parsed.args,
-      env: parsed.env,
+      cwd: ".",
+      command,
+      args,
+      env: {},
       cols: DEFAULT_COLS,
       rows: DEFAULT_ROWS,
-      label: parsed.command === "" ? "terminal" : parsed.command,
+      label: command || "terminal",
     };
 
     setBusy(true);
     try {
       const session = await props.createSession(projectId, request);
       if (session.state === "failed") {
-        // Command-not-found: session exists but never started.
         setHistory((prev) => rememberFailed(prev, historyEntry));
-        setError(
-          toLauncherError(new Error("Command failed to start (not found).")),
-        );
+        setError(toLauncherError(new Error(t("launcher.commandNotFound"))));
         props.onSessionCreated();
         return;
       }
@@ -127,7 +189,6 @@ export function CommandLauncher(props: CommandLauncherProps) {
       props.onSessionCreated();
       close();
     } catch (err) {
-      // Boundary / validation errors are surfaced inline (server-enforced).
       setHistory((prev) => rememberFailed(prev, historyEntry));
       setError(toLauncherError(err));
     } finally {
@@ -135,164 +196,127 @@ export function CommandLauncher(props: CommandLauncherProps) {
     }
   }
 
+  function onKeyDown(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+      close();
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (isTerminalMode()) {
+        void submitTerminal();
+      } else {
+        const items = filteredItems();
+        const idx = selectedIndex();
+        if (items[idx]) {
+          items[idx].action();
+        }
+      }
+      return;
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setSelectedIndex((i) => Math.min(i + 1, filteredItems().length - 1));
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setSelectedIndex((i) => Math.max(i - 1, 0));
+    }
+  }
+
+  let flatIndex = 0;
+
   return (
     <Show when={props.open}>
       <div class="command-launcher__overlay">
         <button
           type="button"
           class="command-launcher__backdrop"
-          aria-label="Close command launcher"
+          aria-label={t("launcher.close")}
           onClick={close}
         />
         <div
           class="command-launcher"
           role="dialog"
           aria-modal="true"
-          aria-label="Command launcher"
-          onKeyDown={(event) => {
-            if (event.key === "Escape") {
-              close();
-            }
-          }}
+          aria-label={t("launcher.title")}
+          onKeyDown={onKeyDown}
         >
-          <Show
-            when={props.projectId !== null}
-            fallback={
-              <p class="command-launcher__empty muted">
-                Select a project before starting a terminal session.
-              </p>
-            }
-          >
-            <form
-              class="command-launcher__form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void submit();
+          {/* Search input */}
+          <div class="command-launcher__search">
+            <span class="command-launcher__search-icon">
+              <SearchIcon size={16} />
+            </span>
+            <input
+              class="command-launcher__search-input"
+              type="text"
+              placeholder={t("launcher.searchPlaceholder") || "コマンドまたはファイル名… ( > でターミナル実行 )"}
+              value={query()}
+              autofocus
+              onInput={(e) => {
+                setQuery(e.currentTarget.value);
+                setSelectedIndex(0);
               }}
-            >
-              <label class="command-launcher__field">
-                <span class="command-launcher__field-label">Command</span>
-                <input
-                  class="command-launcher__field-input"
-                  type="text"
-                  placeholder="Leave empty for the default shell"
-                  value={input().command}
-                  autofocus
-                  onInput={(e) => patch({ command: e.currentTarget.value })}
-                />
-                <Show when={fieldErrors().command}>
-                  {(msg) => (
-                    <span class="command-launcher__field-error">{msg()}</span>
-                  )}
-                </Show>
-              </label>
+            />
+            <kbd class="command-launcher__search-kbd">ESC</kbd>
+          </div>
 
-              <label class="command-launcher__field">
-                <span class="command-launcher__field-label">Arguments</span>
-                <input
-                  class="command-launcher__field-input"
-                  type="text"
-                  placeholder="--flag value"
-                  value={input().args}
-                  onInput={(e) => patch({ args: e.currentTarget.value })}
-                />
-                <Show when={fieldErrors().args}>
-                  {(msg) => (
-                    <span class="command-launcher__field-error">{msg()}</span>
-                  )}
-                </Show>
-              </label>
-
-              <label class="command-launcher__field">
-                <span class="command-launcher__field-label">
-                  Working directory (repo-relative)
-                </span>
-                <input
-                  class="command-launcher__field-input"
-                  type="text"
-                  placeholder="."
-                  value={input().cwd}
-                  onInput={(e) => patch({ cwd: e.currentTarget.value })}
-                />
-                <Show when={fieldErrors().cwd}>
-                  {(msg) => (
-                    <span class="command-launcher__field-error">{msg()}</span>
-                  )}
-                </Show>
-              </label>
-
-              <label class="command-launcher__field">
-                <span class="command-launcher__field-label">
-                  Environment (KEY=VALUE per line, optional)
-                </span>
-                <textarea
-                  class="command-launcher__field-textarea"
-                  rows="2"
-                  placeholder="FOO=bar"
-                  value={input().env}
-                  onInput={(e) => patch({ env: e.currentTarget.value })}
-                />
-                <Show when={fieldErrors().env}>
-                  {(msg) => (
-                    <span class="command-launcher__field-error">{msg()}</span>
-                  )}
-                </Show>
-              </label>
-
-              <button
-                type="submit"
-                class="button command-launcher__submit"
-                disabled={busy()}
-              >
-                {busy() ? "Starting…" : "Start session"}
-              </button>
-            </form>
-
-            <Show when={history().recent.length > 0}>
-              <p class="command-launcher__history-title">Recent</p>
-              <ul class="command-launcher__list">
-                <For each={history().recent}>
-                  {(entry) => (
-                    <li>
-                      <button
-                        type="button"
-                        class="command-launcher__history-item"
-                        onClick={() => fillFrom(entry)}
-                      >
-                        {describeCommand(entry)}
-                      </button>
-                    </li>
-                  )}
-                </For>
-              </ul>
-            </Show>
-
-            <Show when={history().failed.length > 0}>
-              <p class="command-launcher__history-title">Failed</p>
-              <ul class="command-launcher__list">
-                <For each={history().failed}>
-                  {(entry) => (
-                    <li>
-                      <button
-                        type="button"
-                        class="command-launcher__history-item command-launcher__history-item--failed"
-                        onClick={() => fillFrom(entry)}
-                      >
-                        {describeCommand(entry)}
-                      </button>
-                    </li>
-                  )}
-                </For>
-              </ul>
-            </Show>
+          {/* Terminal mode */}
+          <Show when={isTerminalMode()}>
+            <div class="command-launcher__terminal-hint">
+              <Show when={props.projectId} fallback={
+                <p class="command-launcher__empty muted">{t("launcher.noProject")}</p>
+              }>
+                <div class="command-launcher__terminal-row">
+                  <span class="command-launcher__terminal-prompt">&gt;_</span>
+                  <span>{terminalCommand() || t("launcher.commandPlaceholder")}</span>
+                  <span class="command-launcher__terminal-action">
+                    {busy() ? t("launcher.starting") : "ターミナルで実行 ↵"}
+                  </span>
+                </div>
+              </Show>
+            </div>
           </Show>
 
-          {/*
-            Plugin command contributions (`ux-command-launcher`). v0 surfaces
-            them here read-only: the entries are reserved / non-runnable (no
-            execute endpoint exists), independent of project selection.
-          */}
-          <PluginCommandList active={props.open} />
+          {/* Results list */}
+          <Show when={!isTerminalMode()}>
+            <div class="command-launcher__results">
+              {(() => {
+                flatIndex = 0;
+                return null;
+              })()}
+              <For each={Array.from(groupedItems().entries())}>
+                {([category, items]) => (
+                  <div class="command-launcher__group">
+                    <div class="command-launcher__group-label">{category}</div>
+                    <For each={items}>
+                      {(item) => {
+                        const myIndex = flatIndex++;
+                        return (
+                          <button
+                            type="button"
+                            class="command-launcher__result-item"
+                            classList={{ "command-launcher__result-item--selected": selectedIndex() === myIndex }}
+                            onClick={() => item.action()}
+                            onMouseEnter={() => setSelectedIndex(myIndex)}
+                          >
+                            <span class="command-launcher__result-icon">
+                              {item.icon === "terminal" && <TerminalIcon size={16} />}
+                              {item.icon === "files" && <FilesIcon size={16} />}
+                              {item.icon === "review" && <ReviewIcon size={16} />}
+                              {item.icon === "project" && <CommandIcon size={16} />}
+                            </span>
+                            <span class="command-launcher__result-label">{item.label}</span>
+                            <span class="command-launcher__result-detail">{item.detail}</span>
+                          </button>
+                        );
+                      }}
+                    </For>
+                  </div>
+                )}
+              </For>
+            </div>
+          </Show>
 
           <div class="command-launcher__error" aria-live="polite">
             <Show when={error()}>{(err) => <ErrorBanner error={err()} />}</Show>

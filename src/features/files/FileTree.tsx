@@ -1,7 +1,10 @@
 import { createSignal, For, Show } from "solid-js";
+import { t } from "../../i18n";
 import { ConfirmDialog, ErrorBanner } from "../feedback";
+import { FilePlusIcon, FolderPlusIcon } from "../shell/icons";
 import type { FilesApi } from "./api";
 import { type FileError, toFileError } from "./errors";
+import { getDirIcon, getFileIcon, isHiddenFile } from "./icons";
 import {
   createRoot,
   type FlatNode,
@@ -18,6 +21,7 @@ export interface FileTreeProps {
   projectId: string;
   selectedPath: string | null;
   onOpenFile: (path: string) => void;
+  onOpenFilePinned?: (path: string) => void;
 }
 
 type Pending =
@@ -40,8 +44,23 @@ export function FileTree(props: FileTreeProps) {
   const [busy, setBusy] = createSignal(false);
   const [pending, setPending] = createSignal<Pending | null>(null);
   const [draft, setDraft] = createSignal("");
+  const [showHidden, setShowHidden] = createSignal(
+    localStorage.getItem("owox:showHidden") !== "false",
+  );
 
-  const rows = (): FlatNode[] => flatten(root());
+  function toggleHidden() {
+    setShowHidden((prev) => {
+      const next = !prev;
+      localStorage.setItem("owox:showHidden", String(next));
+      return next;
+    });
+  }
+
+  const rows = (): FlatNode[] => {
+    const all = flatten(root());
+    if (showHidden()) return all;
+    return all.filter((n) => !isHiddenFile(n.name));
+  };
 
   async function loadDir(path: string) {
     setError(null);
@@ -157,27 +176,36 @@ export function FileTree(props: FileTreeProps) {
   return (
     <section class="file-tree">
       <header class="file-tree__header">
-        <h2 class="file-tree__title">Files</h2>
+        <h2 class="file-tree__title">{t("files.title")}</h2>
         <div class="file-tree__actions">
           <button
             type="button"
             class="button button--icon"
-            title="New file in root"
-            aria-label="New file in root"
+            title={t("files.newFileInRoot")}
+            aria-label={t("files.newFileInRoot")}
             disabled={busy()}
             onClick={() => startPending({ mode: "new-file", parent: "" })}
           >
-            +F
+            <FilePlusIcon size={14} />
           </button>
           <button
             type="button"
             class="button button--icon"
-            title="New folder in root"
-            aria-label="New folder in root"
+            title={t("files.newFolderInRoot")}
+            aria-label={t("files.newFolderInRoot")}
             disabled={busy()}
             onClick={() => startPending({ mode: "new-folder", parent: "" })}
           >
-            +D
+            <FolderPlusIcon size={14} />
+          </button>
+          <button
+            type="button"
+            class="file-tree__toggle-hidden"
+            title={showHidden() ? t("files.hideHidden") : t("files.showHidden")}
+            aria-label={showHidden() ? t("files.hideHidden") : t("files.showHidden")}
+            onClick={toggleHidden}
+          >
+            {showHidden() ? "◉" : "◎"}
           </button>
         </div>
       </header>
@@ -194,13 +222,13 @@ export function FileTree(props: FileTreeProps) {
         when={loaded()}
         fallback={
           <Show when={!error()}>
-            <p class="muted file-tree__state">Loading files…</p>
+            <p class="muted file-tree__state">{t("files.loading")}</p>
           </Show>
         }
       >
         <Show
           when={rows().length > 0}
-          fallback={<p class="muted file-tree__state">Empty repository.</p>}
+          fallback={<p class="muted file-tree__state">{t("files.empty")}</p>}
         >
           <ul class="file-tree__list">
             <For each={rows()}>
@@ -211,6 +239,7 @@ export function FileTree(props: FileTreeProps) {
                   busy={busy()}
                   onToggle={() => void onToggle(node)}
                   onOpen={() => props.onOpenFile(node.path)}
+                  onOpenPinned={() => props.onOpenFilePinned?.(node.path)}
                   onNewFile={() =>
                     startPending({ mode: "new-file", parent: node.path })
                   }
@@ -237,11 +266,11 @@ export function FileTree(props: FileTreeProps) {
             fallback={
               <ConfirmDialog
                 open
-                operation="Delete file"
+                operation={t("files.delete")}
                 project={props.projectId}
                 targets={[deletePath(p())]}
                 phrase={deletePath(p())}
-                confirmLabel="Delete"
+                confirmLabel={t("common.delete")}
                 onCancel={cancelPending}
                 onConfirm={() => void submitPending()}
               />
@@ -268,29 +297,45 @@ function FileTreeRow(props: {
   busy: boolean;
   onToggle: () => void;
   onOpen: () => void;
+  onOpenPinned?: () => void;
   onNewFile: () => void;
   onNewFolder: () => void;
   onRename: () => void;
   onDelete: () => void;
 }) {
   const isDir = () => props.node.kind === "dir";
+  const icon = () =>
+    isDir()
+      ? getDirIcon(props.node.name, props.node.expanded)
+      : getFileIcon(props.node.name);
+  const hidden = () => isHiddenFile(props.node.name);
   return (
     <li>
       <div
         class="file-tree__row"
-        classList={{ "file-tree__row--selected": props.selected }}
+        classList={{
+          "file-tree__row--selected": props.selected,
+          "file-tree__row--hidden": hidden(),
+        }}
         style={{ "padding-left": `${(props.node.depth - 1) * 14 + 8}px` }}
       >
         <button
           type="button"
           class="file-tree__label"
           onClick={() => (isDir() ? props.onToggle() : props.onOpen())}
+          onDblClick={() => {
+            if (!isDir()) props.onOpenPinned?.();
+          }}
         >
           <span class="file-tree__icon" aria-hidden="true">
             {isDir() ? (props.node.expanded ? "▾" : "▸") : "·"}
           </span>
-          <span class="file-tree__kind" aria-hidden="true">
-            {isDir() ? "📁" : "📄"}
+          <span
+            class="file-tree__kind"
+            aria-hidden="true"
+            style={{ color: icon().color }}
+          >
+            {icon().label}
           </span>
           <span class="file-tree__name">{props.node.name}</span>
         </button>
@@ -299,29 +344,29 @@ function FileTreeRow(props: {
             <button
               type="button"
               class="button button--icon file-tree__action"
-              title="New file"
-              aria-label={`New file in ${props.node.name}`}
+              title={t("files.newFile")}
+              aria-label={`${t("files.newFile")} in ${props.node.name}`}
               disabled={props.busy}
               onClick={props.onNewFile}
             >
-              +F
+              <FilePlusIcon size={12} />
             </button>
             <button
               type="button"
               class="button button--icon file-tree__action"
-              title="New folder"
-              aria-label={`New folder in ${props.node.name}`}
+              title={t("files.newFolder")}
+              aria-label={`${t("files.newFolder")} in ${props.node.name}`}
               disabled={props.busy}
               onClick={props.onNewFolder}
             >
-              +D
+              <FolderPlusIcon size={12} />
             </button>
           </Show>
           <button
             type="button"
             class="button button--icon file-tree__action"
-            title="Rename"
-            aria-label={`Rename ${props.node.name}`}
+            title={t("files.rename")}
+            aria-label={`${t("files.rename")} ${props.node.name}`}
             disabled={props.busy}
             onClick={props.onRename}
           >
@@ -330,8 +375,8 @@ function FileTreeRow(props: {
           <button
             type="button"
             class="button button--icon file-tree__action file-tree__action--danger"
-            title="Delete"
-            aria-label={`Delete ${props.node.name}`}
+            title={t("files.delete")}
+            aria-label={`${t("files.delete")} ${props.node.name}`}
             disabled={props.busy}
             onClick={props.onDelete}
           >
@@ -354,11 +399,11 @@ function PendingDialog(props: {
   const title = () => {
     switch (props.pending.mode) {
       case "new-file":
-        return "New file";
+        return t("files.newFile");
       case "new-folder":
-        return "New folder";
+        return t("files.newFolder");
       default:
-        return "Rename";
+        return t("files.rename");
     }
   };
 
@@ -388,10 +433,10 @@ function PendingDialog(props: {
             disabled={props.busy}
             onClick={props.onCancel}
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button type="submit" class="button" disabled={props.busy}>
-            Confirm
+            {t("common.confirm")}
           </button>
         </div>
       </form>

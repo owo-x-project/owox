@@ -31,6 +31,7 @@ impl MetadataStore {
         for statement in MIGRATIONS {
             sqlx::query(statement).execute(&self.pool).await?;
         }
+        migrate_terminal_sessions_columns(&self.pool).await?;
         Ok(())
     }
 
@@ -104,6 +105,34 @@ const MIGRATIONS: &[&str] = &[
         FOREIGN KEY(project_id) REFERENCES projects(id)
     )",
 ];
+
+async fn migrate_terminal_sessions_columns(pool: &SqlitePool) -> Result<(), sqlx::Error> {
+    ensure_column(pool, "terminal_sessions", "label", "label TEXT").await?;
+    ensure_column(pool, "terminal_sessions", "cols", "cols INTEGER").await?;
+    ensure_column(pool, "terminal_sessions", "rows", "rows INTEGER").await?;
+    ensure_column(pool, "terminal_sessions", "exit_code", "exit_code INTEGER").await?;
+    ensure_column(pool, "terminal_sessions", "pid", "pid INTEGER").await?;
+    Ok(())
+}
+
+async fn ensure_column(
+    pool: &SqlitePool,
+    table: &str,
+    column: &str,
+    definition: &str,
+) -> Result<(), sqlx::Error> {
+    let pragma = format!("PRAGMA table_info({table})");
+    let columns = sqlx::query_as::<_, (i64, String, String, i64, Option<String>, i64)>(&pragma)
+        .fetch_all(pool)
+        .await?;
+    if columns.iter().any(|(_, name, _, _, _, _)| name == column) {
+        return Ok(());
+    }
+
+    let statement = format!("ALTER TABLE {table} ADD COLUMN {definition}");
+    sqlx::query(&statement).execute(pool).await?;
+    Ok(())
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ProjectRecord {

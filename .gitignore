@@ -2,6 +2,7 @@
 /node_modules/
 /dist/
 /.sqlx/
+.owox-data/
 *.db
 *.sqlite
 *.sqlite3

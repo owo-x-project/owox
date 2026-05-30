@@ -91,6 +91,8 @@ function newEventId(): string {
 export class TerminalSocket {
   private socket: SocketLike;
   private closed = false;
+  private opened = false;
+  private pending: Uint8Array[] = [];
 
   constructor(
     private readonly projectId: string,
@@ -100,7 +102,11 @@ export class TerminalSocket {
   ) {
     this.socket = factory(eventsSocketUrl(projectId, sessionId));
     this.socket.binaryType = "arraybuffer";
-    this.socket.onopen = () => this.handlers.onOpen?.();
+    this.socket.onopen = () => {
+      this.opened = true;
+      this.flushPending();
+      this.handlers.onOpen?.();
+    };
     this.socket.onmessage = (ev) => this.receive(ev.data);
     this.socket.onerror = () => this.finish(true);
     this.socket.onclose = () => this.finish(false);
@@ -155,10 +161,27 @@ export class TerminalSocket {
       null,
       payload,
     ];
+    const bytes = encode(envelope);
+    if (!this.opened) {
+      this.pending.push(bytes);
+      return;
+    }
+    this.sendBytes(bytes);
+  }
+
+  private flushPending(): void {
+    while (!this.closed && this.pending.length > 0) {
+      const bytes = this.pending.shift();
+      if (bytes) {
+        this.sendBytes(bytes);
+      }
+    }
+  }
+
+  private sendBytes(bytes: Uint8Array): void {
     try {
-      this.socket.send(encode(envelope));
+      this.socket.send(bytes);
     } catch {
-      // A send on a not-yet-open / closing socket fails; surface as transport.
       this.finish(true);
     }
   }

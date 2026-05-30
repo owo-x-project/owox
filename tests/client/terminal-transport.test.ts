@@ -182,6 +182,9 @@ describe("TerminalSocket outgoing frames", () => {
   it("encodes a term.input envelope", () => {
     const { socket, fake } = makeSocket();
     socket.sendInput("ls\n");
+    expect(fake.sent).toHaveLength(0);
+
+    fake.onopen?.({});
     expect(fake.sent).toHaveLength(1);
     const env = decode(fake.sent[0]) as WsEnvelope;
     expect(env[0]).toBe(1);
@@ -194,13 +197,29 @@ describe("TerminalSocket outgoing frames", () => {
   it("encodes a term.resize envelope", () => {
     const { socket, fake } = makeSocket();
     socket.sendResize(80, 24);
+    fake.onopen?.({});
+
     const env = decode(fake.sent[0]) as WsEnvelope;
     expect(env[1]).toBe("term.resize");
     expect(env[7]).toEqual({ cols: 80, rows: 24 });
   });
 
+  it("queues outgoing frames until the socket opens", () => {
+    const { socket, fake } = makeSocket();
+    socket.sendResize(80, 24);
+    socket.sendInput("pwd\n");
+
+    expect(fake.sent).toHaveLength(0);
+    fake.onopen?.({});
+    expect(fake.sent).toHaveLength(2);
+    expect((decode(fake.sent[0]) as WsEnvelope)[1]).toBe("term.resize");
+    expect((decode(fake.sent[1]) as WsEnvelope)[1]).toBe("term.input");
+  });
+
   it("sends a term.close then stops sending after close", () => {
     const { socket, fake } = makeSocket();
+    fake.onopen?.({});
+
     socket.close();
     const env = decode(fake.sent[0]) as WsEnvelope;
     expect(env[1]).toBe("term.close");

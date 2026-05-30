@@ -148,6 +148,7 @@ export const en = {
   launcher: {
     close: "Close command launcher",
     title: "Command launcher",
+    searchPlaceholder: "Command or file name… ( > to run terminal )",
     noProject: "Select a project before starting a terminal session.",
     command: "Command",
     commandPlaceholder: "Leave empty for the default shell",
@@ -172,6 +173,15 @@ export const en = {
     editorCategory: "Editor",
     save: "Save file",
     gitCategory: "Git",
+  },
+  settings: {
+    title: "Settings",
+    description: "Shell display and environment settings",
+    language: "Language",
+    languageDescription: "UI display language",
+    theme: "Theme",
+    themeDescription: "Light / Dark",
+    done: "Done",
   },
 } as const;
 

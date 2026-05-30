@@ -150,6 +150,7 @@ export const ja: Locale = {
   launcher: {
     close: "コマンドランチャーを閉じる",
     title: "コマンドランチャー",
+    searchPlaceholder: "コマンドまたはファイル名… ( > でターミナル実行 )",
     noProject: "ターミナルセッションを開始するにはプロジェクトを選択してください。",
     command: "コマンド",
     commandPlaceholder: "デフォルトシェルの場合は空欄",
@@ -174,5 +175,14 @@ export const ja: Locale = {
     editorCategory: "エディタ",
     save: "ファイルを保存",
     gitCategory: "Git",
+  },
+  settings: {
+    title: "設定",
+    description: "シェルの表示と環境設定",
+    language: "言語",
+    languageDescription: "UIの表示言語",
+    theme: "テーマ",
+    themeDescription: "ライト / ダーク",
+    done: "完了",
   },
 };

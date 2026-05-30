@@ -10,6 +10,8 @@ import {
   PanelLeftOpen,
   PanelLeftClose,
   Command,
+  Settings,
+  Search,
 } from "lucide-solid";
 
 export {
@@ -24,4 +26,6 @@ export {
   PanelLeftOpen as PanelOpenIcon,
   PanelLeftClose as PanelCloseIcon,
   Command as CommandIcon,
+  Settings as SettingsIcon,
+  Search as SearchIcon,
 };

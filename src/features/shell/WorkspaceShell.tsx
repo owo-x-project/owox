@@ -10,7 +10,7 @@ import {
 import type { ApiClient } from "../../api/client";
 import { t } from "../../i18n";
 import { ToastContainer } from "../feedback/ToastContainer";
-import { ErrorLogPanel } from "../feedback/ErrorLogPanel";
+import { NotificationPanel } from "../feedback/NotificationPanel";
 import { getUnreadCount } from "../feedback/toast-store";
 import { FilesSurface } from "../files";
 import { ReviewSurface } from "../git";
@@ -22,15 +22,16 @@ import {
   TerminalSurface,
 } from "../terminal";
 import { CommandLauncher } from "./CommandLauncher";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { SettingsModal } from "./SettingsModal";
 import { ShortcutHelp } from "./ShortcutHelp";
-import { ThemeToggle } from "./ThemeToggle";
 import {
   CommandIcon,
   TerminalIcon,
   FilesIcon,
   ReviewIcon,
   BellIcon,
+  SettingsIcon,
+  SearchIcon,
 } from "./icons";
 import {
   type ActiveSurface,
@@ -46,8 +47,9 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
   const ws = createWorkspaceStore();
   const viewport = useViewport();
   const [shortcutHelpOpen, setShortcutHelpOpen] = createSignal(false);
-  const [errorLogOpen, setErrorLogOpen] = createSignal(false);
+  const [notifPanelOpen, setNotifPanelOpen] = createSignal(false);
   const [sidebarOpen, setSidebarOpen] = createSignal(false);
+  const [settingsOpen, setSettingsOpen] = createSignal(false);
 
   createEffect(() => {
     ws.setViewport(viewport());
@@ -81,19 +83,20 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
   return (
     <div
       class="workspace-shell"
-      classList={{ "workspace-shell--sidebar-open": sidebarOpen() }}
     >
       {/* Activity Bar */}
       <nav class="activity-bar" aria-label="Activity Bar">
-        <div class="activity-bar__top">
+        <div class="activity-bar__brand-area">
           <button
             type="button"
             class="activity-bar__btn activity-bar__brand"
-            aria-label={t("shell.toggleProjectDrawer")}
-            onClick={toggleSidebar}
+            aria-label="owox"
           >
             <CommandIcon size={18} />
           </button>
+        </div>
+
+        <div class="activity-bar__top">
           <button
             type="button"
             class="activity-bar__btn"
@@ -125,12 +128,23 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
             <ReviewIcon size={20} />
           </button>
         </div>
+
+        <div class="activity-bar__middle">
+          <button
+            type="button"
+            class="activity-bar__project-label"
+            aria-label={t("shell.toggleProjectDrawer")}
+            onClick={toggleSidebar}
+          >
+            {ws.state.selectedProjectId ?? t("projects.title")}
+          </button>
+        </div>
+
         <div class="activity-bar__bottom">
-          <ThemeToggle />
           <button
             type="button"
             class="activity-bar__btn"
-            onClick={() => setErrorLogOpen((prev) => !prev)}
+            onClick={() => setNotifPanelOpen((prev) => !prev)}
             aria-label="Notifications"
           >
             <BellIcon size={18} />
@@ -138,53 +152,80 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
               <span class="notification-badge">{getUnreadCount()()}</span>
             </Show>
           </button>
-          <LanguageSwitcher />
+          <button
+            type="button"
+            class="activity-bar__btn"
+            aria-label={t("settings.title")}
+            onClick={() => setSettingsOpen(true)}
+          >
+            <SettingsIcon size={18} />
+          </button>
         </div>
       </nav>
 
-      {/* Sidebar */}
-      <Show when={sidebarOpen()}>
-        <aside class="sidebar" aria-label="Project list">
-          <ProjectList
-            api={props.api}
-            selectedProjectId={ws.state.selectedProjectId}
-            onSelect={(projectId) => {
-              ws.selectProject(projectId);
-            }}
-          />
-        </aside>
-      </Show>
-
-      {/* Main content */}
-      <main class="main-surface" aria-label="Active surface">
-        <Show
-          when={ws.state.selectedProjectId}
-          fallback={
-            <div class="surface-placeholder">
-              <h2 class="surface-placeholder__title">
-                {t("common.noProjectSelected")}
-              </h2>
-              <p class="surface-placeholder__detail">
-                {t("common.selectProject")}
-              </p>
-            </div>
-          }
+      {/* Content area with gradient border */}
+      <div class="workspace-content">
+        {/* Command bar trigger */}
+        <button
+          type="button"
+          class="command-bar"
+          onClick={() => ws.toggleCommandLauncher()}
         >
-          {(projectId) => (
-            <Switch>
-              <Match when={ws.state.activeSurface === "terminal"}>
-                <TerminalSurface projectId={projectId()} />
-              </Match>
-              <Match when={ws.state.activeSurface === "files"}>
-                <FilesSurface projectId={projectId()} />
-              </Match>
-              <Match when={ws.state.activeSurface === "review"}>
-                <ReviewSurface projectId={projectId()} />
-              </Match>
-            </Switch>
-          )}
-        </Show>
-      </main>
+          <SearchIcon size={14} />
+          <span class="command-bar__label">{t("launcher.searchPlaceholder")}</span>
+          <kbd class="command-bar__shortcut">⌘K</kbd>
+        </button>
+
+        {/* Panels */}
+        <div class="workspace-panels">
+          <Show when={sidebarOpen()}>
+            <aside class="sidebar" aria-label="Project list">
+              <ProjectList
+                api={props.api}
+                selectedProjectId={ws.state.selectedProjectId}
+                onSelect={(projectId) => {
+                  ws.selectProject(projectId);
+                }}
+              />
+            </aside>
+          </Show>
+
+          <main class="main-surface" aria-label="Active surface">
+            <Show
+              when={ws.state.selectedProjectId}
+              fallback={
+                <div class="surface-placeholder">
+                  <h2 class="surface-placeholder__title">
+                    {t("common.noProjectSelected")}
+                  </h2>
+                  <p class="surface-placeholder__detail">
+                    {t("common.selectProject")}
+                  </p>
+                </div>
+              }
+            >
+              {(projectId) => (
+                <Switch>
+                  <Match when={ws.state.activeSurface === "terminal"}>
+                    <TerminalSurface projectId={projectId()} />
+                  </Match>
+                  <Match when={ws.state.activeSurface === "files"}>
+                    <FilesSurface projectId={projectId()} />
+                  </Match>
+                  <Match when={ws.state.activeSurface === "review"}>
+                    <ReviewSurface projectId={projectId()} />
+                  </Match>
+                </Switch>
+              )}
+            </Show>
+          </main>
+
+          <NotificationPanel
+            open={notifPanelOpen()}
+            onClose={() => setNotifPanelOpen(false)}
+          />
+        </div>
+      </div>
 
       {/* Overlays */}
       <CommandLauncher
@@ -195,6 +236,8 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
         onSessionCreated={() => {
           ws.setSurface("terminal");
         }}
+        onSwitchSurface={(surface) => ws.setSurface(surface)}
+        onSelectProject={(pid) => ws.selectProject(pid)}
       />
 
       <ShortcutHelp
@@ -202,11 +245,12 @@ export function WorkspaceShell(props: WorkspaceShellProps) {
         onClose={() => setShortcutHelpOpen(false)}
       />
 
-      <ToastContainer />
-      <ErrorLogPanel
-        open={errorLogOpen()}
-        onClose={() => setErrorLogOpen(false)}
+      <SettingsModal
+        open={settingsOpen()}
+        onClose={() => setSettingsOpen(false)}
       />
+
+      <ToastContainer />
     </div>
   );
 }

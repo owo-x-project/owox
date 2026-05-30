@@ -14,7 +14,7 @@
 
 .files-surface__tree {
   border-right: 1px solid var(--owox-border);
-  background: var(--owox-surface);
+  background: rgba(255, 255, 255, 0.015);
   overflow: auto;
   min-height: 0;
 }
@@ -42,7 +42,8 @@
   border-bottom: 1px solid var(--owox-border);
   position: sticky;
   top: 0;
-  background: var(--owox-surface);
+  background: var(--owox-chrome);
+  backdrop-filter: blur(8px);
 }
 
 .file-tree__title {

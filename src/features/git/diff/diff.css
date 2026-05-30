@@ -1,0 +1,200 @@
+/* Diff view (`SPEC-ui-diff-view`). Reuses the theme variables from
+   styles.css; defines only diff-local add/del/context coloring here. */
+
+.diff-view {
+  --diff-add-bg: rgba(158, 206, 106, 0.12);
+  --diff-add-fg: var(--color-success);
+  --diff-del-bg: rgba(247, 118, 142, 0.12);
+  --diff-del-fg: var(--color-danger);
+  --diff-hunk-bg: var(--color-surface-2);
+
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--color-bg);
+}
+
+.diff-view__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.diff-view__title {
+  font-weight: 600;
+}
+
+.diff-view__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.diff-view__modes {
+  margin-left: auto;
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.diff-view__mode--active {
+  color: var(--color-text);
+  background: var(--color-accent-soft);
+}
+
+.diff-view__state {
+  padding: var(--space-4);
+}
+
+.diff-view__stat--add {
+  color: var(--diff-add-fg);
+}
+
+.diff-view__stat--del {
+  color: var(--diff-del-fg);
+}
+
+/* Scrollable monospace body — huge diffs scroll instead of breaking layout. */
+.diff-view__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.diff-view__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ----------------------------------------------------------------- file */
+
+.diff-file {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.diff-file__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.diff-file__status {
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.diff-file__status--added {
+  color: var(--diff-add-fg);
+}
+
+.diff-file__status--deleted {
+  color: var(--diff-del-fg);
+}
+
+.diff-file__status--renamed,
+.diff-file__status--binary {
+  color: var(--color-warning);
+}
+
+.diff-file__path {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.diff-file__stats {
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.diff-file__binary {
+  padding: var(--space-3) var(--space-4);
+}
+
+/* ----------------------------------------------------------------- rows */
+
+.diff-table {
+  width: 100%;
+}
+
+.diff-row {
+  display: flex;
+  align-items: stretch;
+  white-space: pre;
+}
+
+.diff-row--split {
+  white-space: normal;
+}
+
+.diff-gutter {
+  flex: 0 0 auto;
+  width: 3.5em;
+  padding: 0 var(--space-2);
+  text-align: right;
+  color: var(--color-text-muted);
+  user-select: none;
+  border-right: 1px solid var(--color-border);
+}
+
+.diff-code {
+  flex: 1;
+  min-width: 0;
+  padding: 0 var(--space-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.diff-sign {
+  user-select: none;
+}
+
+.diff-row--add {
+  background: var(--diff-add-bg);
+}
+
+.diff-row--add .diff-code,
+.diff-code--add {
+  color: var(--diff-add-fg);
+  background: var(--diff-add-bg);
+}
+
+.diff-row--del {
+  background: var(--diff-del-bg);
+}
+
+.diff-row--del .diff-code,
+.diff-code--del {
+  color: var(--diff-del-fg);
+  background: var(--diff-del-bg);
+}
+
+.diff-row--hunk {
+  background: var(--diff-hunk-bg);
+  color: var(--color-accent);
+}
+
+.diff-code--empty,
+.diff-gutter--empty {
+  background: var(--color-surface);
+}

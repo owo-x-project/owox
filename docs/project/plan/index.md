@@ -71,3 +71,4 @@ docs/project/plan/
 ## 参照
 
 - `v0/index.md`: `owox` v0 完全実装計画。現行 requirement / spec に基づき、基盤契約、workspace UI、terminal/log、Git/diff、responsive 統合、plugin/packaging/release validation に分解する。
+- `v0.1/index.md`: Frontend UX 改善計画 v1。デザイン基盤 (UnoCSS + owox テーマ)、アニメーション、ターミナル UX、i18n、ファイルツリー、コミット履歴、エラー表示を 7 フェーズ・22 task で改善する。
